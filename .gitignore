@@ -1,0 +1,20 @@
+# Dossiers
+node_modules/
+.DS_Store
+
+# Fichiers de log
+*.log
+npm-debug.log*
+
+# Variables d'environnement
+.env
+.env.local
+
+# Fichiers IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Système
+Thumbs.db

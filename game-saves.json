@@ -1,0 +1,305 @@
+{
+  "timestamp": 1763593615735,
+  "games": {
+    "3936": {
+      "gameCode": "3936",
+      "host": "z52kDhF12Y1-nMpSAAAJ",
+      "players": {
+        "gHTBLIj0eurgGg2DAAAL": {
+          "id": "gHTBLIj0eurgGg2DAAAL",
+          "name": "a",
+          "score": 2,
+          "connected": false
+        },
+        "2We7FuLzL8kYTD-eAAAN": {
+          "id": "2We7FuLzL8kYTD-eAAAN",
+          "name": "b",
+          "score": 0,
+          "connected": false
+        },
+        "72lUMhX0-EVpf7FhAAAR": {
+          "id": "jEzkewsynxl9rgN4AAAP",
+          "name": "c",
+          "score": 2,
+          "connected": false
+        }
+      },
+      "status": "playing",
+      "selectedQuestions": [
+        {
+          "id": 14,
+          "manche": 2,
+          "type": "QCM",
+          "question": "4",
+          "choix": [
+            "Nombre de personne qui travaille à l'assistance métier RC",
+            "Le nombre de faq rce intégré dans mayday",
+            "le nombre de minutes qu'un pc met à s'ouvrir le matin en moyenne",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "A"
+        },
+        {
+          "id": 9,
+          "manche": 2,
+          "type": "QCM",
+          "question": "3",
+          "choix": [
+            "Nombre appels client pris à l'heure ",
+            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
+            "Heure du premier arrivé chez les prestataires",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "B"
+        },
+        {
+          "id": 12,
+          "manche": 2,
+          "type": "QCM",
+          "question": "2H30",
+          "choix": [
+            "Temps moyen d'une réunion RS en coprod",
+            "Temps moyen d'une comop Assistance métiers CR",
+            "Temps d'attente maximale d'un client",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "A"
+        },
+        {
+          "id": 13,
+          "manche": 2,
+          "type": "QCM",
+          "question": "3",
+          "choix": [
+            "Durée moyenne du soutien CR par jour",
+            "Temps de tél minimum par cc journaliers temps plein",
+            "Temps de la Pause maximum du midi",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "B"
+        },
+        {
+          "id": 10,
+          "manche": 2,
+          "type": "QCM",
+          "question": "7h du matin",
+          "choix": [
+            "Heure à laquelle le premier conseiller interne arrive ",
+            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
+            "Heure du premier arrivé chez les prestataires",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "B"
+        },
+        {
+          "id": 11,
+          "manche": 2,
+          "type": "QCM",
+          "question": "40",
+          "choix": [
+            "Nombre de page ouverture par un conseillers pour traiter un dossier ",
+            "Nombre de bugs Informatiques par jour ",
+            "Nombre d'indicateurs qu'un RE doit suivre par conseillers depuis ses PBI",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "C"
+        },
+        {
+          "manche": 5,
+          "type": "Libre",
+          "question": "Je mange des pâtes",
+          "reponseReference": "Arsène",
+          "id": 29
+        }
+      ],
+      "currentQuestionIndex": 1,
+      "responses": {
+        "gHTBLIj0eurgGg2DAAAL": {
+          "answer": "B",
+          "time": 3937,
+          "validated": true,
+          "points": 2
+        },
+        "2We7FuLzL8kYTD-eAAAN": {
+          "answer": "B",
+          "time": 6236,
+          "validated": true,
+          "points": 0
+        },
+        "72lUMhX0-EVpf7FhAAAR": {
+          "answer": "B",
+          "time": 8416,
+          "validated": true,
+          "points": 0
+        }
+      },
+      "questionStartTime": 1763583069749,
+      "questionsHistory": [
+        {
+          "questionIndex": 0,
+          "question": {
+            "id": 14,
+            "manche": 2,
+            "type": "QCM",
+            "question": "4",
+            "choix": [
+              "Nombre de personne qui travaille à l'assistance métier RC",
+              "Le nombre de faq rce intégré dans mayday",
+              "le nombre de minutes qu'un pc met à s'ouvrir le matin en moyenne",
+              "Aucune des réponses"
+            ],
+            "bonneReponse": "A"
+          },
+          "responses": {
+            "gHTBLIj0eurgGg2DAAAL": {
+              "answer": "B",
+              "time": 8333,
+              "validated": false,
+              "points": 0
+            },
+            "2We7FuLzL8kYTD-eAAAN": {
+              "answer": "C",
+              "time": 11114,
+              "validated": false,
+              "points": 0
+            },
+            "72lUMhX0-EVpf7FhAAAR": {
+              "answer": "A",
+              "time": 13214,
+              "validated": true,
+              "points": 2
+            }
+          },
+          "timestamp": 1763583064907
+        },
+        {
+          "questionIndex": 1,
+          "question": {
+            "id": 9,
+            "manche": 2,
+            "type": "QCM",
+            "question": "3",
+            "choix": [
+              "Nombre appels client pris à l'heure ",
+              "Heure du premier SMS  reçu par une RE en cas d'imprévu",
+              "Heure du premier arrivé chez les prestataires",
+              "Aucune des réponses"
+            ],
+            "bonneReponse": "B"
+          },
+          "responses": {
+            "gHTBLIj0eurgGg2DAAAL": {
+              "answer": "B",
+              "time": 3937,
+              "validated": true,
+              "points": 2
+            },
+            "2We7FuLzL8kYTD-eAAAN": {
+              "answer": "B",
+              "time": 6236,
+              "validated": true,
+              "points": 0
+            },
+            "72lUMhX0-EVpf7FhAAAR": {
+              "answer": "B",
+              "time": 8416,
+              "validated": true,
+              "points": 0
+            }
+          },
+          "timestamp": 1763583094546
+        }
+      ]
+    },
+    "5073": {
+      "gameCode": "5073",
+      "host": "mMsFQLSvE9jqcGKRAAAB",
+      "players": {},
+      "status": "waiting",
+      "selectedQuestions": [
+        {
+          "id": 9,
+          "manche": 2,
+          "type": "QCM",
+          "question": "3",
+          "choix": [
+            "Nombre appels client pris à l'heure ",
+            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
+            "Heure du premier arrivé chez les prestataires",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "B"
+        },
+        {
+          "id": 10,
+          "manche": 2,
+          "type": "QCM",
+          "question": "7h du matin",
+          "choix": [
+            "Heure à laquelle le premier conseiller interne arrive ",
+            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
+            "Heure du premier arrivé chez les prestataires",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "B"
+        },
+        {
+          "id": 11,
+          "manche": 2,
+          "type": "QCM",
+          "question": "40",
+          "choix": [
+            "Nombre de page ouverture par un conseillers pour traiter un dossier ",
+            "Nombre de bugs Informatiques par jour ",
+            "Nombre d'indicateurs qu'un RE doit suivre par conseillers depuis ses PBI",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "C"
+        },
+        {
+          "id": 12,
+          "manche": 2,
+          "type": "QCM",
+          "question": "2H30",
+          "choix": [
+            "Temps moyen d'une réunion RS en coprod",
+            "Temps moyen d'une comop Assistance métiers CR",
+            "Temps d'attente maximale d'un client",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "A"
+        },
+        {
+          "id": 13,
+          "manche": 2,
+          "type": "QCM",
+          "question": "3",
+          "choix": [
+            "Durée moyenne du soutien CR par jour",
+            "Temps de tél minimum par cc journaliers temps plein",
+            "Temps de la Pause maximum du midi",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "B"
+        },
+        {
+          "id": 14,
+          "manche": 2,
+          "type": "QCM",
+          "question": "4",
+          "choix": [
+            "Nombre de personne qui travaille à l'assistance métier RC",
+            "Le nombre de faq rce intégré dans mayday",
+            "le nombre de minutes qu'un pc met à s'ouvrir le matin en moyenne",
+            "Aucune des réponses"
+          ],
+          "bonneReponse": "A"
+        }
+      ],
+      "currentQuestionIndex": 0,
+      "responses": {},
+      "questionStartTime": null,
+      "questionsHistory": []
+    }
+  }
+}

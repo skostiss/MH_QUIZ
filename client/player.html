@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joueur - Malakoff Quiz</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ÉCRAN 1 : Connexion -->
+        <div id="joinScreen" class="screen active">
+            <h1>Rejoindre une partie</h1>
+            
+            <form id="joinForm" class="join-form">
+                <div class="form-group">
+                    <label for="playerName">Votre prénom</label>
+                    <input type="text" id="playerName" placeholder="Ex: Alice" required autocomplete="off">
+                </div>
+                
+                <div class="form-group">
+                    <label for="gameCode">Code de la partie</label>
+                    <input type="text" id="gameCode" placeholder="4 chiffres" maxlength="4" pattern="[0-9]{4}" required autocomplete="off">
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Rejoindre</button>
+                
+                <div id="joinError" class="error-message" style="display:none;">
+                    <!-- Message d'erreur -->
+                </div>
+            </form>
+        </div>
+
+        <!-- ÉCRAN 2 : Salle d'attente -->
+        <div id="waitingScreen" class="screen">
+            <h1>✓ Vous êtes dans la partie !</h1>
+            <p>En attente du lancement par le maître du jeu...</p>
+            
+            <div class="waiting-info">
+                <div class="player-name-display">
+                    <strong id="displayPlayerName">-</strong>
+                </div>
+                <div class="players-count">
+                    <p><span id="waitingPlayersCount">1</span> joueur(s) connecté(s)</p>
+                </div>
+            </div>
+            
+            <div id="waitingPlayersList" class="players-waiting-list">
+                <!-- Liste des joueurs -->
+            </div>
+        </div>
+
+        <!-- ÉCRAN 3 : Question -->
+        <div id="questionScreen" class="screen">
+            <div class="question-header">
+                <span>Question <span id="questionNumber">1</span>/<span id="totalQuestions">10</span></span>
+                <span class="timer">⏱️ <span id="timer">20</span>s</span>
+            </div>
+            
+            <!-- Affichage de la manche -->
+            <div id="mancheDisplayPlayer" class="manche-display" style="display:none;">
+                <span class="manche-icon">🎯</span>
+                <span class="manche-name">Manche: <strong id="mancheNamePlayer">-</strong></span>
+            </div>
+            
+            <div class="question-content">
+                <h2 id="questionText">Question...</h2>
+                
+                <!-- Pour QCM -->
+                <div id="qcmAnswers" class="answer-choices" style="display:none;">
+                    <!-- Chargé dynamiquement -->
+                </div>
+                
+                <!-- Pour Vrai/Faux -->
+                <div id="vraiFauxAnswers" class="answer-choices" style="display:none;">
+                    <!-- Chargé dynamiquement -->
+                </div>
+                
+                <!-- Pour Réponse libre -->
+                <div id="libreAnswer" class="answer-input" style="display:none;">
+                    <input type="text" id="freeAnswerInput" placeholder="Votre réponse..." autocomplete="off">
+                    <button id="submitFreeAnswer" class="btn btn-primary">Envoyer</button>
+                </div>
+                
+                <!-- Feedback après envoi -->
+                <div id="answerFeedback" class="answer-feedback" style="display:none;">
+                    <p>✓ Réponse envoyée !</p>
+                    <p class="wait-message">En attente des autres joueurs...</p>
+                </div>
+
+                <!-- Réponses des adversaires -->
+                <div id="opponentsAnswers" class="opponents-answers" style="display:none;">
+                    <h3>Réponses des autres joueurs :</h3>
+                    <div id="opponentsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ÉCRAN 4 : Résultat de la question -->
+        <div id="resultScreen" class="screen">
+            <div id="resultContent" class="result-content">
+                <!-- Chargé dynamiquement -->
+            </div>
+        </div>
+
+        <!-- ÉCRAN 5 : Classement -->
+        <div id="leaderboardScreen" class="screen">
+            <h1>Classement</h1>
+            
+            <div id="leaderboardContent" class="leaderboard">
+                <!-- Chargé dynamiquement -->
+            </div>
+            
+            <div id="playerRank" class="player-rank-highlight">
+                <!-- Position du joueur -->
+            </div>
+            
+            <p class="wait-message">Prochaine question dans quelques secondes...</p>
+        </div>
+
+        <!-- ÉCRAN 6 : Fin de partie -->
+        <div id="finishedScreen" class="screen">
+            <h1 id="finalTitle">🏆 Partie terminée !</h1>
+            
+            <div id="finalRank" class="final-rank">
+                <!-- Position finale -->
+            </div>
+            
+            <div id="finalLeaderboard" class="leaderboard">
+                <!-- Classement final -->
+            </div>
+            
+            <div class="final-message">
+                <p>Merci d'avoir participé !</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/player.js"></script>
+</body>
+</html>

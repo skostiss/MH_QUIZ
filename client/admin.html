@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Malakoff Quiz</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #f5f7fa; }
+        .admin-container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .admin-header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; text-align: center; }
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #e0e0e0; }
+        .admin-tab { padding: 15px 30px; background: white; border: none; cursor: pointer; font-size: 16px; font-weight: 600; color: #666; border-radius: 8px 8px 0 0; transition: all 0.3s; }
+        .admin-tab.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .admin-section { display: none; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .admin-section.active { display: block; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 10px; text-align: center; }
+        .stat-card h3 { font-size: 48px; margin: 0; }
+        .stat-card p { margin: 10px 0 0 0; opacity: 0.9; }
+        .question-item { background: #f8f9fa; padding: 20px; margin-bottom: 15px; border-radius: 8px; border-left: 4px solid #667eea; }
+        .question-item-header { display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px; }
+        .question-type-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600; background: #667eea; color: white; margin-bottom: 10px; }
+        .question-actions { display: flex; gap: 10px; }
+        .btn-icon { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: all 0.3s; }
+        .btn-edit { background: #4CAF50; color: white; }
+        .btn-delete { background: #f44336; color: white; }
+        .btn-icon:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 5px; font-size: 16px; box-sizing: border-box; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #667eea; }
+        .choices-container { display: none; gap: 10px; flex-direction: column; margin-top: 15px; }
+        .choices-container.active { display: flex; }
+        .choice-input-group { display: flex; align-items: center; gap: 10px; }
+        .choice-input-group input[type="radio"] { width: auto; margin: 0; }
+        .choice-input-group label { margin: 0; font-weight: normal; min-width: 20px; }
+        .choice-input-group input[type="text"] { flex: 1; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3); }
+        .btn-secondary { background: #6c757d; color: white; padding: 15px 30px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; margin-left: 10px; }
+        .alert { padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; padding: 30px; border-radius: 10px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: #666; }
+        .export-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+        /* Drag & Drop */
+        .question-item { cursor: default; position: relative; }
+        .question-item.dragging { opacity: 0.5; }
+        .question-item.drag-over { border-top: 3px solid #667eea; }
+        .question-item.selected { background: #e3f2fd; border-left-color: #2196F3; }
+        .drag-handle { cursor: grab; font-size: 20px; color: #999; margin-right: 10px; user-select: none; }
+        .drag-handle:active { cursor: grabbing; }
+        .question-item-content { display: flex; align-items: start; gap: 10px; }
+        .question-order { font-weight: bold; color: #667eea; min-width: 30px; }
+        .question-checkbox { width: 20px; height: 20px; cursor: pointer; }
+        .bulk-actions { margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; display: none; align-items: center; gap: 15px; }
+        .bulk-actions.active { display: flex; }
+        .bulk-actions-text { font-weight: 600; color: #333; }
+        .reorder-buttons { display: flex; flex-direction: column; gap: 5px; }
+        .btn-reorder { padding: 4px 8px; border: none; border-radius: 3px; cursor: pointer; font-size: 16px; background: #e0e0e0; color: #333; transition: all 0.2s; }
+        .btn-reorder:hover { background: #667eea; color: white; transform: scale(1.1); }
+        .btn-reorder:disabled { opacity: 0.3; cursor: not-allowed; }
+        .select-all-container { margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .select-all-container label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; }
+        /* Manches */
+        .manche-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+        .manche-filter { padding: 10px 20px; border: 2px solid #e0e0e0; border-radius: 8px; background: white; cursor: pointer; font-weight: 600; color: #666; transition: all 0.3s; }
+        .manche-filter:hover { border-color: #667eea; color: #667eea; }
+        .manche-filter.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
+        .manche-section { margin-bottom: 30px; }
+        .manche-title { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 15px; font-size: 20px; }
+        .manche-count { font-weight: normal; opacity: 0.9; font-size: 16px; }
+        .manche-questions { padding-left: 20px; }
+        .manche-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: #e3f2fd; color: #0d47a1; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>⚙️ Administration du Quiz</h1>
+            <p>Gérez vos questions facilement</p>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="admin-tab active" onclick="switchTab('dashboard')">📊 Tableau de bord</button>
+            <button class="admin-tab" onclick="switchTab('list')">📋 Liste des questions</button>
+            <button class="admin-tab" onclick="switchTab('add')">➕ Ajouter une question</button>
+            <button class="admin-tab" onclick="switchTab('import')">📥 Import/Export</button>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- TABLEAU DE BORD -->
+        <div id="dashboard" class="admin-section active">
+            <h2>Statistiques globales</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><h3 id="totalQuestions">0</h3><p>Questions totales</p></div>
+                <div class="stat-card"><h3 id="qcmCount">0</h3><p>Questions QCM</p></div>
+                <div class="stat-card"><h3 id="vraiFauxCount">0</h3><p>Questions Vrai/Faux</p></div>
+                <div class="stat-card"><h3 id="libreCount">0</h3><p>Questions libres</p></div>
+            </div>
+            
+            <h2 style="margin-top: 40px;">Statistiques par manche</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><h3 id="manche1Count">0</h3><p>🎯 Sel ou poivre</p></div>
+                <div class="stat-card"><h3 id="manche2Count">0</h3><p>🎯 Le juste chiffre</p></div>
+                <div class="stat-card"><h3 id="manche3Count">0</h3><p>🎯 Vrai ou faux Express</p></div>
+                <div class="stat-card"><h3 id="manche4Count">0</h3><p>🎯 Le menu</p></div>
+                <div class="stat-card"><h3 id="manche5Count">0</h3><p>🎯 Qui suis-je ?</p></div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="/" class="btn-primary">🎮 Retour à l'accueil</a>
+            </div>
+        </div>
+
+        <!-- LISTE DES QUESTIONS -->
+        <div id="list" class="admin-section">
+            <h2>Liste des questions</h2>
+            
+            <!-- Filtres par manche -->
+            <div id="mancheFilters" class="manche-filters"></div>
+            
+            <!-- Actions groupées -->
+            <div id="bulkActions" class="bulk-actions">
+                <span class="bulk-actions-text"><span id="selectedCount">0</span> question(s) sélectionnée(s)</span>
+                <button class="btn-icon btn-delete" onclick="deleteSelected()">🗑️ Supprimer la sélection</button>
+                <button class="btn-secondary" onclick="clearSelection()">Annuler</button>
+            </div>
+            
+            <!-- Sélectionner tout -->
+            <div class="select-all-container">
+                <label>
+                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                    <span>Sélectionner toutes les questions</span>
+                </label>
+            </div>
+
+            <!-- Sélectionner par manche -->
+            <div id="mancheSelectionContainer" class="select-all-container" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+            
+            <div id="questionsList" class="questions-list"></div>
+        </div>
+
+        <!-- AJOUTER UNE QUESTION -->
+        <div id="add" class="admin-section">
+            <h2>Ajouter une nouvelle question</h2>
+            <form id="addQuestionForm" onsubmit="addQuestion(event)">
+                <div class="form-group">
+                    <label for="questionManche">Manche *</label>
+                    <select id="questionManche" required>
+                        <option value="">Sélectionnez une manche</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="questionType">Type de question *</label>
+                    <select id="questionType" required onchange="toggleFields('add')">
+                        <option value="">Sélectionnez un type</option>
+                        <option value="QCM">QCM (4 choix)</option>
+                        <option value="VraiFaux">Vrai/Faux</option>
+                        <option value="Libre">Réponse libre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="questionText">Question *</label>
+                    <textarea id="questionText" rows="3" required placeholder="Entrez votre question..."></textarea>
+                </div>
+                <!-- QCM -->
+                <div id="addQcmFields" class="choices-container">
+                    <label>Choix de réponses * (Cochez la bonne réponse)</label>
+                    <div class="choice-input-group"><input type="radio" name="correctAnswer" value="A"><label>A:</label><input type="text" id="choixA" placeholder="Choix A"></div>
+                    <div class="choice-input-group"><input type="radio" name="correctAnswer" value="B"><label>B:</label><input type="text" id="choixB" placeholder="Choix B"></div>
+                    <div class="choice-input-group"><input type="radio" name="correctAnswer" value="C"><label>C:</label><input type="text" id="choixC" placeholder="Choix C"></div>
+                    <div class="choice-input-group"><input type="radio" name="correctAnswer" value="D"><label>D:</label><input type="text" id="choixD" placeholder="Choix D"></div>
+                </div>
+                <!-- Vrai/Faux -->
+                <div id="addVraiFauxFields" class="choices-container">
+                    <label>Bonne réponse *</label>
+                    <div class="choice-input-group"><input type="radio" name="vraiFauxAnswer" value="Vrai"> Vrai</div>
+                    <div class="choice-input-group"><input type="radio" name="vraiFauxAnswer" value="Faux"> Faux</div>
+                </div>
+                <!-- Réponse libre -->
+                <div id="addLibreFields" class="choices-container">
+                    <div class="form-group">
+                        <label for="reponseReference">Réponse de référence *</label>
+                        <input type="text" id="reponseReference" placeholder="Réponse attendue">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">✅ Ajouter la question</button>
+                <button type="reset" class="btn-secondary">🔄 Réinitialiser</button>
+            </form>
+        </div>
+
+        <!-- IMPORT/EXPORT -->
+        <div id="import" class="admin-section">
+            <h2>Import / Export</h2>
+            <h3>📤 Exporter les questions</h3>
+            <div class="export-buttons">
+                <button class="btn-primary" onclick="exportJSON()">📄 Export JSON</button>
+                <button class="btn-primary" onclick="exportCSV()">📊 Export CSV</button>
+            </div>
+            <hr style="margin: 40px 0;">
+            <h3>📥 Importer des questions</h3>
+            <p>Importez des questions depuis un fichier JSON :</p>
+            <div class="form-group">
+                <input type="file" id="importFile" accept=".json">
+                <button class="btn-primary" onclick="importJSON()" style="margin-top: 10px;">📥 Importer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal d'édition -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Modifier la question</h2>
+                <button class="modal-close" onclick="closeEditModal()">×</button>
+            </div>
+            <form id="editQuestionForm" onsubmit="saveEdit(event)">
+                <input type="hidden" id="editQuestionId">
+                <div class="alert" style="background: #e3f2fd; color: #0d47a1; border: 1px solid #90caf9;">
+                    <strong id="editMancheInfo">Manche: -</strong>
+                    <p style="margin: 5px 0 0 0; font-size: 14px;">La manche est déterminée automatiquement par l'ID de la question</p>
+                </div>
+                <div class="form-group">
+                    <label for="editQuestionType">Type de question</label>
+                    <select id="editQuestionType" required onchange="toggleFields('edit')">
+                        <option value="QCM">QCM (4 choix)</option>
+                        <option value="VraiFaux">Vrai/Faux</option>
+                        <option value="Libre">Réponse libre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="editQuestionText">Question</label>
+                    <textarea id="editQuestionText" rows="3" required></textarea>
+                </div>
+                <!-- QCM -->
+                <div id="editQcmFields" class="choices-container">
+                    <label>Choix de réponses</label>
+                    <div class="choice-input-group"><input type="radio" name="editCorrectAnswer" value="A"><label>A:</label><input type="text" id="editChoixA"></div>
+                    <div class="choice-input-group"><input type="radio" name="editCorrectAnswer" value="B"><label>B:</label><input type="text" id="editChoixB"></div>
+                    <div class="choice-input-group"><input type="radio" name="editCorrectAnswer" value="C"><label>C:</label><input type="text" id="editChoixC"></div>
+                    <div class="choice-input-group"><input type="radio" name="editCorrectAnswer" value="D"><label>D:</label><input type="text" id="editChoixD"></div>
+                </div>
+                <!-- Vrai/Faux -->
+                <div id="editVraiFauxFields" class="choices-container">
+                    <label>Bonne réponse</label>
+                    <div class="choice-input-group"><input type="radio" name="editVraiFauxAnswer" value="Vrai"> Vrai</div>
+                    <div class="choice-input-group"><input type="radio" name="editVraiFauxAnswer" value="Faux"> Faux</div>
+                </div>
+                <!-- Réponse libre -->
+                <div id="editLibreFields" class="choices-container">
+                    <div class="form-group">
+                        <label for="editReponseReference">Réponse de référence</label>
+                        <input type="text" id="editReponseReference">
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary">💾 Sauvegarder</button>
+                <button type="button" class="btn-secondary" onclick="closeEditModal()">❌ Annuler</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
