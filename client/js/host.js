@@ -51,46 +51,17 @@ async function loadManches() {
         manches = await response.json();
         console.log('Manches chargées:', manches);
         // Afficher le contrôle d'ordre des manches
+        // Afficher le contrôle d'ordre des manches (qui sert aussi de filtre)
         displayMancheOrderControl();
-        // Ne pas afficher les filtres ici, attendre que les questions soient chargées
     } catch (error) {
         console.error('Erreur chargement manches:', error);
     }
 }
 
-function displayMancheFilters() {
-    const container = document.getElementById('mancheFiltersHost');
-    if (!container) return;
-
-    // Calculer le total sélectionné
-    const totalSelected = persistentSelections.size;
-    const totalQuestions = allQuestions.length;
-
-    let html = `
-        <button class="manche-filter-btn ${currentMancheFilter === 'all' ? 'active' : ''}" onclick="filterByManche('all')">
-            📚 Toutes les questions (${totalSelected}/${totalQuestions})
-        </button>
-    `;
-
-    Object.values(manches).forEach(manche => {
-        const mancheQuestions = allQuestions.filter(q => q.manche === manche.id);
-        const totalInManche = mancheQuestions.length;
-        const selectedInManche = mancheQuestions.filter(q => persistentSelections.has(q.id)).length;
-
-        html += `
-            <button class="manche-filter-btn ${currentMancheFilter === manche.id ? 'active' : ''}"
-                    onclick="filterByManche(${manche.id})">
-                🎯 ${manche.nom} (${selectedInManche}/${totalInManche})
-            </button>
-        `;
-    });
-
-    container.innerHTML = html;
-}
-
 function filterByManche(mancheId) {
     currentMancheFilter = mancheId;
-    displayMancheFilters();
+    // Rafraîchir l'affichage pour mettre à jour la classe active
+    displayMancheOrderControl();
     displayQuestionsSelection();
 }
 
@@ -102,8 +73,8 @@ async function loadQuestions() {
     try {
         const response = await fetch('/api/questions');
         allQuestions = await response.json();
-        // Maintenant que les questions sont chargées, afficher les filtres puis les questions
-        displayMancheFilters();
+        // Maintenant que les questions sont chargées, afficher le contrôle (qui sert de filtre)
+        displayMancheOrderControl();
         displayQuestionsSelection();
     } catch (error) {
         console.error('Erreur chargement questions:', error);
@@ -206,8 +177,8 @@ function updateMancheCounts() {
         countElement.textContent = `(${selectedInManche}/${totalInManche} questions)`;
     });
 
-    // Mettre à jour aussi les filtres de manche en haut
-    displayMancheFilters();
+    // Mettre à jour aussi les filtres (ordre des manches)
+    displayMancheOrderControl();
 }
 
 // Fonction pour tout sélectionner/désélectionner
@@ -302,28 +273,51 @@ function displayMancheOrderControl() {
     const container = document.getElementById('mancheOrderControl');
     if (!container) return;
 
-    container.innerHTML = `
-        <h3>📋 Ordre des manches</h3>
-        <p>Glissez-déposez les manches pour modifier l'ordre, ou utilisez les flèches</p>
-        <div class="manche-order-list">
-            ${mancheOrder.map((mancheId, index) => {
-                const manche = manches[mancheId];
-                if (!manche) return '';
+    // Calculer les totaux pour "Toutes les questions"
+    const totalSelected = persistentSelections.size;
+    const totalQuestions = allQuestions.length;
 
-                return `
-                    <div class="manche-order-item" draggable="true" data-index="${index}">
-                        <span class="drag-handle">☰</span>
-                        <span class="manche-order-number">${index + 1}.</span>
-                        <span class="manche-order-label">${manche.nom}</span>
-                        <div class="manche-order-controls">
-                            <button class="manche-order-btn" onclick="moveMancheUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
-                            <button class="manche-order-btn" onclick="moveMancheDown(${index})" ${index === mancheOrder.length - 1 ? 'disabled' : ''}>↓</button>
-                        </div>
-                    </div>
-                `;
-            }).join('')}
-        </div>
+    let html = `
+        <h3>📋 Ordre des manches & Filtres</h3>
+        <p>Cliquez pour filtrer, glissez pour réorganiser.</p>
+        <div class="manche-order-list">
+            <!-- Item statique pour "Toutes les questions" -->
+            <div class="manche-order-item static-item ${currentMancheFilter === 'all' ? 'active' : ''}" 
+                 onclick="filterByManche('all')">
+                <span class="manche-order-number">📚</span>
+                <span class="manche-order-label">Toutes les questions</span>
+                <span class="manche-count-badge">${totalSelected}/${totalQuestions}</span>
+            </div>
     `;
+
+    html += mancheOrder.map((mancheId, index) => {
+        const manche = manches[mancheId];
+        if (!manche) return '';
+
+        // Calculer les totaux pour cette manche
+        const mancheQuestions = allQuestions.filter(q => q.manche === manche.id);
+        const totalInManche = mancheQuestions.length;
+        const selectedInManche = mancheQuestions.filter(q => persistentSelections.has(q.id)).length;
+
+        return `
+            <div class="manche-order-item ${currentMancheFilter === manche.id ? 'active' : ''}" 
+                 draggable="true" 
+                 data-index="${index}"
+                 onclick="filterByManche(${manche.id})">
+                <span class="drag-handle" onclick="event.stopPropagation()">☰</span>
+                <span class="manche-order-number">${index + 1}.</span>
+                <span class="manche-order-label">${manche.nom}</span>
+                <span class="manche-count-badge">${selectedInManche}/${totalInManche}</span>
+                <div class="manche-order-controls" onclick="event.stopPropagation()">
+                    <button class="manche-order-btn" onclick="moveMancheUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+                    <button class="manche-order-btn" onclick="moveMancheDown(${index})" ${index === mancheOrder.length - 1 ? 'disabled' : ''}>↓</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    html += `</div>`;
+    container.innerHTML = html;
 
     // Initialiser le glisser-déposer après le rendu
     initMancheDragAndDrop();

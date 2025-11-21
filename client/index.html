@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malakoff Quiz - Accueil</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
+
 <body>
     <div class="container">
         <div class="welcome-screen">
-            <h1>MALAKOFF QUIZ</h1>
-            <p class="subtitle">Quiz interactif en temps réel</p>
-            
-            <div class="role-selection">
-                <a href="/host" class="role-button host-button">
-                    <span class="icon">🎯</span>
+            <h1>MH QUIZ</h1>
+
+            <div class="role-cards">
+                <a href="/host" class="role-card host-button">
+                    <i class="ph ph-target role-icon"></i>
                     <h2>Maître du jeu</h2>
                     <p>Créer et animer une partie</p>
                 </a>
-                
-                <a href="/player" class="role-button player-button">
-                    <span class="icon">👤</span>
+
+                <a href="/player" class="role-card player-button">
+                    <i class="ph ph-user role-icon"></i>
                     <h2>Joueur</h2>
                     <p>Rejoindre une partie</p>
                 </a>
             </div>
-            
-            <footer class="app-footer">
+
+            <footer class="app-footer" style="text-align: center;">
                 <p>Développé par KraftCut pour Malakoff Humanis</p>
-                <p style="margin-top: 10px;"><a href="/admin" style="color: #667eea; text-decoration: none; font-size: 14px;">⚙️ Administration</a></p>
+                <p style="margin-top: 10px;"><a href="/admin"
+                        style="color: #667eea; text-decoration: none; font-size: 14px;"><i class="ph ph-gear"></i>
+                        Administration</a></p>
             </footer>
         </div>
     </div>
 </body>
+
 </html>

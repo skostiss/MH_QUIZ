@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maître du Jeu - Malakoff Quiz</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
+
 <body>
     <!-- Panneau d'informations permanent (code partie + joueurs) -->
     <aside id="gameInfoPanel" class="game-info-panel" style="display: none;">
@@ -32,22 +37,20 @@
                 <!-- Chargé dynamiquement par displayMancheOrderControl() -->
             </div>
 
-            <!-- Filtres par manche -->
-            <div id="mancheFiltersHost" class="manche-filters-host">
-                <!-- Chargé dynamiquement -->
-            </div>
-            
+            <!-- Filtres par manche (Intégré dans l'ordre des manches) -->
+
             <div class="select-all-container">
                 <input type="checkbox" id="selectAllCheckbox">
                 <label for="selectAllCheckbox"><strong>Tout sélectionner</strong></label>
             </div>
-            
+
             <div id="questionsSelection" class="questions-list">
                 <!-- Chargé dynamiquement via JS -->
             </div>
 
             <button id="createGameBtn" class="btn btn-primary">Créer la partie</button>
-            <button id="restoreGameBtn" class="btn btn-secondary" style="margin-top: 15px;">🔄 Reprendre une partie</button>
+            <button id="restoreGameBtn" class="btn btn-secondary" style="margin-top: 15px;"><i
+                    class="ph ph-arrows-clockwise"></i> Reprendre une partie</button>
         </div>
 
         <!-- ÉCRAN 2 : Salle d'attente -->
@@ -57,14 +60,14 @@
                 <div id="gameCode" class="code">----</div>
                 <p>Communiquez ce code aux joueurs</p>
             </div>
-            
+
             <div class="players-waiting">
                 <h3>Joueurs connectés (<span id="playerCount">0</span>)</h3>
                 <div id="playersList" class="players-list">
                     <p class="empty-state">En attente des joueurs...</p>
                 </div>
             </div>
-            
+
             <button id="startGameBtn" class="btn btn-primary" disabled>Lancer la partie</button>
         </div>
 
@@ -74,45 +77,48 @@
                 <div class="game-info">
                     <span>Code: <strong id="currentGameCode">----</strong></span>
                     <span>Question <span id="questionNumber">1</span>/<span id="totalQuestions">10</span></span>
-                    <span>⏱️ <span id="timer">20</span>s</span>
+                    <span><i class="ph ph-clock"></i> <span id="timer">20</span>s</span>
                 </div>
             </div>
-            
+
             <!-- Affichage de la manche -->
             <div id="mancheDisplay" class="manche-display" style="display:none;">
-                <span class="manche-icon">🎯</span>
+                <span class="manche-icon"><i class="ph ph-target"></i></span>
                 <span class="manche-name">Manche: <strong id="mancheName">-</strong></span>
             </div>
-            
+
             <div class="question-display">
                 <h2 id="questionText">Question...</h2>
-                
+
                 <!-- Pour QCM -->
                 <div id="qcmChoices" class="choices" style="display:none;">
                     <!-- Chargé dynamiquement -->
                 </div>
-                
+
                 <!-- Pour Vrai/Faux -->
                 <div id="vraiFauxChoices" class="choices" style="display:none;">
                     <!-- Chargé dynamiquement -->
                 </div>
-                
+
                 <!-- Réponse correcte (visible uniquement pour le maître) -->
                 <div id="correctAnswer" class="correct-answer">
                     Bonne réponse : <strong id="correctAnswerText">-</strong>
                 </div>
             </div>
-            
+
             <div class="responses-section">
                 <h3>Réponses des joueurs (<span id="responsesCount">0</span>/<span id="totalPlayersCount">0</span>)</h3>
                 <div id="responsesList" class="responses-list">
                     <!-- Chargé dynamiquement -->
                 </div>
             </div>
-            
-            <button id="revealResultsBtn" class="btn btn-success" style="display:none;">🎭 Révéler les résultats</button>
-            <button id="showLeaderboardBtn" class="btn btn-primary" style="display:none; margin-top: 10px;">📊 Afficher le classement</button>
-            <button id="endGameBtnQuestion" class="btn btn-danger" style="margin-top: 10px;">⏹️ Terminer la partie</button>
+
+            <button id="revealResultsBtn" class="btn btn-success" style="display:none;"><i class="ph ph-mask-happy"></i>
+                Révéler les résultats</button>
+            <button id="showLeaderboardBtn" class="btn btn-primary" style="display:none; margin-top: 10px;"><i
+                    class="ph ph-chart-bar"></i> Afficher le classement</button>
+            <button id="endGameBtnQuestion" class="btn btn-danger" style="margin-top: 10px;"><i
+                    class="ph ph-stop-circle"></i> Terminer la partie</button>
         </div>
 
         <!-- ÉCRAN 4 : Classement -->
@@ -124,13 +130,15 @@
 
             <button id="nextQuestionBtn" class="btn btn-primary">Question suivante</button>
             <button id="finishGameBtn" class="btn btn-secondary" style="display:none;">Terminer la partie</button>
-            <button id="viewHistoryBtn" class="btn btn-secondary">📋 Voir l'historique</button>
-            <button id="endGameBtnLeaderboard" class="btn btn-danger" style="margin-top: 10px;">⏹️ Terminer la partie</button>
+            <button id="viewHistoryBtn" class="btn btn-secondary"><i class="ph ph-clipboard-text"></i> Voir
+                l'historique</button>
+            <button id="endGameBtnLeaderboard" class="btn btn-danger" style="margin-top: 10px;"><i
+                    class="ph ph-stop-circle"></i> Terminer la partie</button>
         </div>
 
         <!-- ÉCRAN 5 : Fin de partie -->
         <div id="finishedScreen" class="screen">
-            <h1>🏆 Partie terminée !</h1>
+            <h1><i class="ph ph-trophy"></i> Partie terminée !</h1>
             <div id="finalLeaderboard" class="leaderboard">
                 <!-- Chargé dynamiquement -->
             </div>
@@ -143,7 +151,7 @@
 
         <!-- ÉCRAN 6 : Historique des questions -->
         <div id="historyScreen" class="screen">
-            <h1>📋 Historique des questions</h1>
+            <h1><i class="ph ph-clipboard-text"></i> Historique des questions</h1>
 
             <div class="history-header">
                 <button id="backFromHistory" class="btn btn-secondary">← Retour</button>
@@ -190,4 +198,5 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="js/host.js"></script>
 </body>
+
 </html>
