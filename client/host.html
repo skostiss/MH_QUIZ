@@ -29,28 +29,35 @@
     <div class="container">
         <!-- ÉCRAN 1 : Configuration de la partie -->
         <div id="setupScreen" class="screen active">
-            <h1>Configuration de la partie</h1>
+            <div class="setup-header">
+                <h1>Configuration de la partie</h1>
+                <button id="restoreGameBtn" class="btn btn-secondary btn-sm"><i class="ph ph-arrows-clockwise"></i>
+                    Reprendre une partie</button>
+            </div>
             <p>Sélectionnez les questions pour votre quiz</p>
 
-            <!-- Ordre des manches -->
-            <div id="mancheOrderControl" class="manche-order-container">
-                <!-- Chargé dynamiquement par displayMancheOrderControl() -->
+            <div class="setup-layout">
+                <!-- COLONNE GAUCHE : Ordre des manches -->
+                <div class="setup-column-left">
+                    <div id="mancheOrderControl" class="manche-order-container">
+                        <!-- Chargé dynamiquement par displayMancheOrderControl() -->
+                    </div>
+                </div>
+
+                <!-- COLONNE DROITE : Liste des questions -->
+                <div class="setup-column-right">
+                    <div class="select-all-container">
+                        <input type="checkbox" id="selectAllCheckbox">
+                        <label for="selectAllCheckbox"><strong>Tout sélectionner</strong></label>
+                    </div>
+
+                    <div id="questionsSelection" class="questions-list">
+                        <!-- Chargé dynamiquement via JS -->
+                    </div>
+                </div>
             </div>
 
-            <!-- Filtres par manche (Intégré dans l'ordre des manches) -->
-
-            <div class="select-all-container">
-                <input type="checkbox" id="selectAllCheckbox">
-                <label for="selectAllCheckbox"><strong>Tout sélectionner</strong></label>
-            </div>
-
-            <div id="questionsSelection" class="questions-list">
-                <!-- Chargé dynamiquement via JS -->
-            </div>
-
-            <button id="createGameBtn" class="btn btn-primary">Créer la partie</button>
-            <button id="restoreGameBtn" class="btn btn-secondary" style="margin-top: 15px;"><i
-                    class="ph ph-arrows-clockwise"></i> Reprendre une partie</button>
+            <button id="createGameBtn" class="btn btn-primary" style="margin-top: 20px;">Créer la partie</button>
         </div>
 
         <!-- ÉCRAN 2 : Salle d'attente -->
@@ -149,10 +156,21 @@
             </div>
         </div>
 
+        <!-- ÉCRAN 5 : Reprendre une partie -->
+        <div id="restoreScreen" class="screen">
+            <h1><i class="ph ph-arrows-clockwise"></i> Reprendre une partie</h1>
+            <div class="history-header">
+                <button id="backFromRestore" class="btn btn-secondary">← Retour</button>
+            </div>
+            <p id="restoreGameMessage">Chargement des parties actives...</p>
+            <div id="activeGamesList" class="active-games-list">
+                <!-- Liste des parties actives chargée dynamiquement -->
+            </div>
+        </div>
+
         <!-- ÉCRAN 6 : Historique des questions -->
         <div id="historyScreen" class="screen">
             <h1><i class="ph ph-clipboard-text"></i> Historique des questions</h1>
-
             <div class="history-header">
                 <button id="backFromHistory" class="btn btn-secondary">← Retour</button>
             </div>
@@ -173,22 +191,6 @@
                         <div id="modalResponsesList" class="responses-list">
                             <!-- Réponses chargées dynamiquement -->
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal pour reprendre une partie -->
-        <div id="restoreGameModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Reprendre une partie</h2>
-                    <button id="closeRestoreModal" class="btn-close">×</button>
-                </div>
-                <div class="modal-body">
-                    <p id="restoreGameMessage">Chargement des parties actives...</p>
-                    <div id="activeGamesList" class="active-games-list">
-                        <!-- Liste des parties actives chargée dynamiquement -->
                     </div>
                 </div>
             </div>

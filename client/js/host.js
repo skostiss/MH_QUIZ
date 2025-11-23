@@ -25,7 +25,8 @@ const screens = {
     question: document.getElementById('questionScreen'),
     leaderboard: document.getElementById('leaderboardScreen'),
     finished: document.getElementById('finishedScreen'),
-    history: document.getElementById('historyScreen')
+    history: document.getElementById('historyScreen'),
+    restore: document.getElementById('restoreScreen')
 };
 
 let currentHistoryQuestionIndex = null;
@@ -323,14 +324,14 @@ function displayMancheOrderControl() {
     initMancheDragAndDrop();
 }
 
-window.moveMancheUp = function(index) {
+window.moveMancheUp = function (index) {
     if (index > 0) {
         [mancheOrder[index], mancheOrder[index - 1]] = [mancheOrder[index - 1], mancheOrder[index]];
         displayMancheOrderControl();
     }
 };
 
-window.moveMancheDown = function(index) {
+window.moveMancheDown = function (index) {
     if (index < mancheOrder.length - 1) {
         [mancheOrder[index], mancheOrder[index + 1]] = [mancheOrder[index + 1], mancheOrder[index]];
         displayMancheOrderControl();
@@ -488,7 +489,8 @@ function showScreen(screenName) {
         question: document.getElementById('questionScreen'),
         leaderboard: document.getElementById('leaderboardScreen'),
         finished: document.getElementById('finishedScreen'),
-        history: document.getElementById('historyScreen')
+        history: document.getElementById('historyScreen'),
+        restore: document.getElementById('restoreScreen')
     };
 
     // Remove 'active' class from all screens
@@ -749,7 +751,7 @@ function displayQuestion(question) {
 function displayQCMChoices(question) {
     const container = document.getElementById('qcmChoices');
     const letters = ['A', 'B', 'C', 'D'];
-    
+
     container.innerHTML = question.choix.map((choix, index) => {
         const letter = letters[index];
         const isCorrect = letter === question.bonneReponse;
@@ -759,7 +761,7 @@ function displayQCMChoices(question) {
             </div>
         `;
     }).join('');
-    
+
     container.style.display = 'grid';
 }
 
@@ -784,17 +786,17 @@ function displayResponses(responses, totalPlayers) {
     const container = document.getElementById('responsesList');
     document.getElementById('responsesCount').textContent = responses.length;
     document.getElementById('totalPlayersCount').textContent = totalPlayers;
-    
+
     if (responses.length === 0) {
         container.innerHTML = '<p class="empty-state">En attente des réponses...</p>';
         return;
     }
-    
+
     container.innerHTML = responses.map(r => {
         let statusClass = 'pending';
         let statusText = '⏳ En attente';
         let actions = '';
-        
+
         if (r.validated === true) {
             statusClass = 'correct';
             statusText = `✅ Correct (+${r.points} points)`;
@@ -802,7 +804,7 @@ function displayResponses(responses, totalPlayers) {
             statusClass = 'incorrect';
             statusText = '❌ Incorrect';
         }
-        
+
         // Pour les réponses libres non validées, afficher les boutons
         if (currentQuestion.type === 'Libre' && r.validated === null) {
             actions = `
@@ -816,7 +818,7 @@ function displayResponses(responses, totalPlayers) {
                 </div>
             `;
         }
-        
+
         return `
             <div class="response-item ${statusClass}">
                 <div class="response-header">
@@ -832,7 +834,7 @@ function displayResponses(responses, totalPlayers) {
 }
 
 // Fonction globale pour la validation (appelée depuis le HTML)
-window.validateAnswer = function(playerId, isValid) {
+window.validateAnswer = function (playerId, isValid) {
     socket.emit('host:validateAnswer', { gameCode, playerId, isValid });
 };
 
@@ -911,23 +913,40 @@ socket.on('game:leaderboard', ({ leaderboard, currentQuestion, totalQuestions, i
     currentPlayers = mergedPlayers; // Sauvegarder l'état mis à jour
     updateGameInfoPanel(mergedPlayers);
 
+    const nextBtn = document.getElementById('nextQuestionBtn');
+    const finishBtn = document.getElementById('finishGameBtn');
+
     if (isFinished) {
-        document.getElementById('nextQuestionBtn').style.display = 'none';
-        document.getElementById('finishGameBtn').style.display = 'block';
+        // Cas où la partie est déjà marquée comme terminée par le serveur
+        nextBtn.style.display = 'none';
+        finishBtn.style.display = 'block';
     } else {
-        document.getElementById('nextQuestionBtn').style.display = 'block';
-        document.getElementById('finishGameBtn').style.display = 'none';
+        // Partie en cours
+        nextBtn.style.display = 'block';
+        finishBtn.style.display = 'none';
+
+        // Vérifier si c'est la dernière question
+        // currentQuestion est l'index (0-based) de la question qui vient d'être jouée
+        if (currentQuestion + 1 >= totalQuestions) {
+            nextBtn.innerHTML = '<i class="ph ph-trophy"></i> Voir le classement général';
+            nextBtn.classList.remove('btn-primary');
+            nextBtn.classList.add('btn-success'); // Optionnel : changer la couleur pour marquer la fin
+        } else {
+            nextBtn.textContent = 'Question suivante';
+            nextBtn.classList.add('btn-primary');
+            nextBtn.classList.remove('btn-success');
+        }
     }
 });
 
 function displayLeaderboard(leaderboard) {
     const container = document.getElementById('leaderboardContent');
-    
+
     container.innerHTML = leaderboard.map(player => {
         const rankClass = `rank-${player.rank}`;
         const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
         const medal = medals[player.rank] || '';
-        
+
         return `
             <div class="leaderboard-item ${rankClass}">
                 <div class="leaderboard-rank">${medal || player.rank}</div>
@@ -973,12 +992,12 @@ function endGameManually() {
 
 function displayFinalLeaderboard(leaderboard) {
     const container = document.getElementById('finalLeaderboard');
-    
+
     container.innerHTML = leaderboard.map(player => {
         const rankClass = `rank-${player.rank}`;
         const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
         const medal = medals[player.rank] || '';
-        
+
         return `
             <div class="leaderboard-item ${rankClass}">
                 <div class="leaderboard-rank">${medal || player.rank}</div>
@@ -1035,7 +1054,7 @@ function displayHistoryList(history) {
     `).join('');
 }
 
-window.viewQuestionDetails = function(questionIndex) {
+window.viewQuestionDetails = function (questionIndex) {
     currentHistoryQuestionIndex = questionIndex;
     socket.emit('host:getHistoricalQuestion', { gameCode, questionIndex });
 };
@@ -1074,9 +1093,9 @@ function displayQuestionDetailsModal(questionIndex, question, responses) {
                     <span class="response-status">${statusText} - ${pointsText}</span>
                     <div class="response-actions">
                         ${r.validated ?
-                            `<button class="btn-modify-answer" onclick="modifyAnswer(${questionIndex}, '${r.playerId}', false)">❌ Refuser</button>` :
-                            `<button class="btn-modify-answer" onclick="modifyAnswer(${questionIndex}, '${r.playerId}', true)">✅ Valider</button>`
-                        }
+                `<button class="btn-modify-answer" onclick="modifyAnswer(${questionIndex}, '${r.playerId}', false)">❌ Refuser</button>` :
+                `<button class="btn-modify-answer" onclick="modifyAnswer(${questionIndex}, '${r.playerId}', true)">✅ Valider</button>`
+            }
                     </div>
                 </div>
             </div>
@@ -1086,7 +1105,7 @@ function displayQuestionDetailsModal(questionIndex, question, responses) {
     modal.style.display = 'flex';
 }
 
-window.modifyAnswer = function(questionIndex, playerId, newValidation) {
+window.modifyAnswer = function (questionIndex, playerId, newValidation) {
     socket.emit('host:modifyHistoricalAnswer', { gameCode, questionIndex, playerId, newValidation });
 };
 
@@ -1126,18 +1145,18 @@ function restoreGameState() {
 // RESTAURATION DE PARTIE
 // ============================================
 
-async function showRestoreGameModal() {
-    const modal = document.getElementById('restoreGameModal');
+async function showRestoreGameScreen() {
+    showScreen('restore');
     const message = document.getElementById('restoreGameMessage');
     const container = document.getElementById('activeGamesList');
 
-    modal.style.display = 'flex';
     message.textContent = 'Chargement des parties actives...';
     container.innerHTML = '';
 
     try {
         const response = await fetch('/api/games/active');
-        const activeGames = await response.json();
+        // Inverser l'ordre pour avoir les plus récentes en premier
+        const activeGames = (await response.json()).reverse();
 
         if (activeGames.length === 0) {
             message.textContent = 'Aucune partie en cours à restaurer.';
@@ -1163,9 +1182,9 @@ async function showRestoreGameModal() {
                     <div class="game-players-list">
                         <strong>Participants :</strong><br>
                         ${sortedPlayers.map(p => {
-                            const connectedIcon = p.connected ? '🟢' : '🔴';
-                            return `<span class="player-score-item">${connectedIcon} ${p.name} (${p.score} pts)</span>`;
-                        }).join(', ')}
+                    const connectedIcon = p.connected ? '🟢' : '🔴';
+                    return `<span class="player-score-item">${connectedIcon} ${p.name} (${p.score} pts)</span>`;
+                }).join(', ')}
                     </div>
                 `;
             } else {
@@ -1180,55 +1199,56 @@ async function showRestoreGameModal() {
                     </div>
                     <div class="game-item-info">
                         <span>👥 ${game.playersCount} joueur(s)</span>
-                        <span>📝 Question ${game.currentQuestion}/${game.totalQuestions}</span>
+                        <span>❓ Question ${game.currentQuestion} / ${game.totalQuestions}</span>
                     </div>
                     ${playersInfo}
-                    <button class="btn btn-primary btn-reconnect" onclick="reconnectToGame('${game.gameCode}')">
-                        🔄 Reprendre
-                    </button>
                 </div>
             `;
         }).join('');
+
+        // Ajouter les écouteurs d'événements sur les éléments créés
+        document.querySelectorAll('.active-game-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const gameCode = item.dataset.code;
+                restoreGame(gameCode);
+            });
+        });
+
     } catch (error) {
-        console.error('Erreur chargement parties actives:', error);
+        console.error('Erreur:', error);
         message.textContent = 'Erreur lors du chargement des parties.';
     }
 }
 
-function closeRestoreGameModal() {
-    document.getElementById('restoreGameModal').style.display = 'none';
-}
+// Gestionnaire pour le bouton "Reprendre une partie"
+document.getElementById('restoreGameBtn').addEventListener('click', showRestoreGameScreen);
 
-window.reconnectToGame = function(reconnectGameCode) {
-    console.log('Reconnexion à la partie:', reconnectGameCode);
+// Gestionnaire pour le bouton "Retour" de l'écran de restauration
+document.getElementById('backFromRestore').addEventListener('click', () => {
+    showScreen('setup');
+});
 
-    socket.emit('host:reconnectGame', { gameCode: reconnectGameCode }, (response) => {
+function restoreGame(gameCode) {
+    console.log('Restauration de la partie:', gameCode);
+
+    socket.emit('host:restoreGame', { gameCode: gameCode }, (response) => {
         if (response.success) {
-            gameCode = reconnectGameCode;
             const gameInfo = response.gameInfo;
+            currentGameCode = gameCode;
+            document.getElementById('gameCode').textContent = gameCode;
 
-            console.log('Reconnexion réussie:', gameInfo);
+            // Restaurer l'état local
+            currentQuestion = gameInfo.currentQuestionIndex;
+            totalQuestions = gameInfo.totalQuestions;
 
-            // Fermer la modal
-            closeRestoreGameModal();
-
-            // Afficher le panneau d'informations permanent
-            showGameInfoPanel(gameCode);
-
-            // Mettre à jour le panneau avec les joueurs actuels
-            if (gameInfo.players && gameInfo.players.length > 0) {
-                updateGameInfoPanel(gameInfo.players);
-            }
-
-            // Afficher l'écran approprié selon le statut
+            // Mettre à jour l'affichage selon l'état
             if (gameInfo.status === 'waiting') {
-                // Retour à l'écran d'attente
-                document.getElementById('gameCode').textContent = gameCode;
-                socket.emit('host:getQuestionsHistory', { gameCode });
-                showScreen('waiting');
+                showScreen('waitingScreen');
+                updatePlayersList(gameInfo.players);
             } else if (gameInfo.status === 'playing') {
-                // Retour à l'écran de jeu - afficher le classement
-                document.getElementById('currentGameCode').textContent = gameCode;
+                // Si une question est en cours
+                // Note: Idéalement, le serveur devrait nous dire exactement où on en est
+                // Pour l'instant, on suppose qu'on va au classement ou à la question suivante
                 showScreen('leaderboard');
 
                 // Demander le classement actuel
