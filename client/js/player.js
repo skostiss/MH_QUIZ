@@ -14,6 +14,7 @@ let currentQuestion = null;
 let hasAnswered = false;
 let timeExpired = false;
 let opponentsAnswers = new Map(); // Map de playerId -> {playerName, isCorrect, answer}
+let currentScore = 0; // Score actuel du joueur
 
 // Références aux éléments DOM
 const screens = {
@@ -42,10 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupEventListeners() {
     console.log('✅ setupEventListeners appelé');
-    
+
     const joinForm = document.getElementById('joinForm');
     console.log('Form trouvé:', joinForm);
-    
+
     // Formulaire de connexion
     joinForm.addEventListener('submit', (e) => {
         console.log('✅ Formulaire soumis !');
@@ -53,17 +54,17 @@ function setupEventListeners() {
         console.log('✅ Comportement par défaut empêché');
         joinGame();
     });
-    
+
     // Bouton pour réponse libre
     document.getElementById('submitFreeAnswer').addEventListener('click', submitFreeAnswer);
-    
+
     // Enter pour soumettre réponse libre
     document.getElementById('freeAnswerInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             submitFreeAnswer();
         }
     });
-    
+
     console.log('✅ Event listeners installés');
 }
 
@@ -73,18 +74,18 @@ function setupEventListeners() {
 
 function joinGame() {
     console.log('✅ joinGame() appelé');
-    
+
     playerName = document.getElementById('playerName').value.trim();
     gameCode = document.getElementById('gameCode').value.trim();
-    
+
     console.log('Nom:', playerName, 'Code:', gameCode);
-    
+
     if (!playerName || !gameCode) {
         console.log('❌ Champs vides');
         showError('Veuillez remplir tous les champs');
         return;
     }
-    
+
     console.log('✅ Émission du signal player:joinGame');
     socket.emit('player:joinGame', { gameCode, playerName }, (response) => {
         console.log('✅ Réponse reçue:', response);
@@ -97,6 +98,11 @@ function joinGame() {
                 console.log('🔄 Reconnexion détectée');
                 showSuccess('Reconnexion réussie ! Vous retrouvez votre partie en cours.');
 
+                // Restaurer le score du joueur
+                if (response.score !== undefined) {
+                    updateScoreDisplay(response.score);
+                }
+
                 // Si la partie est déjà en cours, rester en attente
                 if (response.gameStatus === 'playing') {
                     showScreen('waiting');
@@ -104,6 +110,8 @@ function joinGame() {
                     showScreen('waiting');
                 }
             } else {
+                // Nouveau joueur : initialiser le score à 0
+                updateScoreDisplay(0);
                 showScreen('waiting');
             }
         } else {
@@ -138,6 +146,18 @@ function showSuccess(message) {
 }
 
 // ============================================
+// MISE À JOUR DU SCORE
+// ============================================
+
+function updateScoreDisplay(score) {
+    currentScore = score;
+    const scoreElement = document.getElementById('currentScoreValue');
+    if (scoreElement) {
+        scoreElement.textContent = `${score} pts`;
+    }
+}
+
+// ============================================
 // GESTION DES ÉCRANS
 // ============================================
 
@@ -155,7 +175,7 @@ function showScreen(screenName) {
 socket.on('game:playersUpdate', ({ players }) => {
     console.log('Mise à jour joueurs:', players);
     document.getElementById('waitingPlayersCount').textContent = players.length;
-    
+
     const container = document.getElementById('waitingPlayersList');
     container.innerHTML = players.map(p => `
         <div class="player-item">
@@ -288,8 +308,15 @@ socket.on('game:resultsRevealed', ({ responses, fastestCorrectPlayerId }) => {
 
 socket.on('game:leaderboard', ({ leaderboard, currentQuestion, totalQuestions, isFinished }) => {
     console.log('Classement:', leaderboard);
+
+    // Mettre à jour le score affiché en haut de l'écran
+    const myData = leaderboard.find(p => p.name === playerName);
+    if (myData) {
+        updateScoreDisplay(myData.score);
+    }
+
     displayLeaderboard(leaderboard);
-    
+
     if (isFinished) {
         setTimeout(() => {
             displayFinalResults(leaderboard);
@@ -409,7 +436,7 @@ function updateOpponentsDisplay() {
 function displayQCMAnswers(question) {
     const container = document.getElementById('qcmAnswers');
     const letters = ['A', 'B', 'C', 'D'];
-    
+
     container.innerHTML = question.choix.map((choix, index) => {
         const letter = letters[index];
         return `
@@ -418,7 +445,7 @@ function displayQCMAnswers(question) {
             </div>
         `;
     }).join('');
-    
+
     container.querySelectorAll('.answer-choice').forEach(choice => {
         choice.addEventListener('click', () => {
             if (!hasAnswered) {
@@ -426,13 +453,13 @@ function displayQCMAnswers(question) {
             }
         });
     });
-    
+
     container.style.display = 'grid';
 }
 
 function displayVraiFauxAnswers(question) {
     const container = document.getElementById('vraiFauxAnswers');
-    
+
     container.innerHTML = `
         <div class="answer-choice" data-answer="Vrai">
             Vrai
@@ -441,7 +468,7 @@ function displayVraiFauxAnswers(question) {
             Faux
         </div>
     `;
-    
+
     container.querySelectorAll('.answer-choice').forEach(choice => {
         choice.addEventListener('click', () => {
             if (!hasAnswered) {
@@ -449,51 +476,51 @@ function displayVraiFauxAnswers(question) {
             }
         });
     });
-    
+
     container.style.display = 'grid';
 }
 
 function displayFreeAnswer() {
     const container = document.getElementById('libreAnswer');
     const input = document.getElementById('freeAnswerInput');
-    
+
     input.value = '';
     input.disabled = false;
     document.getElementById('submitFreeAnswer').disabled = false;
-    
+
     container.style.display = 'block';
 }
 
 function selectAnswer(answer) {
     if (hasAnswered || timeExpired) return;
-    
+
     document.querySelectorAll('.answer-choice').forEach(c => {
         c.classList.remove('selected');
         c.classList.add('disabled');
     });
-    
+
     const selectedChoice = document.querySelector(`.answer-choice[data-answer="${answer}"]`);
     if (selectedChoice) {
         selectedChoice.classList.add('selected');
     }
-    
+
     socket.emit('player:answer', { gameCode, answer });
 }
 
 function submitFreeAnswer() {
     if (hasAnswered || timeExpired) return;
-    
+
     const input = document.getElementById('freeAnswerInput');
     const answer = input.value.trim();
-    
+
     if (!answer) {
         alert('Veuillez saisir une réponse');
         return;
     }
-    
+
     input.disabled = true;
     document.getElementById('submitFreeAnswer').disabled = true;
-    
+
     socket.emit('player:answer', { gameCode, answer });
 }
 
@@ -502,30 +529,30 @@ let timerInterval = null;
 function startTimer(seconds) {
     let remaining = seconds;
     updateTimerDisplay(remaining);
-    
+
     if (timerInterval) {
         clearInterval(timerInterval);
     }
-    
+
     timerInterval = setInterval(() => {
         remaining--;
         updateTimerDisplay(remaining);
-        
+
         if (remaining <= 0) {
             clearInterval(timerInterval);
             timeExpired = true;
-            
+
             // Désactiver tous les choix
             document.querySelectorAll('.answer-choice').forEach(c => {
                 c.classList.add('disabled');
             });
-            
+
             // Désactiver l'input pour réponse libre
             const freeInput = document.getElementById('freeAnswerInput');
             const submitBtn = document.getElementById('submitFreeAnswer');
             if (freeInput) freeInput.disabled = true;
             if (submitBtn) submitBtn.disabled = true;
-            
+
             // Afficher un message si pas encore répondu
             if (!hasAnswered) {
                 document.getElementById('answerFeedback').innerHTML = '<p>⏰ Temps écoulé !</p>';
@@ -542,13 +569,13 @@ function updateTimerDisplay(seconds) {
 function displayLeaderboard(leaderboard) {
     const container = document.getElementById('leaderboardContent');
     const myRank = leaderboard.find(p => p.name === playerName);
-    
+
     container.innerHTML = leaderboard.map(player => {
         const rankClass = `rank-${player.rank}`;
         const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
         const medal = medals[player.rank] || '';
         const isMe = player.name === playerName;
-        
+
         return `
             <div class="leaderboard-item ${rankClass} ${isMe ? 'highlight' : ''}">
                 <div class="leaderboard-rank">${medal || player.rank}</div>
@@ -557,7 +584,7 @@ function displayLeaderboard(leaderboard) {
             </div>
         `;
     }).join('');
-    
+
     if (myRank) {
         document.getElementById('playerRank').innerHTML = `
             <p>Vous êtes <strong>${myRank.rank}${getRankSuffix(myRank.rank)}</strong> avec <strong>${myRank.score} points</strong></p>
@@ -572,10 +599,10 @@ function getRankSuffix(rank) {
 
 function displayFinalResults(leaderboard) {
     const myRank = leaderboard.find(p => p.name === playerName);
-    
+
     let title = '🏆 Partie terminée !';
     let message = 'Merci d\'avoir participé !';
-    
+
     if (myRank) {
         if (myRank.rank === 1) {
             title = '🥇 Champion !';
@@ -585,23 +612,23 @@ function displayFinalResults(leaderboard) {
             message = 'Belle performance !';
         }
     }
-    
+
     document.getElementById('finalTitle').textContent = title;
-    
+
     if (myRank) {
         document.getElementById('finalRank').innerHTML = `
             <h2>Vous êtes ${myRank.rank}${getRankSuffix(myRank.rank)}</h2>
             <p class="score">${myRank.score} points</p>
         `;
     }
-    
+
     const container = document.getElementById('finalLeaderboard');
     container.innerHTML = leaderboard.map(player => {
         const rankClass = `rank-${player.rank}`;
         const medals = { 1: '🥇', 2: '🥈', 3: '🥉' };
         const medal = medals[player.rank] || '';
         const isMe = player.name === playerName;
-        
+
         return `
             <div class="leaderboard-item ${rankClass}">
                 <div class="leaderboard-rank">${medal || player.rank}</div>
@@ -610,13 +637,23 @@ function displayFinalResults(leaderboard) {
             </div>
         `;
     }).join('');
-    
+
     showScreen('finished');
 }
 
 socket.on('game:hostDisconnected', () => {
     showWarning('⚠️ Le maître du jeu s\'est déconnecté. La partie est en pause. Le maître peut se reconnecter pour continuer.');
     // Ne pas renvoyer à l'accueil - permettre au joueur de rester et attendre la reconnexion
+});
+
+// ============================================
+// EVENT: GAME INTERRUPTED
+// ============================================
+socket.on('game:interrupted', ({ gameCode }) => {
+    console.log('Game interrupted, code:', gameCode);
+    showWarning('⏸️ Partie interrompue par le maître. En attente de reprise.');
+    // Stay on waiting screen to await host reconnection
+    showScreen('waiting');
 });
 
 function showWarning(message) {

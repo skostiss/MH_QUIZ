@@ -361,7 +361,7 @@ class Game {
     };
   }
 
-  // Modifier rétroactivement une réponse et recalculer les scores
+  // Modifier rétroactivement une réponse (validation seulement, les points seront recalculés)
   modifyHistoricalAnswer(questionIndex, playerId, newValidation) {
     const historyItem = this.questionsHistory.find(h => h.questionIndex === questionIndex);
     if (!historyItem) return false;
@@ -369,43 +369,65 @@ class Game {
     const response = historyItem.responses.get(playerId);
     if (!response) return false;
 
-    const player = this.players.get(playerId);
-    if (!player) return false;
-
-    // Retirer les anciens points
-    const oldPoints = response.points || 0;
-    player.score -= oldPoints;
-
-    // Appliquer la nouvelle validation
+    // Appliquer la nouvelle validation (les points seront recalculés par recalculateAllScores)
     response.validated = newValidation;
-
-    if (newValidation) {
-      // Calculer les nouveaux points
-      const points = this.calculatePoints(historyItem.question.manche);
-      player.score += points;
-      response.points = points;
-    } else {
-      response.points = 0;
-    }
 
     return true;
   }
 
   // Recalculer tous les scores depuis zéro à partir de l'historique
+  // - QCM/VraiFaux : winner-takes-all (seul le premier joueur correct reçoit les points)
+  // - Libre : tous les joueurs validés reçoivent des points
   recalculateAllScores() {
     // Réinitialiser tous les scores
     this.players.forEach(player => {
       player.score = 0;
     });
 
+    // Réinitialiser tous les points dans l'historique
+    this.questionsHistory.forEach(historyItem => {
+      historyItem.responses.forEach(response => {
+        response.points = 0;
+      });
+    });
+
     // Recalculer à partir de l'historique
     this.questionsHistory.forEach(historyItem => {
-      historyItem.responses.forEach((response, socketId) => {
-        const player = this.players.get(socketId);
-        if (player && response.validated && response.points) {
-          player.score += response.points;
+      const points = this.calculatePoints(historyItem.question.manche);
+      const questionType = historyItem.question.type;
+
+      if (questionType === 'Libre') {
+        // Questions Libre : tous les joueurs validés reçoivent des points
+        historyItem.responses.forEach((response, socketId) => {
+          if (response.validated) {
+            const player = this.players.get(socketId);
+            if (player) {
+              player.score += points;
+              response.points = points;
+            }
+          }
+        });
+      } else {
+        // QCM et VraiFaux : winner-takes-all (le plus rapide avec bonne réponse gagne)
+        const sortedResponses = Array.from(historyItem.responses.entries())
+          .sort((a, b) => a[1].responseTime - b[1].responseTime);
+
+        let winnerFound = false;
+        for (const [socketId, response] of sortedResponses) {
+          if (response.validated && !winnerFound) {
+            // Premier joueur correct = gagnant
+            const player = this.players.get(socketId);
+            if (player) {
+              player.score += points;
+              response.points = points;
+              winnerFound = true;
+            }
+          } else {
+            // Les autres ne reçoivent pas de points (même si validés)
+            response.points = 0;
+          }
         }
-      });
+      }
     });
   }
 

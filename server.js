@@ -83,11 +83,17 @@ app.get('/api/games/active', (req, res) => {
     const activeGames = [];
     gameManager.games.forEach((game, gameCode) => {
       // Récupérer les informations des joueurs avec leurs scores
-      const players = game.getPlayers().map(p => ({
-        name: p.name,
-        score: p.score,
-        connected: p.connected
-      }));
+      // Utiliser la clé du Map (socketId) pour vérifier l'état réel des sockets
+      const players = [];
+      game.players.forEach((player, socketId) => {
+        const playerSocket = io.sockets.sockets.get(socketId);
+        const isActuallyConnected = playerSocket ? playerSocket.connected : false;
+        players.push({
+          name: player.name,
+          score: player.score,
+          connected: isActuallyConnected
+        });
+      });
 
       activeGames.push({
         gameCode: gameCode,
@@ -140,24 +146,24 @@ app.post('/api/questions', (req, res) => {
     delete require.cache[require.resolve('./questions.js')];
     const questions = require('./questions.js');
     const newQuestion = req.body;
-    
+
     console.log('➕ Ajout d\'une nouvelle question:', newQuestion.type, '-', newQuestion.question.substring(0, 50));
-    
+
     // Générer un nouvel ID
     const maxId = questions.length > 0 ? Math.max(...questions.map(q => q.id)) : 0;
     newQuestion.id = maxId + 1;
-    
+
     // Ajouter la question
     questions.push(newQuestion);
-    
+
     // Sauvegarder dans le fichier
     saveQuestions(questions);
-    
+
     // Vider à nouveau le cache après sauvegarde
     delete require.cache[require.resolve('./questions.js')];
-    
+
     console.log(`✅ Question ajoutée avec ID ${newQuestion.id}. Total: ${questions.length} questions`);
-    
+
     res.json({ success: true, question: newQuestion });
   } catch (error) {
     console.error('❌ Erreur ajout question:', error);
@@ -173,23 +179,23 @@ app.put('/api/questions/:id', (req, res) => {
     const questions = require('./questions.js');
     const id = parseInt(req.params.id);
     const updatedQuestion = req.body;
-    
+
     const index = questions.findIndex(q => q.id === id);
     if (index === -1) {
       return res.status(404).json({ success: false, error: 'Question introuvable' });
     }
-    
+
     // IMPORTANT: Garder l'ID original, ne pas le changer
     updatedQuestion.id = id;
-    
+
     questions[index] = updatedQuestion;
     saveQuestions(questions);
-    
+
     // Recharger le module questions
     delete require.cache[require.resolve('./questions.js')];
-    
+
     console.log(`✏️ Question ${id} modifiée`);
-    
+
     res.json({ success: true, question: updatedQuestion });
   } catch (error) {
     console.error('Erreur modification question:', error);
@@ -204,26 +210,26 @@ app.delete('/api/questions/:id', (req, res) => {
     delete require.cache[require.resolve('./questions.js')];
     const questions = require('./questions.js');
     const id = parseInt(req.params.id);
-    
+
     const index = questions.findIndex(q => q.id === id);
     if (index === -1) {
       return res.status(404).json({ success: false, error: 'Question introuvable' });
     }
-    
+
     questions.splice(index, 1);
-    
+
     // IMPORTANT: Réinitialiser les IDs de 1 à N
     questions.forEach((q, idx) => {
       q.id = idx + 1;
     });
-    
+
     saveQuestions(questions);
-    
+
     // Recharger le module questions
     delete require.cache[require.resolve('./questions.js')];
-    
+
     console.log(`🗑️ Question ${id} supprimée. Reste ${questions.length} questions avec IDs réinitialisés`);
-    
+
     res.json({ success: true });
   } catch (error) {
     console.error('Erreur suppression question:', error);
@@ -235,22 +241,22 @@ app.delete('/api/questions/:id', (req, res) => {
 app.post('/api/questions/import', (req, res) => {
   try {
     const importedQuestions = req.body;
-    
+
     if (!Array.isArray(importedQuestions)) {
       return res.status(400).json({ success: false, error: 'Format invalide' });
     }
-    
+
     // Réassigner les IDs
     const questions = importedQuestions.map((q, index) => ({
       ...q,
       id: index + 1
     }));
-    
+
     saveQuestions(questions);
-    
+
     // Recharger le module questions
     delete require.cache[require.resolve('./questions.js')];
-    
+
     res.json({ success: true, count: questions.length });
   } catch (error) {
     console.error('Erreur import questions:', error);
@@ -264,31 +270,31 @@ app.post('/api/questions/reorder', (req, res) => {
     console.log('=== DÉBUT RÉORDONNANCEMENT ===');
     const reorderedQuestions = req.body;
     console.log('Nombre de questions reçues:', reorderedQuestions.length);
-    
+
     if (!Array.isArray(reorderedQuestions)) {
       console.error('Erreur: Le body n\'est pas un tableau');
       return res.status(400).json({ success: false, error: 'Format invalide' });
     }
-    
+
     if (reorderedQuestions.length === 0) {
       console.error('Erreur: Tableau vide');
       return res.status(400).json({ success: false, error: 'Aucune question à sauvegarder' });
     }
-    
+
     // IMPORTANT: Réinitialiser les IDs de 1 à N selon le nouvel ordre
     reorderedQuestions.forEach((q, idx) => {
       q.id = idx + 1;
     });
     console.log('IDs réinitialisés de 1 à', reorderedQuestions.length);
-    
+
     console.log('Appel de saveQuestions...');
     saveQuestions(reorderedQuestions);
     console.log('saveQuestions terminé avec succès');
-    
+
     // Recharger le module questions
     delete require.cache[require.resolve('./questions.js')];
     console.log('Cache rechargé');
-    
+
     console.log('=== RÉORDONNANCEMENT RÉUSSI ===');
     res.json({ success: true });
   } catch (error) {
@@ -313,14 +319,14 @@ function saveQuestions(questions) {
   try {
     console.log('saveQuestions: Début de la sauvegarde');
     console.log('saveQuestions: Nombre de questions:', questions.length);
-    
+
     // S'assurer que chaque question a une manche
     questions.forEach(q => {
       if (!q.manche) {
         q.manche = getMancheByQuestionId(q.id);
       }
     });
-    
+
     const content = `// ============================================
 // BANQUE DE QUESTIONS - MALAKOFF QUIZ
 // ============================================
@@ -342,13 +348,13 @@ const questions = ${JSON.stringify(questions, null, 2)};
 module.exports = questions;
 module.exports.MANCHES = MANCHES;
 `;
-    
+
     const filePath = path.join(__dirname, 'questions.js');
     console.log('saveQuestions: Chemin du fichier:', filePath);
-    
+
     fs.writeFileSync(filePath, content, 'utf8');
     console.log('✅ Questions sauvegardées avec succès');
-    
+
     return true;
   } catch (error) {
     console.error('❌ Erreur dans saveQuestions:');
@@ -394,6 +400,12 @@ io.on('connection', (socket) => {
       console.log(`🔄 Partie ${gameCode} terminée réactivée pour reprise`);
     }
 
+    // Vérifier l'état réel des connexions des joueurs avant de renvoyer les données
+    game.players.forEach((player, socketId) => {
+      const playerSocket = io.sockets.sockets.get(socketId);
+      player.connected = playerSocket ? playerSocket.connected : false;
+    });
+
     // Renvoyer les informations complètes de la partie
     const players = game.getPlayers();
     const gameInfo = {
@@ -426,7 +438,7 @@ io.on('connection', (socket) => {
       game.selectQuestions(questionIds);
       console.log(`   Questions chargées: ${game.selectedQuestions.length}`);
       autoSaveGames(); // Sauvegarde après configuration
-      
+
       if (game.selectedQuestions.length === 0) {
         console.error(`❌ ERREUR: Aucune question n'a été chargée !`);
       }
@@ -601,7 +613,7 @@ io.on('connection', (socket) => {
   });
 
   // Terminer manuellement la partie
-  socket.on('host:endGame', ({ gameCode }) => {
+  socket.on('host:endGame', ({ gameCode }, callback) => {
     const game = gameManager.getGame(gameCode);
     if (game && game.host === socket.id) {
       console.log(`⏹️ Le maître du jeu a mis fin à la partie ${gameCode}`);
@@ -625,6 +637,25 @@ io.on('connection', (socket) => {
       autoSaveGames();
 
       console.log(`💾 Partie ${gameCode} interrompue manuellement et sauvegardée pour consultation ultérieure`);
+
+      // Envoyer confirmation au client
+      if (callback) callback({ success: true });
+    } else {
+      console.log(`❌ Impossible de terminer la partie ${gameCode} - partie introuvable ou non autorisé`);
+      if (callback) callback({ success: false, message: 'Partie introuvable ou non autorisé' });
+    }
+  });
+
+  // Interrompre la partie (pause)
+  socket.on('host:interruptGame', ({ gameCode }) => {
+    const game = gameManager.getGame(gameCode);
+    if (game && game.host === socket.id) {
+      console.log(`⏸️ Le maître du jeu a interrompu la partie ${gameCode}`);
+      // Save current state (autoSaveGames already persists)
+      autoSaveGames();
+      // Notify players that the game is paused and can be resumed later
+      io.to(gameCode).emit('game:interrupted', { gameCode });
+      console.log(`💾 Partie ${gameCode} sauvegardée après interruption`);
     }
   });
 
@@ -709,6 +740,7 @@ io.on('connection', (socket) => {
 
       // Remettre le joueur en ligne avec le nouveau socket ID
       playerData.connected = true;
+      playerData.id = socket.id;  // Synchroniser l'id avec le nouveau socket
       game.players.set(socket.id, playerData);
 
       // Si une réponse était enregistrée avec l'ancien ID, la transférer
@@ -880,13 +912,13 @@ function sendNextQuestion(gameCode) {
     console.error(`❌ sendNextQuestion: Partie ${gameCode} introuvable`);
     return;
   }
-  
+
   console.log(`💬 sendNextQuestion: Partie ${gameCode}`);
   console.log(`   Index actuel: ${game.currentQuestionIndex}`);
   console.log(`   Nombre de questions: ${game.selectedQuestions.length}`);
-  
+
   const question = game.getCurrentQuestion();
-  
+
   if (!question) {
     // Plus de questions - fin de partie
     console.log(`✅ Fin de partie ${gameCode} - Plus de questions`);
@@ -895,12 +927,12 @@ function sendNextQuestion(gameCode) {
     io.to(gameCode).emit('game:finished', { leaderboard });
     return;
   }
-  
+
   game.startQuestion();
-  
+
   // Récupérer la manche
   const manche = game.getCurrentManche();
-  
+
   // Préparer la question pour les joueurs (sans la réponse)
   const questionForPlayers = {
     id: question.id,
@@ -911,14 +943,14 @@ function sendNextQuestion(gameCode) {
     total: game.selectedQuestions.length,
     manche: manche
   };
-  
+
   // Préparer la question pour le maître (avec la réponse)
   const questionForHost = {
     ...questionForPlayers,
     bonneReponse: question.bonneReponse,
     reponseReference: question.reponseReference
   };
-  
+
   // Envoyer aux joueurs
   io.to(gameCode).emit('game:newQuestion', questionForPlayers);
 
@@ -946,7 +978,7 @@ function sendNextQuestion(gameCode) {
 // Fonction pour obtenir l'adresse IP locale
 function getLocalIpAddress() {
   const interfaces = os.networkInterfaces();
-  
+
   for (const name of Object.keys(interfaces)) {
     for (const iface of interfaces[name]) {
       // Ignorer les adresses internes et IPv6
@@ -955,7 +987,7 @@ function getLocalIpAddress() {
       }
     }
   }
-  
+
   return 'IP non détectée';
 }
 

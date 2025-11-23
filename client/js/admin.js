@@ -148,24 +148,24 @@ function updateMancheStats() {
 // Afficher la liste des questions (groupées par manche)
 function displayQuestions() {
     const container = document.getElementById('questionsList');
-    
+
     if (questions.length === 0) {
         container.innerHTML = '<p>Aucune question pour le moment. Commencez par en ajouter une !</p>';
         return;
     }
-    
+
     let html = '';
-    
+
     // Filtrer les questions selon la manche sélectionnée
-    const filteredQuestions = currentMancheFilter === 'all' 
-        ? questions 
+    const filteredQuestions = currentMancheFilter === 'all'
+        ? questions
         : questions.filter(q => q.manche === currentMancheFilter);
-    
+
     if (filteredQuestions.length === 0) {
         container.innerHTML = '<p>Aucune question dans cette manche.</p>';
         return;
     }
-    
+
     // Grouper par manche
     const groupedByManche = {};
     filteredQuestions.forEach(q => {
@@ -174,18 +174,18 @@ function displayQuestions() {
         }
         groupedByManche[q.manche].push(q);
     });
-    
+
     // Afficher chaque manche
     Object.keys(groupedByManche).sort((a, b) => a - b).forEach(mancheId => {
         const manche = manches[mancheId];
         const mancheQuestions = groupedByManche[mancheId];
-        
+
         html += `
             <div class="manche-section">
                 <h3 class="manche-title">🎯 ${manche.nom} <span class="manche-count">(${mancheQuestions.length} questions)</span></h3>
                 <div class="manche-questions">
         `;
-        
+
         mancheQuestions.forEach((q, localIndex) => {
             const globalIndex = questions.findIndex(question => question.id === q.id);
             html += `
@@ -222,13 +222,18 @@ function displayQuestions() {
                 </div>
             `;
         });
-        
+
         html += `
+                </div>
+                <div style="margin-top: 15px; text-align: center;">
+                    <button class="btn-secondary" onclick="addQuestionToManche(${mancheId})" style="width: 100%; border: 2px dashed #e0e0e0; background: transparent; color: #666;">
+                        ➕ Ajouter une question à "${manche.nom}"
+                    </button>
                 </div>
             </div>
         `;
     });
-    
+
     container.innerHTML = html;
     updateSelectionUI();
     initDragAndDrop();
@@ -238,7 +243,7 @@ function displayQuestions() {
 function switchTab(tabName) {
     document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.admin-section').forEach(section => section.classList.remove('active'));
-    
+
     event.target.classList.add('active');
     document.getElementById(tabName).classList.add('active');
 }
@@ -249,11 +254,11 @@ function toggleFields(prefix) {
     const qcm = document.getElementById(`${prefix}QcmFields`);
     const vraiFaux = document.getElementById(`${prefix}VraiFauxFields`);
     const libre = document.getElementById(`${prefix}LibreFields`);
-    
+
     qcm.classList.remove('active');
     vraiFaux.classList.remove('active');
     libre.classList.remove('active');
-    
+
     if (type === 'QCM') qcm.classList.add('active');
     else if (type === 'VraiFaux') vraiFaux.classList.add('active');
     else if (type === 'Libre') libre.classList.add('active');
@@ -273,19 +278,19 @@ async function addQuestion(event) {
     }
 
     const newQuestion = { manche, type, question };
-    
+
     if (type === 'QCM') {
         const choixA = document.getElementById('choixA').value;
         const choixB = document.getElementById('choixB').value;
         const choixC = document.getElementById('choixC').value;
         const choixD = document.getElementById('choixD').value;
         const bonneReponse = document.querySelector('input[name="correctAnswer"]:checked')?.value;
-        
+
         if (!choixA || !choixB || !choixC || !choixD || !bonneReponse) {
             showAlert('Veuillez remplir tous les choix et sélectionner la bonne réponse', 'error');
             return;
         }
-        
+
         newQuestion.choix = [choixA, choixB, choixC, choixD];
         newQuestion.bonneReponse = bonneReponse;
     } else if (type === 'VraiFaux') {
@@ -303,14 +308,14 @@ async function addQuestion(event) {
         }
         newQuestion.reponseReference = reponseReference;
     }
-    
+
     try {
         const response = await fetch('/api/questions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newQuestion)
         });
-        
+
         if (response.ok) {
             const data = await response.json();
             showAlert(`Question ajoutée avec succès dans la manche "${manches[data.question.manche]?.nom}" !`, 'success');
@@ -326,21 +331,40 @@ async function addQuestion(event) {
     }
 }
 
+
+
+// Préparer l'ajout d'une question pour une manche spécifique
+function addQuestionToManche(mancheId) {
+    switchTab('add');
+    const select = document.getElementById('questionManche');
+    if (select) {
+        select.value = mancheId;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Aller à la liste des questions d'une manche spécifique
+function goToManche(mancheId) {
+    switchTab('list');
+    filterByManche(mancheId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 // Éditer une question
 function editQuestion(id) {
     const question = questions.find(q => q.id === id);
     if (!question) return;
-    
+
     document.getElementById('editQuestionId').value = question.id;
     document.getElementById('editQuestionType').value = question.type;
     document.getElementById('editQuestionText').value = question.question;
-    
+
     // Afficher la manche en lecture seule
     const mancheInfo = manches[question.manche];
     document.getElementById('editMancheInfo').textContent = `Manche: ${mancheInfo?.nom || 'Inconnue'}`;
-    
+
     toggleFields('edit');
-    
+
     if (question.type === 'QCM') {
         document.getElementById('editChoixA').value = question.choix[0];
         document.getElementById('editChoixB').value = question.choix[1];
@@ -352,20 +376,20 @@ function editQuestion(id) {
     } else if (question.type === 'Libre') {
         document.getElementById('editReponseReference').value = question.reponseReference;
     }
-    
+
     document.getElementById('editModal').classList.add('active');
 }
 
 // Sauvegarder les modifications
 async function saveEdit(event) {
     event.preventDefault();
-    
+
     const id = parseInt(document.getElementById('editQuestionId').value);
     const type = document.getElementById('editQuestionType').value;
     const question = document.getElementById('editQuestionText').value;
-    
+
     const updatedQuestion = { id, type, question };
-    
+
     if (type === 'QCM') {
         updatedQuestion.choix = [
             document.getElementById('editChoixA').value,
@@ -379,14 +403,14 @@ async function saveEdit(event) {
     } else if (type === 'Libre') {
         updatedQuestion.reponseReference = document.getElementById('editReponseReference').value;
     }
-    
+
     try {
         const response = await fetch(`/api/questions/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(updatedQuestion)
         });
-        
+
         if (response.ok) {
             showAlert('Question modifiée avec succès !', 'success');
             closeEditModal();
@@ -402,10 +426,10 @@ async function saveEdit(event) {
 // Supprimer une question
 async function deleteQuestion(id) {
     if (!confirm('Êtes-vous sûr de vouloir supprimer cette question ?')) return;
-    
+
     try {
         const response = await fetch(`/api/questions/${id}`, { method: 'DELETE' });
-        
+
         if (response.ok) {
             showAlert('Question supprimée avec succès !', 'success');
             loadQuestions();
@@ -458,7 +482,7 @@ function exportCSV() {
         ];
         csv += row.join(',') + '\n';
     });
-    
+
     const blob = new Blob([csv], { type: 'text/csv' });
     downloadFile(blob, 'questions.csv');
     showAlert('Export CSV réussi !', 'success');
@@ -471,7 +495,7 @@ async function importJSON() {
         showAlert('Veuillez sélectionner un fichier', 'error');
         return;
     }
-    
+
     const reader = new FileReader();
     reader.onload = async (e) => {
         try {
@@ -481,7 +505,7 @@ async function importJSON() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(importedQuestions)
             });
-            
+
             if (response.ok) {
                 showAlert('Import réussi !', 'success');
                 loadQuestions();
@@ -512,7 +536,7 @@ let draggedElement = null;
 
 function initDragAndDrop() {
     const items = document.querySelectorAll('.question-item');
-    
+
     items.forEach(item => {
         item.addEventListener('dragstart', handleDragStart);
         item.addEventListener('dragend', handleDragEnd);
@@ -541,11 +565,11 @@ function handleDragOver(e) {
         e.preventDefault();
     }
     e.dataTransfer.dropEffect = 'move';
-    
+
     if (this !== draggedElement) {
         this.classList.add('drag-over');
     }
-    
+
     return false;
 }
 
@@ -557,19 +581,19 @@ function handleDrop(e) {
     if (e.stopPropagation) {
         e.stopPropagation();
     }
-    
+
     if (draggedElement !== this) {
         const draggedIndex = parseInt(draggedElement.dataset.index);
         const targetIndex = parseInt(this.dataset.index);
-        
+
         const draggedQuestion = questions[draggedIndex];
         questions.splice(draggedIndex, 1);
         questions.splice(targetIndex, 0, draggedQuestion);
-        
+
         saveQuestionOrder();
         displayQuestions();
     }
-    
+
     return false;
 }
 
@@ -581,7 +605,7 @@ async function saveQuestionOrder() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(questions)
         });
-        
+
         if (response.ok) {
             showAlert('Ordre des questions sauvegardé !', 'success');
             loadQuestions(); // Recharger pour mettre à jour les manches
@@ -671,17 +695,17 @@ function clearSelection() {
 
 async function deleteSelected() {
     if (selectedQuestions.size === 0) return;
-    
+
     const count = selectedQuestions.size;
     if (!confirm(`Êtes-vous sûr de vouloir supprimer ${count} question(s) ?`)) return;
-    
+
     try {
-        const deletePromises = Array.from(selectedQuestions).map(id => 
+        const deletePromises = Array.from(selectedQuestions).map(id =>
             fetch(`/api/questions/${id}`, { method: 'DELETE' })
         );
-        
+
         await Promise.all(deletePromises);
-        
+
         showAlert(`${count} question(s) supprimée(s) avec succès !`, 'success');
         selectedQuestions.clear();
         loadQuestions();
@@ -694,8 +718,8 @@ async function deleteSelected() {
 
 function moveQuestion(currentIndex, direction) {
     let newIndex = currentIndex;
-    
-    switch(direction) {
+
+    switch (direction) {
         case 'up':
             newIndex = currentIndex - 1;
             break;
@@ -709,14 +733,14 @@ function moveQuestion(currentIndex, direction) {
             newIndex = questions.length - 1;
             break;
     }
-    
+
     if (newIndex < 0 || newIndex >= questions.length) return;
     if (newIndex === currentIndex) return;
-    
+
     const question = questions[currentIndex];
     questions.splice(currentIndex, 1);
     questions.splice(newIndex, 0, question);
-    
+
     saveQuestionOrder();
     displayQuestions();
 }

@@ -24,6 +24,9 @@
                 <p class="empty-state">Aucun joueur</p>
             </div>
         </div>
+        <button id="interruptGameBtn" class="btn btn-danger btn-sm" style="margin-top: auto; width: 100%;">
+            <i class="ph ph-pause-circle"></i> Interrompre la partie
+        </button>
     </aside>
 
     <div class="container">
@@ -124,8 +127,6 @@
                 Révéler les résultats</button>
             <button id="showLeaderboardBtn" class="btn btn-primary" style="display:none; margin-top: 10px;"><i
                     class="ph ph-chart-bar"></i> Afficher le classement</button>
-            <button id="endGameBtnQuestion" class="btn btn-danger" style="margin-top: 10px;"><i
-                    class="ph ph-stop-circle"></i> Terminer la partie</button>
         </div>
 
         <!-- ÉCRAN 4 : Classement -->
@@ -136,11 +137,8 @@
             </div>
 
             <button id="nextQuestionBtn" class="btn btn-primary">Question suivante</button>
-            <button id="finishGameBtn" class="btn btn-secondary" style="display:none;">Terminer la partie</button>
             <button id="viewHistoryBtn" class="btn btn-secondary"><i class="ph ph-clipboard-text"></i> Voir
                 l'historique</button>
-            <button id="endGameBtnLeaderboard" class="btn btn-danger" style="margin-top: 10px;"><i
-                    class="ph ph-stop-circle"></i> Terminer la partie</button>
         </div>
 
         <!-- ÉCRAN 5 : Fin de partie -->
@@ -174,6 +172,9 @@
             <div class="history-header">
                 <button id="backFromHistory" class="btn btn-secondary">← Retour</button>
             </div>
+            <p class="history-instruction">
+                <i class="ph ph-info"></i> Cliquez sur une question pour voir les détails et modifier les validations des réponses
+            </p>
 
             <div id="historyList" class="history-list">
                 <!-- Liste des questions chargée dynamiquement -->

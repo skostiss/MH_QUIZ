@@ -2,7 +2,7 @@
 // BANQUE DE QUESTIONS - MALAKOFF QUIZ
 // ============================================
 // Ce fichier est géré automatiquement par l'interface d'administration
-// Dernière modification : 19/11/2025 21:27:20
+// Dernière modification : 23/11/2025 22:27:44
 // ============================================
 
 // DÉFINITION DES MANCHES
@@ -17,24 +17,24 @@ const MANCHES = {
 const questions = [
   {
     "id": 1,
-    "manche": 1,
     "type": "Libre",
-    "question": "Citez 3 items de la qualité orale.",
-    "reponseReference": "réponse , maitrise de l'entretien, procédure,"
+    "question": "Pouvez-vous citer 3 items de la qualité orale?",
+    "reponseReference": "réponse , maitrise de l'entretien, procédure,",
+    "manche": 1
   },
   {
     "id": 2,
-    "manche": 1,
     "type": "Libre",
-    "question": "3 Indicateurs qui comptent pour la prime T managers ?",
-    "reponseReference": "sat globale equipe , clarté équipe, DMt tél equipe"
+    "question": "Pouvez-vous citer 3 Indicateurs qui comptent pour la prime trimestrielles des managers ?",
+    "reponseReference": "sat globale equipe , clarté équipe, DMt tél equipe",
+    "manche": 1
   },
   {
     "id": 3,
-    "manche": 1,
     "type": "Libre",
-    "question": "Citez 3 sites RC internes",
-    "reponseReference": "(Blois , Angers, Metz, montpellier)"
+    "question": "Citez 3 sites de RC internes",
+    "reponseReference": "(Blois , Angers, Metz, montpellier)",
+    "manche": 1
   },
   {
     "id": 4,
@@ -45,10 +45,10 @@ const questions = [
   },
   {
     "id": 5,
-    "manche": 1,
     "type": "Libre",
     "question": "3 Indicateurs visibles sur un bandeau conseiller",
-    "reponseReference": "QS, attente, appels traités et %pause tél"
+    "reponseReference": "QS, attente, appels traités et %pause tél",
+    "manche": 1
   },
   {
     "id": 6,
@@ -73,16 +73,16 @@ const questions = [
   },
   {
     "id": 9,
-    "manche": 2,
     "type": "QCM",
     "question": "3",
     "choix": [
-      "Nombre appels client pris à l'heure ",
-      "Heure du premier SMS  reçu par une RE en cas d'imprévu",
-      "Heure du premier arrivé chez les prestataires",
+      "Nombre appels client pris à l'heure par un conseiller.",
+      "Nombre de mail que l’Hypervision nous envoi par jour pour nous tenir informé des chiffres clés ",
+      "Le nombre de fois que je décale la sonnerie de mon réveil les matins d'hiver.",
       "Aucune des réponses"
     ],
-    "bonneReponse": "B"
+    "bonneReponse": "B",
+    "manche": 2
   },
   {
     "id": 10,
@@ -269,18 +269,11 @@ const questions = [
     "id": 31
   },
   {
-    "id": 32,
-    "type": "Libre",
-    "question": "Je suis ce temps mystérieux entre « demande envoyée » et « problème réglé », souvent trop long pour les impatients. Parfois je file à toute vitesse, parfois je prends mon temps… c'est le grand huit des dossiers ! On m'observe comme un compte à rebours, espérant que je ne dépasse pas la limite. Je cours vers Power BI﻿ pour te trouver, comme un détective en mission. Qui suis-je ?",
-    "reponseReference": "DÉLAIS DE TRAITEMENT",
-    "manche": 1
-  },
-  {
     "manche": 5,
     "type": "Libre",
     "question": "Je suis ce temps mystérieux entre « demande envoyée » et « problème réglé », souvent trop long pour les impatients. Parfois je file à toute vitesse, parfois je prends mon temps… c'est le grand huit des dossiers ! On m'observe comme un compte à rebours, espérant que je ne dépasse pas la limite. Je cours vers Power BI﻿ pour te trouver, comme un détective en mission. Qui suis-je ?",
     "reponseReference": "DÉLAIS DE TRAITEMENT",
-    "id": 33
+    "id": 32
   }
 ];
 

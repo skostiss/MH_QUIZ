@@ -21,10 +21,44 @@
         .admin-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px;
+            padding: 20px 30px;
             border-radius: 10px;
             margin-bottom: 30px;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .admin-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .btn-header {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-header:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         .admin-tabs {
@@ -76,6 +110,35 @@
             padding: 25px;
             border-radius: 10px;
             text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-card-info {
+            background: white;
+            color: #666;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card-info h3 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin: 0;
+        }
+
+        .stat-card-info p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            color: #888;
         }
 
         .stat-card h3 {
@@ -520,8 +583,13 @@
 <body>
     <div class="admin-container">
         <div class="admin-header">
-            <h1>⚙️ Administration du Quiz</h1>
-            <p>Gérez vos questions facilement</p>
+            <div>
+                <h1>⚙️ Administration du Quiz</h1>
+                <p>Gérez vos questions facilement</p>
+            </div>
+            <a href="/" class="btn-header">
+                <span>🏠</span> Retour à l'accueil
+            </a>
         </div>
 
         <div class="admin-tabs">
@@ -535,152 +603,152 @@
 
         <!-- TABLEAU DE BORD -->
         <div id="dashboard" class="admin-section active">
-            <h2>Statistiques globales</h2>
+            <h2>Statistiques par manche (Cliquer pour filtrer)</h2>
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h3 id="totalQuestions">0</h3>
-                    <p>Questions totales</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="qcmCount">0</h3>
-                    <p>Questions QCM</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="vraiFauxCount">0</h3>
-                    <p>Questions Vrai/Faux</p>
-                </div>
-                <div class="stat-card">
-                    <h3 id="libreCount">0</h3>
-                    <p>Questions libres</p>
-                </div>
-            </div>
-
-            <h2 style="margin-top: 40px;">Statistiques par manche</h2>
-            <div class="stats-grid">
-                <div class="stat-card">
+                <div class="stat-card" onclick="goToManche(1)">
                     <h3 id="manche1Count">0</h3>
                     <p>🎯 Sel ou poivre</p>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="goToManche(2)">
                     <h3 id="manche2Count">0</h3>
                     <p>🎯 Le juste chiffre</p>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="goToManche(3)">
                     <h3 id="manche3Count">0</h3>
                     <p>🎯 Vrai ou faux Express</p>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="goToManche(4)">
                     <h3 id="manche4Count">0</h3>
                     <p>🎯 Le menu</p>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" onclick="goToManche(5)">
                     <h3 id="manche5Count">0</h3>
                     <p>🎯 Qui suis-je ?</p>
                 </div>
             </div>
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="/" class="btn-primary">🎮 Retour à l'accueil</a>
+
+            <h2 style="margin-top: 40px; font-size: 1.2rem; color: #666;">Statistiques globales (Information)</h2>
+            <div class="stats-grid">
+                <div class="stat-card-info">
+                    <h3 id="totalQuestions">0</h3>
+                    <p>Questions totales</p>
+                </div>
+                <div class="stat-card-info">
+                    <h3 id="qcmCount">0</h3>
+                    <p>Questions QCM</p>
+                </div>
+                <div class="stat-card-info">
+                    <h3 id="vraiFauxCount">0</h3>
+                    <p>Questions Vrai/Faux</p>
+                </div>
+                <div class="stat-card-info">
+                    <h3 id="libreCount">0</h3>
+                    <p>Questions libres</p>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- LISTE DES QUESTIONS -->
-        <div id="list" class="admin-section">
-            <h2>Liste des questions</h2>
+    </div>
 
-            <!-- Filtres par manche -->
-            <div id="mancheFilters" class="manche-filters"></div>
+    <!-- LISTE DES QUESTIONS -->
+    <div id="list" class="admin-section">
+        <h2>Liste des questions</h2>
 
-            <!-- Actions groupées -->
-            <div id="bulkActions" class="bulk-actions">
-                <span class="bulk-actions-text"><span id="selectedCount">0</span> question(s) sélectionnée(s)</span>
-                <button class="btn-icon btn-delete" onclick="deleteSelected()">🗑️ Supprimer la sélection</button>
-                <button class="btn-secondary" onclick="clearSelection()">Annuler</button>
-            </div>
+        <!-- Filtres par manche -->
+        <div id="mancheFilters" class="manche-filters"></div>
 
-            <!-- Sélectionner tout -->
-            <div class="select-all-container">
-                <label>
-                    <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
-                    <span>Sélectionner toutes les questions</span>
-                </label>
-            </div>
-
-            <!-- Sélectionner par manche -->
-            <div id="mancheSelectionContainer" class="select-all-container"
-                style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
-
-            <div id="questionsList" class="questions-list"></div>
+        <!-- Actions groupées -->
+        <div id="bulkActions" class="bulk-actions">
+            <span class="bulk-actions-text"><span id="selectedCount">0</span> question(s) sélectionnée(s)</span>
+            <button class="btn-icon btn-delete" onclick="deleteSelected()">🗑️ Supprimer la sélection</button>
+            <button class="btn-secondary" onclick="clearSelection()">Annuler</button>
         </div>
 
-        <!-- AJOUTER UNE QUESTION -->
-        <div id="add" class="admin-section">
-            <h2>Ajouter une nouvelle question</h2>
-            <form id="addQuestionForm" onsubmit="addQuestion(event)">
-                <div class="form-group">
-                    <label for="questionManche">Manche *</label>
-                    <select id="questionManche" required>
-                        <option value="">Sélectionnez une manche</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="questionType">Type de question *</label>
-                    <select id="questionType" required onchange="toggleFields('add')">
-                        <option value="">Sélectionnez un type</option>
-                        <option value="QCM">QCM (4 choix)</option>
-                        <option value="VraiFaux">Vrai/Faux</option>
-                        <option value="Libre">Réponse libre</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="questionText">Question *</label>
-                    <textarea id="questionText" rows="3" required placeholder="Entrez votre question..."></textarea>
-                </div>
-                <!-- QCM -->
-                <div id="addQcmFields" class="choices-container">
-                    <label>Choix de réponses * (Cochez la bonne réponse)</label>
-                    <div class="choice-input-group"><input type="radio" name="correctAnswer"
-                            value="A"><label>A:</label><input type="text" id="choixA" placeholder="Choix A"></div>
-                    <div class="choice-input-group"><input type="radio" name="correctAnswer"
-                            value="B"><label>B:</label><input type="text" id="choixB" placeholder="Choix B"></div>
-                    <div class="choice-input-group"><input type="radio" name="correctAnswer"
-                            value="C"><label>C:</label><input type="text" id="choixC" placeholder="Choix C"></div>
-                    <div class="choice-input-group"><input type="radio" name="correctAnswer"
-                            value="D"><label>D:</label><input type="text" id="choixD" placeholder="Choix D"></div>
-                </div>
-                <!-- Vrai/Faux -->
-                <div id="addVraiFauxFields" class="choices-container">
-                    <label>Bonne réponse *</label>
-                    <div class="choice-input-group"><input type="radio" name="vraiFauxAnswer" value="Vrai"> Vrai</div>
-                    <div class="choice-input-group"><input type="radio" name="vraiFauxAnswer" value="Faux"> Faux</div>
-                </div>
-                <!-- Réponse libre -->
-                <div id="addLibreFields" class="choices-container">
-                    <div class="form-group">
-                        <label for="reponseReference">Réponse de référence *</label>
-                        <input type="text" id="reponseReference" placeholder="Réponse attendue">
-                    </div>
-                </div>
-                <button type="submit" class="btn-primary">✅ Ajouter la question</button>
-                <button type="reset" class="btn-secondary">🔄 Réinitialiser</button>
-            </form>
+        <!-- Sélectionner tout -->
+        <div class="select-all-container">
+            <label>
+                <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAll()">
+                <span>Sélectionner toutes les questions</span>
+            </label>
         </div>
 
-        <!-- IMPORT/EXPORT -->
-        <div id="import" class="admin-section">
-            <h2>Import / Export</h2>
-            <h3>📤 Exporter les questions</h3>
-            <div class="export-buttons">
-                <button class="btn-primary" onclick="exportJSON()">📄 Export JSON</button>
-                <button class="btn-primary" onclick="exportCSV()">📊 Export CSV</button>
-            </div>
-            <hr style="margin: 40px 0;">
-            <h3>📥 Importer des questions</h3>
-            <p>Importez des questions depuis un fichier JSON :</p>
+        <!-- Sélectionner par manche -->
+        <div id="mancheSelectionContainer" class="select-all-container"
+            style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+
+        <div id="questionsList" class="questions-list"></div>
+    </div>
+
+    <!-- AJOUTER UNE QUESTION -->
+    <div id="add" class="admin-section">
+        <h2>Ajouter une nouvelle question</h2>
+        <form id="addQuestionForm" onsubmit="addQuestion(event)">
             <div class="form-group">
-                <input type="file" id="importFile" accept=".json">
-                <button class="btn-primary" onclick="importJSON()" style="margin-top: 10px;">📥 Importer</button>
+                <label for="questionManche">Manche *</label>
+                <select id="questionManche" required>
+                    <option value="">Sélectionnez une manche</option>
+                </select>
             </div>
+            <div class="form-group">
+                <label for="questionType">Type de question *</label>
+                <select id="questionType" required onchange="toggleFields('add')">
+                    <option value="">Sélectionnez un type</option>
+                    <option value="QCM">QCM (4 choix)</option>
+                    <option value="VraiFaux">Vrai/Faux</option>
+                    <option value="Libre">Réponse libre</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="questionText">Question *</label>
+                <textarea id="questionText" rows="3" required placeholder="Entrez votre question..."></textarea>
+            </div>
+            <!-- QCM -->
+            <div id="addQcmFields" class="choices-container">
+                <label>Choix de réponses * (Cochez la bonne réponse)</label>
+                <div class="choice-input-group"><input type="radio" name="correctAnswer"
+                        value="A"><label>A:</label><input type="text" id="choixA" placeholder="Choix A"></div>
+                <div class="choice-input-group"><input type="radio" name="correctAnswer"
+                        value="B"><label>B:</label><input type="text" id="choixB" placeholder="Choix B"></div>
+                <div class="choice-input-group"><input type="radio" name="correctAnswer"
+                        value="C"><label>C:</label><input type="text" id="choixC" placeholder="Choix C"></div>
+                <div class="choice-input-group"><input type="radio" name="correctAnswer"
+                        value="D"><label>D:</label><input type="text" id="choixD" placeholder="Choix D"></div>
+            </div>
+            <!-- Vrai/Faux -->
+            <div id="addVraiFauxFields" class="choices-container">
+                <label>Bonne réponse *</label>
+                <div class="choice-input-group"><input type="radio" name="vraiFauxAnswer" value="Vrai"> Vrai</div>
+                <div class="choice-input-group"><input type="radio" name="vraiFauxAnswer" value="Faux"> Faux</div>
+            </div>
+            <!-- Réponse libre -->
+            <div id="addLibreFields" class="choices-container">
+                <div class="form-group">
+                    <label for="reponseReference">Réponse de référence *</label>
+                    <input type="text" id="reponseReference" placeholder="Réponse attendue">
+                </div>
+            </div>
+            <button type="submit" class="btn-primary">✅ Ajouter la question</button>
+            <button type="reset" class="btn-secondary">🔄 Réinitialiser</button>
+        </form>
+    </div>
+
+    <!-- IMPORT/EXPORT -->
+    <div id="import" class="admin-section">
+        <h2>Import / Export</h2>
+        <h3>📤 Exporter les questions</h3>
+        <div class="export-buttons">
+            <button class="btn-primary" onclick="exportJSON()">📄 Export JSON</button>
+            <button class="btn-primary" onclick="exportCSV()">📊 Export CSV</button>
         </div>
+        <hr style="margin: 40px 0;">
+        <h3>📥 Importer des questions</h3>
+        <p>Importez des questions depuis un fichier JSON :</p>
+        <div class="form-group">
+            <input type="file" id="importFile" accept=".json">
+            <button class="btn-primary" onclick="importJSON()" style="margin-top: 10px;">📥 Importer</button>
+        </div>
+    </div>
     </div>
 
     <!-- Modal d'édition -->

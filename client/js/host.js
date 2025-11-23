@@ -224,6 +224,8 @@ function updateSelectAllCheckbox() {
 // ============================================
 
 function setupEventListeners() {
+    console.log('🟢 setupEventListeners() appelé');
+
     // Créer la partie
     document.getElementById('createGameBtn').addEventListener('click', createGame);
 
@@ -254,16 +256,24 @@ function setupEventListeners() {
     document.getElementById('closeModal').addEventListener('click', closeQuestionModal);
 
     // Reprendre une partie
-    document.getElementById('restoreGameBtn').addEventListener('click', showRestoreGameModal);
+    document.getElementById('restoreGameBtn').addEventListener('click', showRestoreGameScreen);
 
-    // Fermer le modal de restauration
-    document.getElementById('closeRestoreModal').addEventListener('click', closeRestoreGameModal);
+    // Retour depuis l'écran de restauration
+    document.getElementById('backFromRestore').addEventListener('click', () => showScreen('setup'));
 
     // Terminer la partie manuellement (depuis l'écran question)
-    document.getElementById('endGameBtnQuestion').addEventListener('click', endGameManually);
-
-    // Terminer la partie manuellement (depuis l'écran classement)
-    document.getElementById('endGameBtnLeaderboard').addEventListener('click', endGameManually);
+    // Bouton "Interrompre la partie" (Sidebar)
+    const interruptBtn = document.getElementById('interruptGameBtn');
+    console.log('🔴 Bouton interruptGameBtn trouvé:', interruptBtn);
+    if (interruptBtn) {
+        interruptBtn.addEventListener('click', () => {
+            console.log('🔴 Clic sur interruptGameBtn détecté!');
+            interruptGame();
+        });
+        console.log('🔴 Event listener attaché à interruptGameBtn');
+    } else {
+        console.error('🔴 ERREUR: Bouton interruptGameBtn introuvable!');
+    }
 }
 
 // ============================================
@@ -914,16 +924,14 @@ socket.on('game:leaderboard', ({ leaderboard, currentQuestion, totalQuestions, i
     updateGameInfoPanel(mergedPlayers);
 
     const nextBtn = document.getElementById('nextQuestionBtn');
-    const finishBtn = document.getElementById('finishGameBtn');
 
     if (isFinished) {
         // Cas où la partie est déjà marquée comme terminée par le serveur
         nextBtn.style.display = 'none';
-        finishBtn.style.display = 'block';
     } else {
         // Partie en cours
         nextBtn.style.display = 'block';
-        finishBtn.style.display = 'none';
+
 
         // Vérifier si c'est la dernière question
         // currentQuestion est l'index (0-based) de la question qui vient d'être jouée
@@ -970,19 +978,41 @@ function nextQuestion() {
 // TERMINER LA PARTIE MANUELLEMENT
 // ============================================
 
-function endGameManually() {
+function interruptGame() {
+    console.log('Tentative d\'interruption de partie');
+
+    if (!gameCode) {
+        alert("Erreur : Aucun code de partie actif. Impossible d'interrompre la partie.");
+        return;
+    }
+
     const confirmation = confirm(
         "Êtes-vous sûr de vouloir interrompre la partie maintenant ?\n\n" +
-        "Le classement actuel sera affiché.\n\n" +
+        "La progression sera sauvegardée.\n\n" +
         "💡 Vous pourrez reprendre cette partie plus tard via le bouton '🔄 Reprendre une partie'."
     );
 
     if (confirmation) {
+        console.log('Interruption confirmée pour:', gameCode);
         // Arrêter le timer s'il est en cours
         stopTimer();
 
-        // Envoyer la commande au serveur
-        socket.emit('host:endGame', { gameCode });
+        // Envoyer la commande au serveur avec callback pour confirmer la réception
+        socket.emit('host:endGame', { gameCode }, (response) => {
+            console.log('Réponse du serveur:', response);
+            if (response && response.success) {
+                alert("Partie interrompue et sauvegardée.");
+                window.location.reload();
+            } else {
+                alert("Erreur lors de l'interruption de la partie.");
+            }
+        });
+
+        // Timeout de secours si le serveur ne répond pas
+        setTimeout(() => {
+            console.log('Timeout - rechargement de la page');
+            window.location.reload();
+        }, 3000);
     }
 }
 
@@ -1018,13 +1048,22 @@ function viewHistory() {
         screens[key].classList.contains('active')
     );
 
+    // Sauvegarder si le timer était actif avant d'arrêter
+    const timerWasActive = timer !== null;
+
     savedGameState = {
         screen: currentScreen,
         currentQuestion: currentQuestion,
-        timerSeconds: timerSeconds
+        timerSeconds: timerSeconds,
+        timerWasActive: timerWasActive
     };
 
     console.log('État sauvegardé:', savedGameState);
+
+    // Arrêter le timer pendant la consultation de l'historique
+    if (timerWasActive) {
+        stopTimer();
+    }
 
     // Demander l'historique au serveur
     socket.emit('host:getQuestionsHistory', { gameCode });
@@ -1046,10 +1085,20 @@ function displayHistoryList(history) {
     container.innerHTML = history.map(item => `
         <div class="history-item" onclick="viewQuestionDetails(${item.questionIndex})">
             <div class="history-item-header">
-                <span class="history-question-number">Question ${item.questionNumber}</span>
-                <span class="history-responses-count">${item.responsesCount} réponses</span>
+                <span class="history-question-number">
+                    <i class="ph ph-question"></i> Question ${item.questionNumber}
+                </span>
+                <span class="history-responses-count">
+                    <i class="ph ph-users"></i> ${item.responsesCount} réponses
+                </span>
             </div>
             <div class="history-question-text">${item.question.question}</div>
+            <div class="history-item-footer">
+                <span class="click-hint">
+                    <i class="ph ph-pencil-simple"></i> Cliquer pour voir et corriger
+                </span>
+                <span class="history-arrow"><i class="ph ph-caret-right"></i></span>
+            </div>
         </div>
     `).join('');
 }
@@ -1112,6 +1161,11 @@ window.modifyAnswer = function (questionIndex, playerId, newValidation) {
 socket.on('host:leaderboardUpdated', ({ leaderboard }) => {
     // Mettre à jour le classement affiché
     displayLeaderboard(leaderboard);
+
+    // Mettre à jour le panneau d'informations (sidebar) avec les scores rafraîchis
+    const mergedPlayers = mergeLeaderboardWithPlayers(leaderboard);
+    currentPlayers = mergedPlayers;
+    updateGameInfoPanel(mergedPlayers);
 });
 
 function closeQuestionModal() {
@@ -1135,10 +1189,38 @@ function restoreGameState() {
         currentQuestion = savedGameState.currentQuestion;
         timerSeconds = savedGameState.timerSeconds;
         updateTimerDisplay();
+
+        // Redémarrer le timer s'il était actif et qu'il reste du temps
+        if (savedGameState.timerWasActive && timerSeconds > 0) {
+            resumeTimer();
+        }
     }
 
     // Réinitialiser l'état sauvegardé
     savedGameState = null;
+}
+
+// Reprendre le timer avec les secondes restantes (sans réinitialiser à 40)
+function resumeTimer() {
+    if (timer) return; // Ne pas démarrer si déjà actif
+
+    timer = setInterval(() => {
+        timerSeconds--;
+        updateTimerDisplay();
+
+        if (timerSeconds <= 0) {
+            stopTimer();
+            timerSeconds = 0;
+            updateTimerDisplay();
+
+            // Afficher le bouton approprié même si personne n'a répondu
+            if (currentQuestion && (currentQuestion.type === 'QCM' || currentQuestion.type === 'VraiFaux')) {
+                document.getElementById('revealResultsBtn').style.display = 'block';
+            } else {
+                document.getElementById('showLeaderboardBtn').style.display = 'block';
+            }
+        }
+    }, 1000);
 }
 
 // ============================================
@@ -1228,14 +1310,15 @@ document.getElementById('backFromRestore').addEventListener('click', () => {
     showScreen('setup');
 });
 
-function restoreGame(gameCode) {
-    console.log('Restauration de la partie:', gameCode);
+function restoreGame(restoredGameCode) {
+    console.log('Restauration de la partie:', restoredGameCode);
 
-    socket.emit('host:restoreGame', { gameCode: gameCode }, (response) => {
+    socket.emit('host:reconnectGame', { gameCode: restoredGameCode }, (response) => {
         if (response.success) {
             const gameInfo = response.gameInfo;
-            currentGameCode = gameCode;
+            gameCode = restoredGameCode;
             document.getElementById('gameCode').textContent = gameCode;
+            showGameInfoPanel(gameCode);
 
             // Restaurer l'état local
             currentQuestion = gameInfo.currentQuestionIndex;
