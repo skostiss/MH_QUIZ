@@ -39,24 +39,14 @@
             </div>
             <p>Sélectionnez les questions pour votre quiz</p>
 
-            <div class="setup-layout">
-                <!-- COLONNE GAUCHE : Ordre des manches -->
-                <div class="setup-column-left">
-                    <div id="mancheOrderControl" class="manche-order-container">
-                        <!-- Chargé dynamiquement par displayMancheOrderControl() -->
-                    </div>
+            <div class="setup-layout-single">
+                <div class="select-all-container">
+                    <input type="checkbox" id="selectAllCheckbox">
+                    <label for="selectAllCheckbox"><strong>Tout sélectionner</strong></label>
                 </div>
 
-                <!-- COLONNE DROITE : Liste des questions -->
-                <div class="setup-column-right">
-                    <div class="select-all-container">
-                        <input type="checkbox" id="selectAllCheckbox">
-                        <label for="selectAllCheckbox"><strong>Tout sélectionner</strong></label>
-                    </div>
-
-                    <div id="questionsSelection" class="questions-list">
-                        <!-- Chargé dynamiquement via JS -->
-                    </div>
+                <div id="mancheOrderControl" class="manche-order-container">
+                    <!-- Chargé dynamiquement par displayGameSetup() -->
                 </div>
             </div>
 
@@ -173,7 +163,8 @@
                 <button id="backFromHistory" class="btn btn-secondary">← Retour</button>
             </div>
             <p class="history-instruction">
-                <i class="ph ph-info"></i> Cliquez sur une question pour voir les détails et modifier les validations des réponses
+                <i class="ph ph-info"></i> Cliquez sur une question pour voir les détails et modifier les validations
+                des réponses
             </p>
 
             <div id="historyList" class="history-list">

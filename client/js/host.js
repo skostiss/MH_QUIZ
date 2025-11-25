@@ -12,7 +12,7 @@ let manches = {};
 let currentQuestion = null;
 let timer = null;
 let timerSeconds = 40;
-let currentMancheFilter = 'all';
+
 let persistentSelections = new Set(); // Pour persister les sélections entre les filtres
 let mancheOrder = [1, 2, 3, 4, 5]; // Ordre des manches (modifiable par le host)
 let draggedMancheIndex = null; // Pour le glisser-déposer des manches
@@ -46,24 +46,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 // CHARGEMENT DES MANCHES
 // ============================================
 
+// ============================================
+// CHARGEMENT DES MANCHES
+// ============================================
+
 async function loadManches() {
     try {
         const response = await fetch('/api/manches');
         manches = await response.json();
         console.log('Manches chargées:', manches);
-        // Afficher le contrôle d'ordre des manches
-        // Afficher le contrôle d'ordre des manches (qui sert aussi de filtre)
-        displayMancheOrderControl();
+        // Afficher le setup du jeu
+        displayGameSetup();
     } catch (error) {
         console.error('Erreur chargement manches:', error);
     }
-}
-
-function filterByManche(mancheId) {
-    currentMancheFilter = mancheId;
-    // Rafraîchir l'affichage pour mettre à jour la classe active
-    displayMancheOrderControl();
-    displayQuestionsSelection();
 }
 
 // ============================================
@@ -74,78 +70,129 @@ async function loadQuestions() {
     try {
         const response = await fetch('/api/questions');
         allQuestions = await response.json();
-        // Maintenant que les questions sont chargées, afficher le contrôle (qui sert de filtre)
-        displayMancheOrderControl();
-        displayQuestionsSelection();
+        // Afficher le setup du jeu
+        displayGameSetup();
     } catch (error) {
         console.error('Erreur chargement questions:', error);
         alert('Erreur lors du chargement des questions');
     }
 }
 
-function displayQuestionsSelection() {
-    const container = document.getElementById('questionsSelection');
+// ============================================
+// AFFICHAGE SETUP (ACCORDION)
+// ============================================
+
+// État de l'accordéon (quelles manches sont ouvertes)
+let openManches = new Set();
+
+function toggleMancheAccordion(mancheId) {
+    if (openManches.has(mancheId)) {
+        openManches.delete(mancheId);
+    } else {
+        openManches.add(mancheId);
+    }
+    displayGameSetup();
+}
+
+function displayGameSetup() {
+    const container = document.getElementById('mancheOrderControl');
+    if (!container) return;
+
+    // Si les données ne sont pas encore chargées, ne rien faire
+    if (Object.keys(manches).length === 0 || allQuestions.length === 0) return;
+
     container.innerHTML = '';
 
-    // Filtrer les questions selon la manche sélectionnée
-    const filteredQuestions = currentMancheFilter === 'all'
-        ? allQuestions
-        : allQuestions.filter(q => q.manche === currentMancheFilter);
-
-    if (filteredQuestions.length === 0) {
-        container.innerHTML = '<p>Aucune question dans cette manche.</p>';
-        return;
-    }
-
-    // Grouper par manche
-    const groupedByManche = {};
-    filteredQuestions.forEach(q => {
-        if (!groupedByManche[q.manche]) {
-            groupedByManche[q.manche] = [];
-        }
-        groupedByManche[q.manche].push(q);
-    });
-
-    // Afficher chaque manche
-    Object.keys(groupedByManche).sort((a, b) => a - b).forEach(mancheId => {
+    mancheOrder.forEach((mancheId, index) => {
         const manche = manches[mancheId];
-        const mancheQuestions = groupedByManche[mancheId];
+        if (!manche) return;
 
-        // Calculer le nombre de questions sélectionnées dans cette manche
-        const selectedInManche = mancheQuestions.filter(q => persistentSelections.has(q.id)).length;
+        // Calculer les totaux pour cette manche
+        const mancheQuestions = allQuestions.filter(q => q.manche === manche.id);
         const totalInManche = mancheQuestions.length;
+        const selectedInManche = mancheQuestions.filter(q => persistentSelections.has(q.id)).length;
+        const isOpen = openManches.has(manche.id);
 
-        const mancheSection = document.createElement('div');
-        mancheSection.className = 'manche-section-host';
-        mancheSection.innerHTML = `
-            <h3 class="manche-title-host">🎯 ${manche.nom} <span class="manche-count-host" id="manche-count-${mancheId}">(${selectedInManche}/${totalInManche} questions)</span></h3>
+        // État de la checkbox de manche
+        const isMancheFull = totalInManche > 0 && selectedInManche === totalInManche;
+        const isManchePartial = selectedInManche > 0 && selectedInManche < totalInManche;
+
+        // Créer l'élément de l'accordéon
+        const accordionItem = document.createElement('div');
+        accordionItem.className = `manche-accordion-item ${isOpen ? 'open' : ''}`;
+        accordionItem.draggable = true;
+        accordionItem.dataset.index = index;
+        accordionItem.dataset.mancheId = manche.id;
+
+        // Header de l'accordéon
+        const header = document.createElement('div');
+        header.className = 'manche-accordion-header';
+        header.onclick = (e) => {
+            // Ne pas toggle si on clique sur les contrôles de déplacement ou la checkbox
+            if (e.target.closest('.manche-order-controls') ||
+                e.target.closest('.drag-handle') ||
+                e.target.classList.contains('manche-select-checkbox')) return;
+            toggleMancheAccordion(manche.id);
+        };
+
+        header.innerHTML = `
+            <span class="drag-handle" onclick="event.stopPropagation()">☰</span>
+            <input type="checkbox" class="manche-select-checkbox" data-manche-id="${manche.id}" 
+                   ${isMancheFull ? 'checked' : ''} 
+                   onclick="toggleMancheSelection(${manche.id}, this.checked); event.stopPropagation()">
+            <span class="manche-order-number">${index + 1}.</span>
+            <span class="manche-order-label">${manche.nom}</span>
+            <span class="manche-count-badge" id="manche-count-${manche.id}">(${selectedInManche}/${totalInManche})</span>
+            <div class="manche-order-controls" onclick="event.stopPropagation()">
+                <button class="manche-order-btn" onclick="moveMancheUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
+                <button class="manche-order-btn" onclick="moveMancheDown(${index})" ${index === mancheOrder.length - 1 ? 'disabled' : ''}>↓</button>
+            </div>
+            <i class="ph ph-caret-down accordion-chevron"></i>
         `;
 
-        mancheQuestions.forEach(q => {
-            const div = document.createElement('div');
-            div.className = 'question-checkbox';
+        // Gérer l'état indéterminé visuellement après insertion
+        setTimeout(() => {
+            const cb = header.querySelector('.manche-select-checkbox');
+            if (cb) cb.indeterminate = isManchePartial;
+        }, 0);
 
-            const typeClass = q.type.toLowerCase().replace('/', '');
-            const typeLabel = q.type === 'VraiFaux' ? 'Vrai/Faux' : q.type;
+        // Contenu de l'accordéon (Liste des questions)
+        const content = document.createElement('div');
+        content.className = `manche-accordion-content ${isOpen ? 'open' : ''}`;
 
-            // Vérifier si cette question est dans les sélections persistantes
-            const isChecked = persistentSelections.has(q.id);
+        if (mancheQuestions.length === 0) {
+            content.innerHTML = '<p style="padding: 10px; color: var(--text-muted);">Aucune question dans cette manche.</p>';
+        } else {
+            mancheQuestions.forEach(q => {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'accordion-question-item';
 
-            div.innerHTML = `
-                <input type="checkbox" id="q${q.id}" value="${q.id}" class="question-check" data-manche="${mancheId}" ${isChecked ? 'checked' : ''}>
-                <div class="question-info">
-                    <span class="question-type ${typeClass}">${typeLabel}</span>
-                    <div>${q.question}</div>
-                </div>
-            `;
+                const typeClass = q.type.toLowerCase().replace('/', '');
+                const typeLabel = q.type === 'VraiFaux' ? 'Vrai/Faux' : q.type;
+                const isChecked = persistentSelections.has(q.id);
 
-            mancheSection.appendChild(div);
-        });
+                qDiv.innerHTML = `
+                    <input type="checkbox" id="q${q.id}" value="${q.id}" class="question-check" data-manche="${manche.id}" ${isChecked ? 'checked' : ''}>
+                    <div class="accordion-question-info">
+                        <div style="margin-bottom: 4px;">
+                            <span class="accordion-question-type ${typeClass}">${typeLabel}</span>
+                        </div>
+                        <div>${q.question}</div>
+                    </div>
+                `;
+                content.appendChild(qDiv);
+            });
+        }
 
-        container.appendChild(mancheSection);
+        accordionItem.appendChild(header);
+        accordionItem.appendChild(content);
+        container.appendChild(accordionItem);
     });
 
-    // Ajouter des event listeners pour mettre à jour les sélections persistantes et la case "Tout sélectionner"
+    // Initialiser le glisser-déposer
+    initMancheDragAndDrop();
+
+    // Attacher les event listeners pour les checkboxes
     document.querySelectorAll('.question-check').forEach(checkbox => {
         checkbox.addEventListener('change', (e) => {
             const questionId = parseInt(e.target.value);
@@ -156,34 +203,30 @@ function displayQuestionsSelection() {
             }
             updateSelectAllCheckbox();
             updateMancheCounts();
+            updateMancheCheckboxes(); // Nouvelle fonction pour mettre à jour les checkboxes de manche
         });
     });
 
-    // Mettre à jour l'état de "Tout sélectionner"
     updateSelectAllCheckbox();
 }
 
-// Fonction pour mettre à jour les compteurs de chaque manche
+// Fonction pour mettre à jour les compteurs de chaque manche (optimisée pour ne pas tout re-rendre)
 function updateMancheCounts() {
-    // Parcourir toutes les manches affichées
     Object.keys(manches).forEach(mancheId => {
         const countElement = document.getElementById(`manche-count-${mancheId}`);
         if (!countElement) return;
 
-        // Compter les questions sélectionnées dans cette manche
         const mancheQuestions = allQuestions.filter(q => q.manche === parseInt(mancheId));
         const selectedInManche = mancheQuestions.filter(q => persistentSelections.has(q.id)).length;
         const totalInManche = mancheQuestions.length;
 
-        countElement.textContent = `(${selectedInManche}/${totalInManche} questions)`;
+        countElement.textContent = `(${selectedInManche}/${totalInManche})`;
     });
-
-    // Mettre à jour aussi les filtres (ordre des manches)
-    displayMancheOrderControl();
 }
 
 // Fonction pour tout sélectionner/désélectionner
 function toggleSelectAll() {
+    console.log('🔵 toggleSelectAll called');
     const selectAllCheckbox = document.getElementById('selectAllCheckbox');
     const questionCheckboxes = document.querySelectorAll('.question-check');
 
@@ -200,6 +243,8 @@ function toggleSelectAll() {
 
     // Mettre à jour les compteurs de manches
     updateMancheCounts();
+    // Mettre à jour les checkboxes des manches
+    updateMancheCheckboxes();
 }
 
 // Fonction pour mettre à jour la case "Tout sélectionner"
@@ -276,75 +321,60 @@ function setupEventListeners() {
     }
 }
 
-// ============================================
-// ORDRE DES MANCHES
-// ============================================
+// Fonction pour sélectionner/désélectionner toute une manche
+window.toggleMancheSelection = function (mancheId, isChecked) {
+    const mancheQuestions = allQuestions.filter(q => q.manche === mancheId);
 
-function displayMancheOrderControl() {
-    const container = document.getElementById('mancheOrderControl');
-    if (!container) return;
+    mancheQuestions.forEach(q => {
+        if (isChecked) {
+            persistentSelections.add(q.id);
+        } else {
+            persistentSelections.delete(q.id);
+        }
 
-    // Calculer les totaux pour "Toutes les questions"
-    const totalSelected = persistentSelections.size;
-    const totalQuestions = allQuestions.length;
+        // Mettre à jour la checkbox individuelle si elle est rendue
+        const checkbox = document.getElementById(`q${q.id}`);
+        if (checkbox) {
+            checkbox.checked = isChecked;
+        }
+    });
 
-    let html = `
-        <h3>📋 Ordre des manches & Filtres</h3>
-        <p>Cliquez pour filtrer, glissez pour réorganiser.</p>
-        <div class="manche-order-list">
-            <!-- Item statique pour "Toutes les questions" -->
-            <div class="manche-order-item static-item ${currentMancheFilter === 'all' ? 'active' : ''}" 
-                 onclick="filterByManche('all')">
-                <span class="manche-order-number">📚</span>
-                <span class="manche-order-label">Toutes les questions</span>
-                <span class="manche-count-badge">${totalSelected}/${totalQuestions}</span>
-            </div>
-    `;
+    updateSelectAllCheckbox();
+    updateMancheCounts();
+    // Pas besoin d'appeler updateMancheCheckboxes car on vient de cliquer dessus
+};
 
-    html += mancheOrder.map((mancheId, index) => {
-        const manche = manches[mancheId];
-        if (!manche) return '';
+// Fonction pour mettre à jour l'état des checkboxes de manche (appelée quand on coche une question individuelle)
+function updateMancheCheckboxes() {
+    Object.keys(manches).forEach(mancheId => {
+        const checkbox = document.querySelector(`.manche-select-checkbox[data-manche-id="${mancheId}"]`);
+        if (!checkbox) return;
 
-        // Calculer les totaux pour cette manche
-        const mancheQuestions = allQuestions.filter(q => q.manche === manche.id);
-        const totalInManche = mancheQuestions.length;
+        const mancheQuestions = allQuestions.filter(q => q.manche === parseInt(mancheId));
+        if (mancheQuestions.length === 0) return;
+
         const selectedInManche = mancheQuestions.filter(q => persistentSelections.has(q.id)).length;
+        const totalInManche = mancheQuestions.length;
 
-        return `
-            <div class="manche-order-item ${currentMancheFilter === manche.id ? 'active' : ''}" 
-                 draggable="true" 
-                 data-index="${index}"
-                 onclick="filterByManche(${manche.id})">
-                <span class="drag-handle" onclick="event.stopPropagation()">☰</span>
-                <span class="manche-order-number">${index + 1}.</span>
-                <span class="manche-order-label">${manche.nom}</span>
-                <span class="manche-count-badge">${selectedInManche}/${totalInManche}</span>
-                <div class="manche-order-controls" onclick="event.stopPropagation()">
-                    <button class="manche-order-btn" onclick="moveMancheUp(${index})" ${index === 0 ? 'disabled' : ''}>↑</button>
-                    <button class="manche-order-btn" onclick="moveMancheDown(${index})" ${index === mancheOrder.length - 1 ? 'disabled' : ''}>↓</button>
-                </div>
-            </div>
-        `;
-    }).join('');
+        const allSelected = selectedInManche === totalInManche;
+        const noneSelected = selectedInManche === 0;
 
-    html += `</div>`;
-    container.innerHTML = html;
-
-    // Initialiser le glisser-déposer après le rendu
-    initMancheDragAndDrop();
+        checkbox.checked = allSelected;
+        checkbox.indeterminate = !allSelected && !noneSelected;
+    });
 }
 
 window.moveMancheUp = function (index) {
     if (index > 0) {
         [mancheOrder[index], mancheOrder[index - 1]] = [mancheOrder[index - 1], mancheOrder[index]];
-        displayMancheOrderControl();
+        displayGameSetup();
     }
 };
 
 window.moveMancheDown = function (index) {
     if (index < mancheOrder.length - 1) {
         [mancheOrder[index], mancheOrder[index + 1]] = [mancheOrder[index + 1], mancheOrder[index]];
-        displayMancheOrderControl();
+        displayGameSetup();
     }
 };
 
@@ -362,7 +392,7 @@ function shuffleArray(array) {
 // ============================================
 
 function initMancheDragAndDrop() {
-    const items = document.querySelectorAll('.manche-order-item[draggable]');
+    const items = document.querySelectorAll('.manche-accordion-item[draggable]');
 
     items.forEach(item => {
         item.addEventListener('dragstart', handleMancheDragStart);
@@ -382,8 +412,7 @@ function handleMancheDragStart(e) {
 
 function handleMancheDragEnd(e) {
     this.classList.remove('dragging');
-    // Retirer la classe drag-over de tous les éléments
-    document.querySelectorAll('.manche-order-item').forEach(item => {
+    document.querySelectorAll('.manche-accordion-item').forEach(item => {
         item.classList.remove('drag-over');
     });
 }
@@ -392,14 +421,11 @@ function handleMancheDragOver(e) {
     if (e.preventDefault) {
         e.preventDefault();
     }
-
     e.dataTransfer.dropEffect = 'move';
-
     const targetIndex = parseInt(this.dataset.index);
     if (targetIndex !== draggedMancheIndex) {
         this.classList.add('drag-over');
     }
-
     return false;
 }
 
@@ -415,18 +441,11 @@ function handleMancheDrop(e) {
     const targetIndex = parseInt(this.dataset.index);
 
     if (draggedMancheIndex !== null && draggedMancheIndex !== targetIndex) {
-        // Retirer la manche de sa position d'origine
         const draggedManche = mancheOrder[draggedMancheIndex];
         mancheOrder.splice(draggedMancheIndex, 1);
-
-        // Insérer la manche à la nouvelle position
         mancheOrder.splice(targetIndex, 0, draggedManche);
-
-        // Rafraîchir l'affichage
-        displayMancheOrderControl();
-        initMancheDragAndDrop(); // Ré-attacher les événements
+        displayGameSetup();
     }
-
     return false;
 }
 
