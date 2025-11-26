@@ -1347,43 +1347,48 @@ function resumeTimer() {
 async function showRestoreGameScreen() {
     showScreen('restore');
     const message = document.getElementById('restoreGameMessage');
-    const container = document.getElementById('activeGamesList');
+    const activeContainer = document.getElementById('activeGamesList');
+    const archivedContainer = document.getElementById('archivedGamesList');
 
-    message.textContent = 'Chargement des parties actives...';
-    container.innerHTML = '';
+    message.textContent = 'Chargement des parties...';
+    activeContainer.innerHTML = '';
+    archivedContainer.innerHTML = '';
 
     try {
         const response = await fetch('/api/games/active');
         const gamesData = await response.json();
 
         // Trier par timestamp décroissant (plus récentes en premier)
-        // Si timestamp absent (anciennes sauvegardes), on utilise 0 (fin de liste)
-        const activeGames = gamesData.sort((a, b) => {
+        const allGames = gamesData.sort((a, b) => {
             const timeA = a.timestamp || 0;
             const timeB = b.timestamp || 0;
             return timeB - timeA;
         });
 
-        if (activeGames.length === 0) {
-            message.textContent = 'Aucune partie en cours à restaurer.';
+        if (allGames.length === 0) {
+            message.textContent = 'Aucune partie sauvegardée.';
+            activeContainer.innerHTML = '<p class="empty-state">Aucune partie en cours</p>';
+            archivedContainer.innerHTML = '<p class="empty-state">Aucune partie archivée</p>';
             return;
         }
 
-        message.textContent = `${activeGames.length} partie(s) trouvée(s) : `;
+        // Séparer les parties actives et archivées
+        const activeGames = allGames.filter(g => g.status !== 'finished');
+        const archivedGames = allGames.filter(g => g.status === 'finished');
 
-        container.innerHTML = activeGames.map(game => {
+        message.textContent = `${allGames.length} partie(s) trouvée(s)`;
+
+        // Fonction helper pour générer le HTML d'une partie
+        const renderGameItem = (game) => {
             const statusText = {
                 'waiting': 'En attente',
                 'playing': 'En cours',
                 'finished': 'Terminée'
             }[game.status] || game.status;
 
-            // Formater la liste des joueurs avec leurs scores
             let playersInfo = '';
             if (game.players && game.players.length > 0) {
-                // Trier les joueurs par score décroissant
                 const sortedPlayers = [...game.players].sort((a, b) => b.score - a.score);
-
                 playersInfo = `
                     <div class="game-players-list">
                         <strong>Participants :</strong><br>
@@ -1392,17 +1397,21 @@ async function showRestoreGameScreen() {
                     return `<span class="player-score-item">${connectedIcon} ${p.name} (${p.score} pts)</span>`;
                 }).join(', ')}
                     </div>
-`;
+                `;
             } else {
                 playersInfo = `<div class="game-players-list"><em>Aucun participant</em></div>`;
             }
+
+            // Pour les parties terminées, on affiche "Consulter" au lieu de "Reprendre"
+            const actionBtnText = game.status === 'finished' ? '👁️ Consulter' : '🔄 Reprendre';
+            const actionBtnClass = game.status === 'finished' ? 'btn-view-game' : 'btn-restore-game';
 
             return `
                 <div class="active-game-item-container">
                     <div class="game-select-checkbox">
                         <input type="checkbox" class="game-checkbox" data-code="${game.gameCode}">
                     </div>
-                    <div class="active-game-item" data-code="${game.gameCode}">
+                    <div class="active-game-item ${game.status === 'finished' ? 'archived' : ''}" data-code="${game.gameCode}">
                         <div class="game-item-header">
                             <strong>Code: ${game.gameCode}</strong>
                             <span class="game-status status-${game.status}">${statusText}</span>
@@ -1410,22 +1419,36 @@ async function showRestoreGameScreen() {
                         <div class="game-item-info">
                             <span>👥 ${game.playersCount} joueur(s)</span>
                             <span>❓ Question ${game.currentQuestion} / ${game.totalQuestions}</span>
+                            <span class="game-date">${new Date(game.timestamp).toLocaleString()}</span>
                         </div>
                         ${playersInfo}
                         <div class="game-item-action">
-                            <button class="btn-restore-game">🔄 Reprendre</button>
+                            <button class="${actionBtnClass}">${actionBtnText}</button>
                         </div>
                     </div>
                 </div>
-    `;
-        }).join('');
+            `;
+        };
+
+        // Rendu des parties actives
+        if (activeGames.length > 0) {
+            activeContainer.innerHTML = activeGames.map(renderGameItem).join('');
+        } else {
+            activeContainer.innerHTML = '<p class="empty-state">Aucune partie en cours</p>';
+        }
+
+        // Rendu des parties archivées
+        if (archivedGames.length > 0) {
+            archivedContainer.innerHTML = archivedGames.map(renderGameItem).join('');
+        } else {
+            archivedContainer.innerHTML = '<p class="empty-state">Aucune partie archivée</p>';
+        }
 
         // Gérer l'affichage du bouton "Supprimer la sélection"
         const checkboxes = document.querySelectorAll('.game-checkbox');
         const deleteSelectedBtn = document.getElementById('deleteSelectedGames');
         const selectAllCheckbox = document.getElementById('selectAllGames');
 
-        // Reset select all state
         if (selectAllCheckbox) selectAllCheckbox.checked = false;
 
         function updateSelectionState() {
@@ -1436,18 +1459,8 @@ async function showRestoreGameScreen() {
             if (selectAllCheckbox) selectAllCheckbox.checked = allChecked;
         }
 
-        // Event listener for Select All
+        // Re-attacher l'écouteur pour "Tout sélectionner"
         if (selectAllCheckbox) {
-            // Remove old listener to avoid duplicates if re-rendered (though showRestoreGameScreen re-renders list, header is static)
-            // Actually header is static, so we should attach listener only once or handle it carefully.
-            // Better: attach it once outside, but here we need access to 'checkboxes' which are dynamic.
-            // So we can attach a change event to document or re-attach here.
-            // Let's use a fresh clone to clear listeners or just simple assignment if we were using onclick.
-            // Since we are inside the function that runs every time we show the screen, we should be careful.
-            // BUT: selectAllGames is in the static HTML.
-            // Let's move the listener OUTSIDE this function, or handle it here by finding it again.
-
-            // Clone to remove previous listeners
             const newSelectAll = selectAllCheckbox.cloneNode(true);
             selectAllCheckbox.parentNode.replaceChild(newSelectAll, selectAllCheckbox);
 
@@ -1464,21 +1477,13 @@ async function showRestoreGameScreen() {
             cb.addEventListener('change', () => {
                 updateSelectionState();
             });
-
-            // Empêcher le clic sur la checkbox de déclencher le clic sur l'item parent (si propagation)
             cb.addEventListener('click', (e) => e.stopPropagation());
         });
 
         // Ajouter les écouteurs d'événements sur les éléments créés
         document.querySelectorAll('.active-game-item').forEach(item => {
             item.addEventListener('click', (e) => {
-                // Si on clique sur le bouton reprendre, on reprend
-                // Si on clique ailleurs, on pourrait toggle la checkbox ? 
-                // Pour l'instant on garde le comportement actuel : click item = reprendre
-                // MAIS attention, le bouton reprendre a sa propre classe
-
-                // Si le clic vient du bouton, on reprend
-                if (e.target.classList.contains('btn-restore-game')) {
+                if (e.target.classList.contains('btn-restore-game') || e.target.classList.contains('btn-view-game')) {
                     const gameCode = item.dataset.code;
                     restoreGame(gameCode);
                 }

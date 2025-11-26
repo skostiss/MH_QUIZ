@@ -163,9 +163,20 @@
                     <button id="deleteAllGames" class="btn btn-outline-danger">Tout supprimer</button>
                 </div>
             </div>
-            <p id="restoreGameMessage">Chargement des parties actives...</p>
-            <div id="activeGamesList" class="active-games-list">
-                <!-- Liste des parties actives chargée dynamiquement -->
+            <p id="restoreGameMessage">Chargement des parties...</p>
+
+            <div class="restore-section">
+                <h3><i class="ph ph-play-circle"></i> Parties en cours</h3>
+                <div id="activeGamesList" class="active-games-list">
+                    <!-- Liste des parties actives chargée dynamiquement -->
+                </div>
+            </div>
+
+            <div class="restore-section" style="margin-top: 30px;">
+                <h3><i class="ph ph-archive"></i> Parties archivées</h3>
+                <div id="archivedGamesList" class="active-games-list">
+                    <!-- Liste des parties archivées chargée dynamiquement -->
+                </div>
             </div>
         </div>
 

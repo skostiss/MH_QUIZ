@@ -1,6 +1,152 @@
 {
-  "timestamp": 1764185371371,
+  "timestamp": 1764187615048,
   "games": {
+    "6484": {
+      "gameCode": "6484",
+      "host": "2tJaPoYdECJ73Lf3AAAF",
+      "players": {
+        "RzuPp-IR2ac-qewuAAAF": {
+          "id": "RzuPp-IR2ac-qewuAAAF",
+          "name": "sq",
+          "score": 1,
+          "connected": false
+        },
+        "GkuDuEt4qNN569QdAAAH": {
+          "id": "GkuDuEt4qNN569QdAAAH",
+          "name": "GLJGJGJG",
+          "score": 0,
+          "connected": false
+        }
+      },
+      "status": "finished",
+      "selectedQuestions": [
+        {
+          "id": 22,
+          "type": "VraiFaux",
+          "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 23,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’un manager peut appartenir à plus de 20 groupes Teams ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 19,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
+          "manche": 3,
+          "bonneReponse": "Faux"
+        },
+        {
+          "id": 18,
+          "type": "VraiFaux",
+          "question": "Est-ce que les conseillers qui dépassent 60% de taux tél par trimestre ont une prime ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 13,
+          "type": "VraiFaux",
+          "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 21,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’il existe 5 files d’appel RCE ? ",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 20,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’un manager justifie chaque enquête de satisfaction négative reçue par son équipe ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 15,
+          "type": "VraiFaux",
+          "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 17,
+          "type": "VraiFaux",
+          "question": "Est-ce que les CR font aussi le soutien métier des prestataires ?\n\n",
+          "manche": 3,
+          "bonneReponse": "Faux"
+        },
+        {
+          "id": 16,
+          "type": "VraiFaux",
+          "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        }
+      ],
+      "currentQuestionIndex": 2,
+      "responses": {},
+      "questionStartTime": 1764187388591,
+      "questionsHistory": [
+        {
+          "questionIndex": 0,
+          "question": {
+            "id": 22,
+            "type": "VraiFaux",
+            "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
+            "manche": 3,
+            "bonneReponse": "Vrai"
+          },
+          "responses": {
+            "RzuPp-IR2ac-qewuAAAF": {
+              "answer": "Vrai",
+              "time": 5756,
+              "validated": true,
+              "points": 1
+            },
+            "GkuDuEt4qNN569QdAAAH": {
+              "answer": "Faux",
+              "time": 9276,
+              "validated": false,
+              "points": 0
+            }
+          },
+          "timestamp": 1764187289567
+        },
+        {
+          "questionIndex": 1,
+          "question": {
+            "id": 23,
+            "type": "VraiFaux",
+            "question": "Est-ce qu’un manager peut appartenir à plus de 20 groupes Teams ?",
+            "manche": 3,
+            "bonneReponse": "Vrai"
+          },
+          "responses": {},
+          "timestamp": 1764187381359
+        },
+        {
+          "questionIndex": 2,
+          "question": {
+            "id": 19,
+            "type": "VraiFaux",
+            "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
+            "manche": 3,
+            "bonneReponse": "Faux"
+          },
+          "responses": {},
+          "timestamp": 1764187412089
+        }
+      ],
+      "timestamp": 1764187236889
+    },
     "8225": {
       "gameCode": "8225",
       "host": "y1d1vxvQ8FBRBwBpAAAL",
@@ -211,6 +357,141 @@
         }
       ],
       "timestamp": 1764184234665
+    },
+    "9945": {
+      "gameCode": "9945",
+      "host": "w34W0-wi_aqMgWMnAAAL",
+      "players": {
+        "FEh8UduX6UH0uy88AAAH": {
+          "id": "FEh8UduX6UH0uy88AAAH",
+          "name": "A",
+          "score": 0,
+          "connected": true
+        },
+        "-Z-1bNDuaAMQ9tJgAAAN": {
+          "id": "-Z-1bNDuaAMQ9tJgAAAN",
+          "name": "B",
+          "score": 1,
+          "connected": true
+        }
+      },
+      "status": "finished",
+      "selectedQuestions": [
+        {
+          "id": 19,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
+          "manche": 3,
+          "bonneReponse": "Faux"
+        },
+        {
+          "id": 22,
+          "type": "VraiFaux",
+          "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 15,
+          "type": "VraiFaux",
+          "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 23,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’un manager peut appartenir à plus de 20 groupes Teams ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 18,
+          "type": "VraiFaux",
+          "question": "Est-ce que les conseillers qui dépassent 60% de taux tél par trimestre ont une prime ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 20,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’un manager justifie chaque enquête de satisfaction négative reçue par son équipe ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 16,
+          "type": "VraiFaux",
+          "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 13,
+          "type": "VraiFaux",
+          "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 21,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’il existe 5 files d’appel RCE ? ",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 17,
+          "type": "VraiFaux",
+          "question": "Est-ce que les CR font aussi le soutien métier des prestataires ?\n\n",
+          "manche": 3,
+          "bonneReponse": "Faux"
+        }
+      ],
+      "currentQuestionIndex": 0,
+      "responses": {
+        "FEh8UduX6UH0uy88AAAH": {
+          "answer": "Vrai",
+          "time": 3635,
+          "validated": false,
+          "points": 0
+        },
+        "-Z-1bNDuaAMQ9tJgAAAN": {
+          "answer": "Faux",
+          "time": 8294,
+          "validated": true,
+          "points": 1
+        }
+      },
+      "questionStartTime": 1764187526533,
+      "questionsHistory": [
+        {
+          "questionIndex": 0,
+          "question": {
+            "id": 19,
+            "type": "VraiFaux",
+            "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
+            "manche": 3,
+            "bonneReponse": "Faux"
+          },
+          "responses": {
+            "FEh8UduX6UH0uy88AAAH": {
+              "answer": "Vrai",
+              "time": 3635,
+              "validated": false,
+              "points": 0
+            },
+            "-Z-1bNDuaAMQ9tJgAAAN": {
+              "answer": "Faux",
+              "time": 8294,
+              "validated": true,
+              "points": 1
+            }
+          },
+          "timestamp": 1764187546834
+        }
+      ],
+      "timestamp": 1764187493430
     }
   }
 }

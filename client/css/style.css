@@ -1835,3 +1835,37 @@ body:has(.player-permanent-header[style*="display: block"]) .container {
         padding-top: 65px;
     }
 }
+/* --- ARCHIVED GAMES --- */
+.active-game-item.archived {
+    opacity: 0.8;
+    border-color: var(--border-subtle);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.active-game-item.archived:hover {
+    opacity: 1;
+    border-color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.active-game-item.archived .game-status {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+}
+
+.btn-view-game {
+    background: transparent;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.btn-view-game:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--text-main);
+}
