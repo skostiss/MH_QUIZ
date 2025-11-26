@@ -1,343 +1,216 @@
 {
-  "timestamp": 1764075280697,
+  "timestamp": 1764185371371,
   "games": {
-    "3936": {
-      "gameCode": "3936",
-      "host": "KdZ5li2LQat5nazsAAAD",
+    "8225": {
+      "gameCode": "8225",
+      "host": "y1d1vxvQ8FBRBwBpAAAL",
       "players": {
-        "2We7FuLzL8kYTD-eAAAN": {
-          "id": "2We7FuLzL8kYTD-eAAAN",
-          "name": "b",
-          "score": 0,
-          "connected": false
-        },
-        "72lUMhX0-EVpf7FhAAAR": {
-          "id": "jEzkewsynxl9rgN4AAAP",
-          "name": "c",
-          "score": 2,
-          "connected": false
-        },
-        "vN5t6TUKR9ZVdsUrAAAF": {
-          "id": "vN5t6TUKR9ZVdsUrAAAF",
+        "iC9lSqO1yAsfywLwAAAJ": {
+          "id": "iC9lSqO1yAsfywLwAAAJ",
           "name": "a",
-          "score": 10,
+          "score": 5,
+          "connected": false
+        },
+        "Zw1Oe4W43p78ZqQ_AAAI": {
+          "id": "Zw1Oe4W43p78ZqQ_AAAI",
+          "name": "b",
+          "score": 4,
           "connected": false
         }
       },
-      "status": "playing",
+      "status": "finished",
       "selectedQuestions": [
         {
-          "id": 14,
-          "manche": 2,
-          "type": "QCM",
-          "question": "4",
-          "choix": [
-            "Nombre de personne qui travaille à l'assistance métier RC",
-            "Le nombre de faq rce intégré dans mayday",
-            "le nombre de minutes qu'un pc met à s'ouvrir le matin en moyenne",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "A"
+          "id": 4,
+          "type": "Libre",
+          "question": "Citez 3 actions que les Conseillers référents doivent réaliser au quotidien.",
+          "reponseReference": "Répondre au soutien métier, le traitement des bal rce retours, faire des ezv pour cas complexes , écoute qualité, accompagnement",
+          "manche": 1
         },
         {
           "id": 9,
-          "manche": 2,
           "type": "QCM",
           "question": "3",
+          "manche": 2,
           "choix": [
-            "Nombre appels client pris à l'heure ",
-            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
-            "Heure du premier arrivé chez les prestataires",
+            " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+            "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+            "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
             "Aucune des réponses"
           ],
           "bonneReponse": "B"
         },
         {
-          "id": 12,
-          "manche": 2,
-          "type": "QCM",
-          "question": "2H30",
-          "choix": [
-            "Temps moyen d'une réunion RS en coprod",
-            "Temps moyen d'une comop Assistance métiers CR",
-            "Temps d'attente maximale d'un client",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "A"
-        },
-        {
-          "id": 13,
-          "manche": 2,
-          "type": "QCM",
-          "question": "3",
-          "choix": [
-            "Durée moyenne du soutien CR par jour",
-            "Temps de tél minimum par cc journaliers temps plein",
-            "Temps de la Pause maximum du midi",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "B"
-        },
-        {
-          "id": 10,
-          "manche": 2,
+          "id": 8,
           "type": "QCM",
           "question": "7h du matin",
           "choix": [
-            "Heure à laquelle le premier conseiller interne arrive ",
-            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
-            "Heure du premier arrivé chez les prestataires",
+            "Est-ce l’heure à laquelle le premier conseiller interne arrive ?",
+            " Est-ce l’heure du premier SMS reçu par un responsable d’équipe en cas d’imprévu ? ",
+            "Est-ce l’heure du premier arrivé chez les prestataires ?",
             "Aucune des réponses"
           ],
-          "bonneReponse": "B"
+          "bonneReponse": "B",
+          "manche": 2
         },
         {
-          "id": 11,
-          "manche": 2,
-          "type": "QCM",
-          "question": "40",
-          "choix": [
-            "Nombre de page ouverture par un conseillers pour traiter un dossier ",
-            "Nombre de bugs Informatiques par jour ",
-            "Nombre d'indicateurs qu'un RE doit suivre par conseillers depuis ses PBI",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "C"
-        },
-        {
-          "manche": 5,
+          "id": 27,
           "type": "Libre",
-          "question": "Je mange des pâtes",
-          "reponseReference": "Arsène",
-          "id": 29
+          "question": "Pouvez-vous citer les 5 principaux indicateurs chiffrés qu’un Responsable de service (RS) doit expliquer au quotidien ?",
+          "manche": 4,
+          "reponseReference": "La DMT (Durée Moyenne de Traitement) du site  La satisfaction globale du site  La note de clarté du site  Les notes de qualité du site  L'ancienneté des stocks mails"
+        },
+        {
+          "id": 25,
+          "type": "Libre",
+          "question": "Pouvez-vous citer les 5 plus grands projets qui arriveront en RC ?",
+          "manche": 4,
+          "reponseReference": "MAYDAY : base de connaissance intelligente pour centraliser, structurer et diffuser l’information métier avec IA.  Speech to Text : conversion automatique de la parole en texte pour faciliter la transcription des échanges.  Numéro unique MH1ID : identification unique pour suivre et tracer les interactions clients.  CRM poste de travail : intégration du logiciel de gestion de la relation client directement dans le poste de travail des conseillers.  Distribution de l’activité : gestion et répartition optimisée des appels ou tâches entre les conseillers selon les règles définies."
         }
       ],
-      "currentQuestionIndex": 3,
+      "currentQuestionIndex": 5,
       "responses": {
-        "vN5t6TUKR9ZVdsUrAAAF": {
-          "answer": "B",
-          "time": 7097,
+        "iC9lSqO1yAsfywLwAAAJ": {
+          "answer": "BNBN,",
+          "time": 8817,
           "validated": true,
-          "points": 2
+          "points": 1
+        },
+        "Zw1Oe4W43p78ZqQ_AAAI": {
+          "answer": "BBN,B,B,,",
+          "time": 16877,
+          "validated": false,
+          "points": 0
         }
       },
-      "questionStartTime": 1763938484880,
+      "questionStartTime": 1764184438445,
       "questionsHistory": [
         {
           "questionIndex": 0,
           "question": {
-            "id": 14,
-            "manche": 2,
-            "type": "QCM",
-            "question": "4",
-            "choix": [
-              "Nombre de personne qui travaille à l'assistance métier RC",
-              "Le nombre de faq rce intégré dans mayday",
-              "le nombre de minutes qu'un pc met à s'ouvrir le matin en moyenne",
-              "Aucune des réponses"
-            ],
-            "bonneReponse": "A"
+            "id": 4,
+            "type": "Libre",
+            "question": "Citez 3 actions que les Conseillers référents doivent réaliser au quotidien.",
+            "reponseReference": "Répondre au soutien métier, le traitement des bal rce retours, faire des ezv pour cas complexes , écoute qualité, accompagnement",
+            "manche": 1
           },
           "responses": {
-            "gHTBLIj0eurgGg2DAAAL": {
-              "answer": "B",
-              "time": 8333,
-              "validated": false,
-              "points": 0
+            "iC9lSqO1yAsfywLwAAAJ": {
+              "answer": "jkjkj",
+              "time": 12998,
+              "validated": true,
+              "points": 2
             },
-            "2We7FuLzL8kYTD-eAAAN": {
-              "answer": "C",
-              "time": 11114,
-              "validated": false,
-              "points": 0
-            },
-            "72lUMhX0-EVpf7FhAAAR": {
-              "answer": "A",
-              "time": 13214,
+            "Zw1Oe4W43p78ZqQ_AAAI": {
+              "answer": "jjhjhjh",
+              "time": 15701,
               "validated": true,
               "points": 2
             }
           },
-          "timestamp": 1763583064907
+          "timestamp": 1764184299025
         },
         {
           "questionIndex": 1,
           "question": {
             "id": 9,
-            "manche": 2,
             "type": "QCM",
             "question": "3",
+            "manche": 2,
             "choix": [
-              "Nombre appels client pris à l'heure ",
-              "Heure du premier SMS  reçu par une RE en cas d'imprévu",
-              "Heure du premier arrivé chez les prestataires",
+              " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+              "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+              "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
               "Aucune des réponses"
             ],
             "bonneReponse": "B"
           },
           "responses": {
-            "gHTBLIj0eurgGg2DAAAL": {
+            "iC9lSqO1yAsfywLwAAAJ": {
               "answer": "B",
-              "time": 3937,
+              "time": 8516,
               "validated": true,
               "points": 2
             },
-            "2We7FuLzL8kYTD-eAAAN": {
-              "answer": "B",
-              "time": 6236,
-              "validated": true,
-              "points": 0
-            },
-            "72lUMhX0-EVpf7FhAAAR": {
-              "answer": "B",
-              "time": 8416,
-              "validated": true,
+            "Zw1Oe4W43p78ZqQ_AAAI": {
+              "answer": "A",
+              "time": 11616,
+              "validated": false,
               "points": 0
             }
           },
-          "timestamp": 1763583094546
+          "timestamp": 1764184344788
         },
         {
           "questionIndex": 2,
           "question": {
-            "id": 12,
-            "manche": 2,
+            "id": 8,
             "type": "QCM",
-            "question": "2H30",
+            "question": "7h du matin",
             "choix": [
-              "Temps moyen d'une réunion RS en coprod",
-              "Temps moyen d'une comop Assistance métiers CR",
-              "Temps d'attente maximale d'un client",
+              "Est-ce l’heure à laquelle le premier conseiller interne arrive ?",
+              " Est-ce l’heure du premier SMS reçu par un responsable d’équipe en cas d’imprévu ? ",
+              "Est-ce l’heure du premier arrivé chez les prestataires ?",
               "Aucune des réponses"
             ],
-            "bonneReponse": "A"
+            "bonneReponse": "B",
+            "manche": 2
           },
           "responses": {
-            "vN5t6TUKR9ZVdsUrAAAF": {
-              "answer": "A",
-              "time": 10776,
+            "iC9lSqO1yAsfywLwAAAJ": {
+              "answer": "D",
+              "time": 21437,
+              "validated": false,
+              "points": 0
+            },
+            "Zw1Oe4W43p78ZqQ_AAAI": {
+              "answer": "B",
+              "time": 26157,
               "validated": true,
               "points": 2
             }
           },
-          "timestamp": 1763938462998
+          "timestamp": 1764184404546
         },
         {
           "questionIndex": 3,
           "question": {
-            "id": 13,
-            "manche": 2,
-            "type": "QCM",
-            "question": "3",
-            "choix": [
-              "Durée moyenne du soutien CR par jour",
-              "Temps de tél minimum par cc journaliers temps plein",
-              "Temps de la Pause maximum du midi",
-              "Aucune des réponses"
-            ],
-            "bonneReponse": "B"
+            "id": 27,
+            "type": "Libre",
+            "question": "Pouvez-vous citer les 5 principaux indicateurs chiffrés qu’un Responsable de service (RS) doit expliquer au quotidien ?",
+            "manche": 4,
+            "reponseReference": "La DMT (Durée Moyenne de Traitement) du site  La satisfaction globale du site  La note de clarté du site  Les notes de qualité du site  L'ancienneté des stocks mails"
+          },
+          "responses": {},
+          "timestamp": 1764184421762
+        },
+        {
+          "questionIndex": 4,
+          "question": {
+            "id": 25,
+            "type": "Libre",
+            "question": "Pouvez-vous citer les 5 plus grands projets qui arriveront en RC ?",
+            "manche": 4,
+            "reponseReference": "MAYDAY : base de connaissance intelligente pour centraliser, structurer et diffuser l’information métier avec IA.  Speech to Text : conversion automatique de la parole en texte pour faciliter la transcription des échanges.  Numéro unique MH1ID : identification unique pour suivre et tracer les interactions clients.  CRM poste de travail : intégration du logiciel de gestion de la relation client directement dans le poste de travail des conseillers.  Distribution de l’activité : gestion et répartition optimisée des appels ou tâches entre les conseillers selon les règles définies."
           },
           "responses": {
-            "vN5t6TUKR9ZVdsUrAAAF": {
-              "answer": "B",
-              "time": 7097,
+            "iC9lSqO1yAsfywLwAAAJ": {
+              "answer": "BNBN,",
+              "time": 8817,
               "validated": true,
-              "points": 2
+              "points": 1
+            },
+            "Zw1Oe4W43p78ZqQ_AAAI": {
+              "answer": "BBN,B,B,,",
+              "time": 16877,
+              "validated": false,
+              "points": 0
             }
           },
-          "timestamp": 1763938504537
-        }
-      ]
-    },
-    "5073": {
-      "gameCode": "5073",
-      "host": "xEb1jBOMfdbzrncfAAAD",
-      "players": {},
-      "status": "waiting",
-      "selectedQuestions": [
-        {
-          "id": 9,
-          "manche": 2,
-          "type": "QCM",
-          "question": "3",
-          "choix": [
-            "Nombre appels client pris à l'heure ",
-            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
-            "Heure du premier arrivé chez les prestataires",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "B"
-        },
-        {
-          "id": 10,
-          "manche": 2,
-          "type": "QCM",
-          "question": "7h du matin",
-          "choix": [
-            "Heure à laquelle le premier conseiller interne arrive ",
-            "Heure du premier SMS  reçu par une RE en cas d'imprévu",
-            "Heure du premier arrivé chez les prestataires",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "B"
-        },
-        {
-          "id": 11,
-          "manche": 2,
-          "type": "QCM",
-          "question": "40",
-          "choix": [
-            "Nombre de page ouverture par un conseillers pour traiter un dossier ",
-            "Nombre de bugs Informatiques par jour ",
-            "Nombre d'indicateurs qu'un RE doit suivre par conseillers depuis ses PBI",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "C"
-        },
-        {
-          "id": 12,
-          "manche": 2,
-          "type": "QCM",
-          "question": "2H30",
-          "choix": [
-            "Temps moyen d'une réunion RS en coprod",
-            "Temps moyen d'une comop Assistance métiers CR",
-            "Temps d'attente maximale d'un client",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "A"
-        },
-        {
-          "id": 13,
-          "manche": 2,
-          "type": "QCM",
-          "question": "3",
-          "choix": [
-            "Durée moyenne du soutien CR par jour",
-            "Temps de tél minimum par cc journaliers temps plein",
-            "Temps de la Pause maximum du midi",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "B"
-        },
-        {
-          "id": 14,
-          "manche": 2,
-          "type": "QCM",
-          "question": "4",
-          "choix": [
-            "Nombre de personne qui travaille à l'assistance métier RC",
-            "Le nombre de faq rce intégré dans mayday",
-            "le nombre de minutes qu'un pc met à s'ouvrir le matin en moyenne",
-            "Aucune des réponses"
-          ],
-          "bonneReponse": "A"
+          "timestamp": 1764184471424
         }
       ],
-      "currentQuestionIndex": 0,
-      "responses": {},
-      "questionStartTime": null,
-      "questionsHistory": []
+      "timestamp": 1764184234665
     }
   }
 }

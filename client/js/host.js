@@ -575,20 +575,28 @@ function updateGameInfoPanel(players) {
 }
 
 function showGameInfoPanel(code) {
-    const panel = document.getElementById('gameInfoPanel');
     const panelGameCode = document.getElementById('panelGameCode');
+    const codeSection = document.getElementById('panelCodeSection');
+    const playersSection = document.getElementById('panelPlayersSection');
+    const interruptBtn = document.getElementById('interruptGameBtn');
 
-    if (panel && panelGameCode) {
+    if (panelGameCode) {
         panelGameCode.textContent = code;
-        panel.style.display = 'flex';
     }
+
+    if (codeSection) codeSection.style.display = 'block';
+    if (playersSection) playersSection.style.display = 'block';
+    if (interruptBtn) interruptBtn.style.display = 'inline-flex';
 }
 
 function hideGameInfoPanel() {
-    const panel = document.getElementById('gameInfoPanel');
-    if (panel) {
-        panel.style.display = 'none';
-    }
+    const codeSection = document.getElementById('panelCodeSection');
+    const playersSection = document.getElementById('panelPlayersSection');
+    const interruptBtn = document.getElementById('interruptGameBtn');
+
+    if (codeSection) codeSection.style.display = 'none';
+    if (playersSection) playersSection.style.display = 'none';
+    if (interruptBtn) interruptBtn.style.display = 'none';
 }
 
 function mergeLeaderboardWithPlayers(leaderboard) {
@@ -697,6 +705,26 @@ socket.on('host:allAnswered', ({ responses, question }) => {
 socket.on('game:finished', ({ leaderboard }) => {
     displayFinalLeaderboard(leaderboard);
     showScreen('finished');
+});
+
+// Événement de mise à jour des scores (instantané)
+socket.on('game:scoresUpdated', ({ leaderboard }) => {
+    console.log('Scores mis à jour instantanément:', leaderboard);
+
+    // Mettre à jour le panneau d'informations permanent (sidebar) avec les scores rafraîchis
+    const mergedPlayers = mergeLeaderboardWithPlayers(leaderboard);
+    currentPlayers = mergedPlayers; // Sauvegarder l'état mis à jour
+    updateGameInfoPanel(mergedPlayers);
+
+    // Si on est sur l'écran leaderboard, le rafraîchir
+    if (document.getElementById('leaderboardScreen').classList.contains('active')) {
+        displayLeaderboard(leaderboard);
+    }
+
+    // Si on est sur l'écran de fin, le rafraîchir aussi
+    if (document.getElementById('finishedScreen').classList.contains('active')) {
+        displayFinalLeaderboard(leaderboard);
+    }
 });
 
 socket.on('game:stopTimer', () => {
@@ -828,24 +856,45 @@ function displayResponses(responses, totalPlayers) {
 
         if (r.validated === true) {
             statusClass = 'correct';
-            statusText = `✅ Correct (+${r.points} points)`;
+            statusText = `✅ Correct (+${r.points} points) <span class="modifiable-hint">↻</span>`;
         } else if (r.validated === false) {
             statusClass = 'incorrect';
-            statusText = '❌ Incorrect';
+            statusText = `❌ Incorrect <span class="modifiable-hint">↻</span>`;
         }
 
-        // Pour les réponses libres non validées, afficher les boutons
-        if (currentQuestion.type === 'Libre' && r.validated === null) {
-            actions = `
-                <div class="response-actions">
-                    <button class="btn-validate" onclick="validateAnswer('${r.playerId}', true)">
-                        ✓ Valider
-                    </button>
-                    <button class="btn-reject" onclick="validateAnswer('${r.playerId}', false)">
-                        ✗ Refuser
-                    </button>
-                </div>
-            `;
+        // Pour les réponses libres, toujours afficher des boutons pour permettre la modification
+        if (currentQuestion.type === 'Libre') {
+            if (r.validated === true) {
+                // Déjà validé : afficher un bouton pour invalider
+                actions = `
+                    <div class="response-actions">
+                        <button class="btn-reject" onclick="validateAnswer('${r.playerId}', false)">
+                            ❌ Invalider
+                        </button>
+                    </div>
+                `;
+            } else if (r.validated === false) {
+                // Déjà refusé : afficher un bouton pour valider
+                actions = `
+                    <div class="response-actions">
+                        <button class="btn-validate" onclick="validateAnswer('${r.playerId}', true)">
+                            ✓ Valider
+                        </button>
+                    </div>
+                `;
+            } else {
+                // En attente : afficher les deux boutons
+                actions = `
+                    <div class="response-actions">
+                        <button class="btn-validate" onclick="validateAnswer('${r.playerId}', true)">
+                            ✓ Valider
+                        </button>
+                        <button class="btn-reject" onclick="validateAnswer('${r.playerId}', false)">
+                            ✗ Refuser
+                        </button>
+                    </div>
+                `;
+            }
         }
 
         return `
@@ -884,12 +933,9 @@ function startTimer() {
             timerSeconds = 0;
             updateTimerDisplay();
 
-            // Afficher le bouton approprié même si personne n'a répondu
-            if (currentQuestion && (currentQuestion.type === 'QCM' || currentQuestion.type === 'VraiFaux')) {
-                document.getElementById('revealResultsBtn').style.display = 'block';
-            } else {
-                document.getElementById('showLeaderboardBtn').style.display = 'block';
-            }
+            // Afficher le bouton "Révéler les résultats" pour tous les types de questions
+            document.getElementById('revealResultsBtn').style.display = 'block';
+            document.getElementById('showLeaderboardBtn').style.display = 'none';
         }
     }, 1000);
 }
@@ -919,8 +965,15 @@ function revealResults() {
     // Cacher le bouton "Révéler les résultats"
     document.getElementById('revealResultsBtn').style.display = 'none';
 
-    // Afficher le bouton "Afficher le classement"
-    document.getElementById('showLeaderboardBtn').style.display = 'block';
+    // Afficher le bouton "Afficher le classement" mais le désactiver temporairement
+    const leaderboardBtn = document.getElementById('showLeaderboardBtn');
+    leaderboardBtn.style.display = 'block';
+    leaderboardBtn.disabled = true;
+
+    // Réactiver après 3 secondes pour laisser le temps aux joueurs de voir les résultats
+    setTimeout(() => {
+        leaderboardBtn.disabled = false;
+    }, 3000);
 
     console.log('🎭 Résultats révélés, en attente de l\'affichage du classement');
 }
@@ -942,6 +995,13 @@ socket.on('game:leaderboard', ({ leaderboard, currentQuestion, totalQuestions, i
     currentPlayers = mergedPlayers; // Sauvegarder l'état mis à jour
     updateGameInfoPanel(mergedPlayers);
 
+    // Afficher la progression (Question X/Y)
+    const progressElem = document.getElementById('leaderboardQuestionProgress');
+    if (progressElem) {
+        // currentQuestion est l'index (0-based), donc +1 pour l'affichage
+        progressElem.textContent = `(Question ${currentQuestion + 1}/${totalQuestions})`;
+    }
+
     const nextBtn = document.getElementById('nextQuestionBtn');
 
     if (isFinished) {
@@ -951,6 +1011,11 @@ socket.on('game:leaderboard', ({ leaderboard, currentQuestion, totalQuestions, i
         // Partie en cours
         nextBtn.style.display = 'block';
 
+        // Désactiver temporairement pour forcer la lecture du classement
+        nextBtn.disabled = true;
+        setTimeout(() => {
+            nextBtn.disabled = false;
+        }, 1000);
 
         // Vérifier si c'est la dernière question
         // currentQuestion est l'index (0-based) de la question qui vient d'être jouée
@@ -1090,7 +1155,10 @@ function viewHistory() {
 }
 
 socket.on('host:questionsHistory', ({ history }) => {
-    displayHistoryList(history);
+    // Inverser l'ordre pour avoir la plus récente en haut
+    // (Le user a demandé : "classe les de bas en haut de la plus récente à la plus ancienne")
+    // Interprétation : On veut voir la plus récente en premier (en haut de la liste)
+    displayHistoryList(history.reverse());
 });
 
 function displayHistoryList(history) {
@@ -1102,79 +1170,109 @@ function displayHistoryList(history) {
     }
 
     container.innerHTML = history.map(item => `
-        <div class="history-item" onclick="viewQuestionDetails(${item.questionIndex})">
-            <div class="history-item-header">
-                <span class="history-question-number">
-                    <i class="ph ph-question"></i> Question ${item.questionNumber}
-                </span>
-                <span class="history-responses-count">
-                    <i class="ph ph-users"></i> ${item.responsesCount} réponses
-                </span>
+        <div class="history-item" id="history-item-${item.questionIndex}">
+            <div class="history-item-header" onclick="toggleHistoryItem(${item.questionIndex})">
+                <div class="history-header-top">
+                    <span class="history-question-number">
+                        <i class="ph ph-question"></i> Question ${item.questionNumber}
+                    </span>
+                    <span class="history-responses-count">
+                        <i class="ph ph-users"></i> ${item.responsesCount} réponses
+                    </span>
+                </div>
+                <div class="history-question-text">${item.question.question}</div>
+                <div class="history-item-footer">
+                    <span class="click-hint">
+                        <i class="ph ph-caret-down"></i> Détails
+                    </span>
+                </div>
             </div>
-            <div class="history-question-text">${item.question.question}</div>
-            <div class="history-item-footer">
-                <span class="click-hint">
-                    <i class="ph ph-pencil-simple"></i> Cliquer pour voir et corriger
-                </span>
-                <span class="history-arrow"><i class="ph ph-caret-right"></i></span>
+            <div class="history-item-details" id="history-details-${item.questionIndex}" style="display: none;">
+                <div class="loading-spinner">Chargement...</div>
             </div>
         </div>
     `).join('');
 }
 
-window.viewQuestionDetails = function (questionIndex) {
-    currentHistoryQuestionIndex = questionIndex;
-    socket.emit('host:getHistoricalQuestion', { gameCode, questionIndex });
+window.toggleHistoryItem = function (questionIndex) {
+    const detailsDiv = document.getElementById(`history-details-${questionIndex}`);
+    const itemDiv = document.getElementById(`history-item-${questionIndex}`);
+
+    if (!detailsDiv || !itemDiv) return;
+
+    const isHidden = detailsDiv.style.display === 'none';
+
+    if (isHidden) {
+        // Ouvrir
+        detailsDiv.style.display = 'block';
+        itemDiv.classList.add('expanded');
+
+        // Si le contenu n'est pas encore chargé (ou si on veut rafraîchir à chaque fois)
+        // On demande les détails au serveur
+        socket.emit('host:getHistoricalQuestion', { gameCode, questionIndex });
+    } else {
+        // Fermer
+        detailsDiv.style.display = 'none';
+        itemDiv.classList.remove('expanded');
+    }
 };
 
 socket.on('host:historicalQuestionDetails', ({ questionIndex, question, responses }) => {
-    displayQuestionDetailsModal(questionIndex, question, responses);
+    updateHistoryItemDetails(questionIndex, question, responses);
 });
 
-function displayQuestionDetailsModal(questionIndex, question, responses) {
-    const modal = document.getElementById('questionDetailsModal');
-    const title = document.getElementById('modalQuestionTitle');
-    const questionText = document.getElementById('modalQuestionText');
-    const responsesList = document.getElementById('modalResponsesList');
+function updateHistoryItemDetails(questionIndex, question, responses) {
+    const detailsDiv = document.getElementById(`history-details-${questionIndex}`);
+    if (!detailsDiv) return;
 
-    title.textContent = `Question ${questionIndex + 1}`;
-    questionText.innerHTML = `
-        <p><strong>${question.question}</strong></p>
-        ${question.type === 'QCM' ? `<p>Type: QCM - Bonne réponse: ${question.bonneReponse}</p>` : ''}
-        ${question.type === 'VraiFaux' ? `<p>Type: Vrai/Faux - Bonne réponse: ${question.bonneReponse}</p>` : ''}
-        ${question.type === 'Libre' ? `<p>Type: Libre - Référence: ${question.reponseReference}</p>` : ''}
-    `;
-
-    responsesList.innerHTML = responses.map(r => {
+    detailsDiv.innerHTML = `
+        <div class="history-details-content">
+            <div class="history-info-block">
+                <p><strong>Type:</strong> ${question.type}</p>
+                ${question.type === 'QCM' ? `<p><strong>Bonne réponse:</strong> ${question.bonneReponse}</p>` : ''}
+                ${question.type === 'VraiFaux' ? `<p><strong>Bonne réponse:</strong> ${question.bonneReponse}</p>` : ''}
+                ${question.type === 'Libre' ? `<p><strong>Référence:</strong> ${question.reponseReference}</p>` : ''}
+            </div>
+            
+            <div class="history-responses-list">
+                ${responses.map(r => {
         let statusClass = r.validated ? 'correct' : 'incorrect';
         let statusText = r.validated ? '✅ Validée' : '❌ Refusée';
-        let pointsText = `${r.points} pts`;
+
+        // Permettre la modification de TOUS les types de questions (QCM, VraiFaux, Libre)
+        // Le host peut modifier rétroactivement n'importe quelle réponse
+        let actions = `
+                        <div class="history-actions">
+                            <button class="btn-sm ${r.validated ? 'btn-outline-danger' : 'btn-outline-success'}"
+                                    onclick="toggleHistoricalValidation(${questionIndex}, '${r.playerId}', ${!r.validated})">
+                                ${r.validated ? 'Invalider' : 'Valider'}
+                            </button>
+                        </div>
+                    `;
 
         return `
-            <div class="response-item-modal ${statusClass}">
-                <div class="response-header">
-                    <span class="response-player">${r.playerName}</span>
-                    <span class="response-time">${(r.time / 1000).toFixed(1)}s</span>
-                </div>
-                <div class="response-answer">${r.answer}</div>
-                <div class="response-footer">
-                    <span class="response-status">${statusText} - ${pointsText}</span>
-                    <div class="response-actions">
-                        ${r.validated ?
-                `<button class="btn-modify-answer" onclick="modifyAnswer(${questionIndex}, '${r.playerId}', false)">❌ Refuser</button>` :
-                `<button class="btn-modify-answer" onclick="modifyAnswer(${questionIndex}, '${r.playerId}', true)">✅ Valider</button>`
-            }
-                    </div>
-                </div>
+                        <div class="response-item-history ${statusClass}">
+                            <div class="response-info">
+                                <span class="response-player">${r.playerName}</span>
+                                <span class="response-val">${r.answer}</span>
+                                <span class="response-status">${statusText}</span>
+                                <span class="response-points">${r.points} pts</span>
+                            </div>
+                            ${actions}
+                        </div>
+                    `;
+    }).join('')}
             </div>
-        `;
-    }).join('');
-
-    modal.style.display = 'flex';
+        </div>
+    `;
 }
 
-window.modifyAnswer = function (questionIndex, playerId, newValidation) {
+// Fonction pour modifier la validation dans l'historique
+window.toggleHistoricalValidation = function (questionIndex, playerId, newValidation) {
     socket.emit('host:modifyHistoricalAnswer', { gameCode, questionIndex, playerId, newValidation });
+
+    // Le serveur renverra automatiquement les détails mis à jour via host:historicalQuestionDetails
+    // et les scores via game:scoresUpdated
 };
 
 socket.on('host:leaderboardUpdated', ({ leaderboard }) => {
@@ -1256,15 +1354,22 @@ async function showRestoreGameScreen() {
 
     try {
         const response = await fetch('/api/games/active');
-        // Inverser l'ordre pour avoir les plus récentes en premier
-        const activeGames = (await response.json()).reverse();
+        const gamesData = await response.json();
+
+        // Trier par timestamp décroissant (plus récentes en premier)
+        // Si timestamp absent (anciennes sauvegardes), on utilise 0 (fin de liste)
+        const activeGames = gamesData.sort((a, b) => {
+            const timeA = a.timestamp || 0;
+            const timeB = b.timestamp || 0;
+            return timeB - timeA;
+        });
 
         if (activeGames.length === 0) {
             message.textContent = 'Aucune partie en cours à restaurer.';
             return;
         }
 
-        message.textContent = `${activeGames.length} partie(s) trouvée(s) :`;
+        message.textContent = `${activeGames.length} partie(s) trouvée(s) : `;
 
         container.innerHTML = activeGames.map(game => {
             const statusText = {
@@ -1287,31 +1392,96 @@ async function showRestoreGameScreen() {
                     return `<span class="player-score-item">${connectedIcon} ${p.name} (${p.score} pts)</span>`;
                 }).join(', ')}
                     </div>
-                `;
+`;
             } else {
                 playersInfo = `<div class="game-players-list"><em>Aucun participant</em></div>`;
             }
 
             return `
-                <div class="active-game-item" data-code="${game.gameCode}">
-                    <div class="game-item-header">
-                        <strong>Code: ${game.gameCode}</strong>
-                        <span class="game-status status-${game.status}">${statusText}</span>
+                <div class="active-game-item-container">
+                    <div class="game-select-checkbox">
+                        <input type="checkbox" class="game-checkbox" data-code="${game.gameCode}">
                     </div>
-                    <div class="game-item-info">
-                        <span>👥 ${game.playersCount} joueur(s)</span>
-                        <span>❓ Question ${game.currentQuestion} / ${game.totalQuestions}</span>
+                    <div class="active-game-item" data-code="${game.gameCode}">
+                        <div class="game-item-header">
+                            <strong>Code: ${game.gameCode}</strong>
+                            <span class="game-status status-${game.status}">${statusText}</span>
+                        </div>
+                        <div class="game-item-info">
+                            <span>👥 ${game.playersCount} joueur(s)</span>
+                            <span>❓ Question ${game.currentQuestion} / ${game.totalQuestions}</span>
+                        </div>
+                        ${playersInfo}
+                        <div class="game-item-action">
+                            <button class="btn-restore-game">🔄 Reprendre</button>
+                        </div>
                     </div>
-                    ${playersInfo}
                 </div>
-            `;
+    `;
         }).join('');
+
+        // Gérer l'affichage du bouton "Supprimer la sélection"
+        const checkboxes = document.querySelectorAll('.game-checkbox');
+        const deleteSelectedBtn = document.getElementById('deleteSelectedGames');
+        const selectAllCheckbox = document.getElementById('selectAllGames');
+
+        // Reset select all state
+        if (selectAllCheckbox) selectAllCheckbox.checked = false;
+
+        function updateSelectionState() {
+            const anyChecked = Array.from(checkboxes).some(c => c.checked);
+            const allChecked = Array.from(checkboxes).length > 0 && Array.from(checkboxes).every(c => c.checked);
+
+            deleteSelectedBtn.style.display = anyChecked ? 'inline-block' : 'none';
+            if (selectAllCheckbox) selectAllCheckbox.checked = allChecked;
+        }
+
+        // Event listener for Select All
+        if (selectAllCheckbox) {
+            // Remove old listener to avoid duplicates if re-rendered (though showRestoreGameScreen re-renders list, header is static)
+            // Actually header is static, so we should attach listener only once or handle it carefully.
+            // Better: attach it once outside, but here we need access to 'checkboxes' which are dynamic.
+            // So we can attach a change event to document or re-attach here.
+            // Let's use a fresh clone to clear listeners or just simple assignment if we were using onclick.
+            // Since we are inside the function that runs every time we show the screen, we should be careful.
+            // BUT: selectAllGames is in the static HTML.
+            // Let's move the listener OUTSIDE this function, or handle it here by finding it again.
+
+            // Clone to remove previous listeners
+            const newSelectAll = selectAllCheckbox.cloneNode(true);
+            selectAllCheckbox.parentNode.replaceChild(newSelectAll, selectAllCheckbox);
+
+            newSelectAll.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                checkboxes.forEach(cb => {
+                    cb.checked = isChecked;
+                });
+                updateSelectionState();
+            });
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+                updateSelectionState();
+            });
+
+            // Empêcher le clic sur la checkbox de déclencher le clic sur l'item parent (si propagation)
+            cb.addEventListener('click', (e) => e.stopPropagation());
+        });
 
         // Ajouter les écouteurs d'événements sur les éléments créés
         document.querySelectorAll('.active-game-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const gameCode = item.dataset.code;
-                restoreGame(gameCode);
+            item.addEventListener('click', (e) => {
+                // Si on clique sur le bouton reprendre, on reprend
+                // Si on clique ailleurs, on pourrait toggle la checkbox ? 
+                // Pour l'instant on garde le comportement actuel : click item = reprendre
+                // MAIS attention, le bouton reprendre a sa propre classe
+
+                // Si le clic vient du bouton, on reprend
+                if (e.target.classList.contains('btn-restore-game')) {
+                    const gameCode = item.dataset.code;
+                    restoreGame(gameCode);
+                }
             });
         });
 
@@ -1327,6 +1497,42 @@ document.getElementById('restoreGameBtn').addEventListener('click', showRestoreG
 // Gestionnaire pour le bouton "Retour" de l'écran de restauration
 document.getElementById('backFromRestore').addEventListener('click', () => {
     showScreen('setup');
+});
+
+// Gestionnaire pour la suppression de la sélection
+document.getElementById('deleteSelectedGames').addEventListener('click', async () => {
+    const checkboxes = document.querySelectorAll('.game-checkbox:checked');
+    if (checkboxes.length === 0) return;
+
+    if (!confirm(`Voulez-vous vraiment supprimer ces ${checkboxes.length} partie(s) ?`)) return;
+
+    const gameCodes = Array.from(checkboxes).map(cb => cb.dataset.code);
+
+    // Supprimer une par une (ou implémenter un bulk delete API)
+    // Pour l'instant une par une c'est simple
+    for (const code of gameCodes) {
+        try {
+            await fetch(`/api/games/${code}`, { method: 'DELETE' });
+        } catch (err) {
+            console.error(`Erreur suppression ${code}:`, err);
+        }
+    }
+
+    // Rafraîchir la liste
+    showRestoreGameScreen();
+});
+
+// Gestionnaire pour tout supprimer
+document.getElementById('deleteAllGames').addEventListener('click', async () => {
+    if (!confirm("ATTENTION : Voulez-vous vraiment supprimer TOUTES les parties sauvegardées ?\nCette action est irréversible.")) return;
+
+    try {
+        await fetch('/api/games', { method: 'DELETE' });
+        showRestoreGameScreen();
+    } catch (err) {
+        console.error('Erreur suppression totale:', err);
+        alert('Erreur lors de la suppression.');
+    }
 });
 
 function restoreGame(restoredGameCode) {

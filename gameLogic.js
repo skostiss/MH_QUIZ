@@ -20,6 +20,7 @@ class Game {
     this.responses = new Map(); // Map de socket.id -> response data
     this.questionStartTime = null;
     this.questionsHistory = []; // Historique de toutes les questions avec leurs réponses
+    this.timestamp = Date.now(); // Date de création de la partie
   }
 
   // Ajouter le maître du jeu
@@ -50,12 +51,12 @@ class Game {
   // Sélectionner les questions pour la partie
   selectQuestions(questionIds) {
     const questions = loadQuestions(); // Charger les questions fraîches
-    this.selectedQuestions = questionIds.map(id => 
+    this.selectedQuestions = questionIds.map(id =>
       questions.find(q => q.id === id)
     ).filter(q => q !== undefined);
-    
+
     console.log(`🎯 Questions sélectionnées: ${this.selectedQuestions.length} sur ${questionIds.length} demandées`);
-    
+
     // Debug: afficher les questions sélectionnées
     if (this.selectedQuestions.length === 0) {
       console.error('⚠️ AUCUNE QUESTION TROUVÉE ! IDs demandés:', questionIds);
@@ -81,10 +82,10 @@ class Game {
   getCurrentManche() {
     const question = this.getCurrentQuestion();
     if (!question) return null;
-    
+
     const questions = loadQuestions();
     const { MANCHES } = require('./questions');
-    
+
     return MANCHES[question.manche] || null;
   }
 
@@ -155,24 +156,18 @@ class Game {
       }
     });
 
-    // Si au moins une bonne réponse, attribuer les points au plus rapide
+    // Si au moins une bonne réponse, attribuer les points à tous les joueurs corrects
     if (correctResponses.length > 0) {
-      // Trier par temps de réponse (le plus rapide en premier)
-      correctResponses.sort((a, b) => a.time - b.time);
-
-      // Le plus rapide gagne les points
-      const fastest = correctResponses[0];
       const points = this.calculatePoints(currentQuestion.manche);
-      const player = this.players.get(fastest.socketId);
-      if (player) {
-        player.score += points;
-        this.responses.get(fastest.socketId).points = points;
-      }
 
-      // Les autres bonnes réponses obtiennent 0 points
-      for (let i = 1; i < correctResponses.length; i++) {
-        this.responses.get(correctResponses[i].socketId).points = 0;
-      }
+      // Tous les joueurs avec une bonne réponse gagnent les points
+      correctResponses.forEach(resp => {
+        const player = this.players.get(resp.socketId);
+        if (player) {
+          player.score += points;
+          this.responses.get(resp.socketId).points = points;
+        }
+      });
     }
   }
 
@@ -184,32 +179,33 @@ class Game {
     const currentQuestion = this.getCurrentQuestion();
     if (!currentQuestion) return;
 
-    response.validated = isValid;
+    // Empêcher la modification si la question est fermée (résultats révélés)
+    if (this.isQuestionClosed()) return;
 
-    // Calculer et attribuer les points
+    // Si l'état de validation ne change pas, on ne fait rien
+    if (response.validated === isValid) return;
+
+    const points = this.calculatePoints(currentQuestion.manche);
+    const player = this.players.get(socketId);
+
     if (isValid) {
-      // Vérifier si quelqu'un a déjà été validé (et donc gagné les points)
-      let alreadyValidated = false;
-      this.responses.forEach((r, id) => {
-        if (id !== socketId && r.validated === true && r.points > 0) {
-          alreadyValidated = true;
-        }
-      });
-
-      // Seul le premier validé (le plus rapide) gagne les points
-      if (!alreadyValidated) {
-        const points = this.calculatePoints(currentQuestion.manche);
-        const player = this.players.get(socketId);
-        if (player) {
-          player.score += points;
-          response.points = points;
-        }
-      } else {
-        // Bonne réponse mais pas le plus rapide
-        response.points = 0;
+      // On valide la réponse : on ajoute les points
+      response.validated = true;
+      if (player) {
+        player.score += points;
+        response.points = points;
       }
     } else {
-      response.points = 0;
+      // On invalide la réponse : on retire les points si elle était validée avant
+      // (ce qui est le cas ici car on a vérifié que l'état changeait)
+      response.validated = false;
+      if (player) {
+        // On ne retire les points que si le joueur avait des points pour cette réponse
+        if (response.points > 0) {
+          player.score -= response.points;
+        }
+        response.points = 0;
+      }
     }
   }
 
@@ -237,19 +233,16 @@ class Game {
 
     // Pour les questions QCM et VraiFaux, calculer les points potentiels si pas encore attribués
     if (currentQuestion && (currentQuestion.type === 'QCM' || currentQuestion.type === 'VraiFaux')) {
-      // Trouver le plus rapide avec une bonne réponse
-      const fastestCorrect = results.find(r => r.validated === true);
+      // Trouver toutes les réponses correctes
+      const correctResponses = results.filter(r => r.validated === true);
 
-      if (fastestCorrect && fastestCorrect.points === 0) {
-        // Les points n'ont pas encore été attribués via autoValidateResponses()
-        // Calculer et afficher les points potentiels
+      if (correctResponses.length > 0) {
         const points = this.calculatePoints(currentQuestion.manche);
 
+        // Afficher les points potentiels pour tous les joueurs corrects
         results.forEach(r => {
-          if (r.playerId === fastestCorrect.playerId) {
-            r.points = points; // Afficher les points pour le gagnant
-          } else {
-            r.points = 0; // Confirmer 0 points pour les autres
+          if (r.validated === true && r.points === 0) {
+            r.points = points;
           }
         });
       }
@@ -391,9 +384,18 @@ class Game {
       });
     });
 
+    // Charger les questions à jour pour avoir les bonnes manches (et donc les bons points)
+    const currentQuestions = loadQuestions();
+
     // Recalculer à partir de l'historique
     this.questionsHistory.forEach(historyItem => {
-      const points = this.calculatePoints(historyItem.question.manche);
+      // Tenter de retrouver la question à jour via son ID
+      const currentQuestion = currentQuestions.find(q => q.id === historyItem.question.id);
+
+      // Utiliser la manche de la question à jour si trouvée, sinon celle de l'historique
+      const mancheToUse = currentQuestion ? currentQuestion.manche : historyItem.question.manche;
+
+      const points = this.calculatePoints(mancheToUse);
       const questionType = historyItem.question.type;
 
       if (questionType === 'Libre') {
@@ -408,25 +410,18 @@ class Game {
           }
         });
       } else {
-        // QCM et VraiFaux : winner-takes-all (le plus rapide avec bonne réponse gagne)
-        const sortedResponses = Array.from(historyItem.responses.entries())
-          .sort((a, b) => a[1].responseTime - b[1].responseTime);
-
-        let winnerFound = false;
-        for (const [socketId, response] of sortedResponses) {
-          if (response.validated && !winnerFound) {
-            // Premier joueur correct = gagnant
+        // QCM et VraiFaux : tous les joueurs corrects reçoivent des points
+        historyItem.responses.forEach((response, socketId) => {
+          if (response.validated) {
             const player = this.players.get(socketId);
             if (player) {
               player.score += points;
               response.points = points;
-              winnerFound = true;
             }
           } else {
-            // Les autres ne reçoivent pas de points (même si validés)
             response.points = 0;
           }
-        }
+        });
       }
     });
   }

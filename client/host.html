@@ -13,19 +13,23 @@
 
 <body>
     <!-- Panneau d'informations permanent (code partie + joueurs) -->
-    <aside id="gameInfoPanel" class="game-info-panel" style="display: none;">
-        <div class="panel-code-display">
+    <aside id="gameInfoPanel" class="game-info-panel">
+        <div id="panelCodeSection" class="panel-code-display" style="display: none;">
             <h3>Code de la partie</h3>
             <div class="game-code-number" id="panelGameCode">----</div>
         </div>
-        <div class="players-status-section">
+        <div id="panelPlayersSection" class="players-status-section" style="display: none;">
             <h3>Joueurs <span class="player-counter">(<span id="panelPlayerCount">0</span>)</span></h3>
             <div id="panelPlayersList" class="players-status-list">
                 <p class="empty-state">Aucun joueur</p>
             </div>
         </div>
-        <button id="interruptGameBtn" class="btn btn-danger btn-sm" style="margin-top: auto; width: 100%;">
+        <button id="interruptGameBtn" class="btn btn-danger btn-sm"
+            style="margin-top: auto; width: 100%; display: none;">
             <i class="ph ph-pause-circle"></i> Interrompre la partie
+        </button>
+        <button onclick="location.href='/'" class="btn btn-secondary btn-sm" style="margin-top: 10px; width: 100%;">
+            <i class="ph ph-house"></i> Retour à l'accueil
         </button>
     </aside>
 
@@ -34,9 +38,10 @@
         <div id="setupScreen" class="screen active">
             <div class="setup-header">
                 <h1>Configuration de la partie</h1>
-                <button id="restoreGameBtn" class="btn btn-secondary btn-sm"><i class="ph ph-arrows-clockwise"></i>
-                    Reprendre une partie</button>
             </div>
+            <button id="restoreGameBtn" class="btn btn-secondary btn-sm" style="width: auto; margin-bottom: 20px;">
+                <i class="ph ph-arrows-clockwise"></i> Reprendre une partie
+            </button>
             <p>Sélectionnez les questions pour votre quiz</p>
 
             <div class="setup-layout-single">
@@ -121,7 +126,7 @@
 
         <!-- ÉCRAN 4 : Classement -->
         <div id="leaderboardScreen" class="screen">
-            <h1>Classement</h1>
+            <h1>Classement <span id="leaderboardQuestionProgress" class="header-subtitle"></span></h1>
             <div id="leaderboardContent" class="leaderboard">
                 <!-- Chargé dynamiquement -->
             </div>
@@ -149,6 +154,14 @@
             <h1><i class="ph ph-arrows-clockwise"></i> Reprendre une partie</h1>
             <div class="history-header">
                 <button id="backFromRestore" class="btn btn-secondary">← Retour</button>
+                <div class="restore-actions">
+                    <label class="select-all-label">
+                        <input type="checkbox" id="selectAllGames"> Tout sélectionner
+                    </label>
+                    <button id="deleteSelectedGames" class="btn btn-danger" style="display:none;">Supprimer la
+                        sélection</button>
+                    <button id="deleteAllGames" class="btn btn-outline-danger">Tout supprimer</button>
+                </div>
             </div>
             <p id="restoreGameMessage">Chargement des parties actives...</p>
             <div id="activeGamesList" class="active-games-list">

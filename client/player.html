@@ -12,6 +12,18 @@
 </head>
 
 <body>
+    <!-- Header permanent avec nom et score du joueur -->
+    <div id="playerPermanentHeader" class="player-permanent-header" style="display: none;">
+        <div class="header-player-info">
+            <span class="header-player-icon">👤</span>
+            <span id="headerPlayerName" class="header-player-name">-</span>
+        </div>
+        <div class="header-player-score">
+            <span class="header-score-label">SCORE</span>
+            <span id="headerScoreValue" class="header-score-value">0 pts</span>
+        </div>
+    </div>
+
     <div class="container">
         <!-- ÉCRAN 1 : Connexion -->
         <div id="joinScreen" class="screen active">
@@ -123,7 +135,7 @@
 
         <!-- ÉCRAN 5 : Classement -->
         <div id="leaderboardScreen" class="screen">
-            <h1>Classement</h1>
+            <h1>Classement <span id="leaderboardQuestionProgress" class="header-subtitle"></span></h1>
 
             <div id="leaderboardContent" class="leaderboard">
                 <!-- Chargé dynamiquement -->

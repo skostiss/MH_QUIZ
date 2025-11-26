@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SAVE_FILE = path.join(__dirname, 'game-saves.json');
-const MAX_SAVED_GAMES = 2; // Limite de parties sauvegardées simultanément
+const MAX_SAVED_GAMES = 50; // Limite de parties sauvegardées simultanément
 
 // Convertir une Map en objet sérialisable
 function mapToObject(map) {
@@ -42,7 +42,8 @@ function serializeGame(game) {
       question: item.question,
       responses: mapToObject(item.responses),
       timestamp: item.timestamp
-    }))
+    })),
+    timestamp: game.timestamp
   };
 }
 
@@ -69,6 +70,8 @@ function deserializeGame(data, Game) {
     responses: objectToMap(item.responses),
     timestamp: item.timestamp
   }));
+
+  game.timestamp = data.timestamp || Date.now();
 
   return game;
 }

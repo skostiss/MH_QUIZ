@@ -75,6 +75,11 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'admin.html'));
 });
 
+// Route de santé pour le keep-alive
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 // ========== API ADMINISTRATION DES QUESTIONS ==========
 
 // Récupérer les parties actives (pour la restauration)
@@ -101,13 +106,55 @@ app.get('/api/games/active', (req, res) => {
         playersCount: game.players.size,
         players: players,
         currentQuestion: game.currentQuestionIndex + 1,
-        totalQuestions: game.selectedQuestions.length
+        totalQuestions: game.selectedQuestions.length,
+        timestamp: game.timestamp
       });
     });
     console.log(`📋 API GET /api/games/active - Envoi de ${activeGames.length} parties actives avec détails des joueurs`);
     res.json(activeGames);
   } catch (error) {
-    console.error('Erreur récupération parties actives:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Supprimer une partie spécifique
+app.delete('/api/games/:gameCode', (req, res) => {
+  try {
+    const gameCode = req.params.gameCode;
+
+    // Supprimer de la mémoire si active
+    if (gameManager.games.has(gameCode)) {
+      gameManager.games.delete(gameCode);
+    }
+
+    // Supprimer du fichier de sauvegarde
+    const success = persistence.deleteSavedGame(gameCode);
+
+    if (success || !gameManager.games.has(gameCode)) {
+      console.log(`🗑️ Partie ${gameCode} supprimée`);
+      res.json({ success: true });
+    } else {
+      res.status(404).json({ success: false, message: 'Partie introuvable' });
+    }
+  } catch (error) {
+    console.error('Erreur suppression partie:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Supprimer toutes les parties
+app.delete('/api/games', (req, res) => {
+  try {
+    // Vider la mémoire
+    gameManager.games.clear();
+
+    // Vider le fichier
+    const success = persistence.clearSaves();
+
+    console.log('🗑️ Toutes les parties ont été supprimées');
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Erreur suppression toutes parties:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 });
@@ -185,10 +232,53 @@ app.put('/api/questions/:id', (req, res) => {
       return res.status(404).json({ success: false, error: 'Question introuvable' });
     }
 
+    const oldManche = questions[index].manche;
+    const newManche = updatedQuestion.manche;
+
     // IMPORTANT: Garder l'ID original, ne pas le changer
     updatedQuestion.id = id;
 
-    questions[index] = updatedQuestion;
+    // Si la manche a changé, on déplace la question à la fin de la nouvelle manche
+    if (newManche && oldManche !== newManche) {
+      console.log(`🔄 Changement de manche détecté: ${oldManche} -> ${newManche}`);
+
+      // Retirer la question de sa position actuelle
+      questions.splice(index, 1);
+
+      // Trouver la dernière position de la nouvelle manche
+      // On cherche la dernière question qui a cette manche
+      let insertIndex = questions.length;
+      for (let i = questions.length - 1; i >= 0; i--) {
+        if (questions[i].manche === newManche) {
+          insertIndex = i + 1;
+          break;
+        }
+        // Si on ne trouve pas de question de cette manche, on regarde les manches précédentes
+        // pour savoir où insérer (pour garder l'ordre des manches)
+        if (questions[i].manche < newManche) {
+          insertIndex = i + 1;
+          break;
+        }
+        // Si on arrive au début et qu'on a que des manches supérieures, on insère au début
+        if (i === 0 && questions[i].manche > newManche) {
+          insertIndex = 0;
+        }
+      }
+
+      // Insérer à la nouvelle position
+      questions.splice(insertIndex, 0, updatedQuestion);
+
+      // Réinitialiser les IDs pour que tout soit propre
+      questions.forEach((q, idx) => {
+        q.id = idx + 1;
+      });
+
+      console.log(`📍 Question déplacée à l'index ${insertIndex} et IDs réinitialisés`);
+    } else {
+      // Mise à jour simple sur place
+      questions[index] = updatedQuestion;
+    }
+
     saveQuestions(questions);
 
     // Recharger le module questions
@@ -305,27 +395,56 @@ app.post('/api/questions/reorder', (req, res) => {
   }
 });
 
-// Fonction pour déterminer la manche en fonction de l'ID
-function getMancheByQuestionId(id) {
-  if (id >= 1 && id <= 8) return 1;
-  if (id >= 9 && id <= 14) return 2;
-  if (id >= 15 && id <= 24) return 3;
-  if (id >= 25 && id <= 28) return 4;
-  return 1; // Par défaut
-}
-
 // Fonction pour sauvegarder les questions dans le fichier
 function saveQuestions(questions) {
   try {
     console.log('saveQuestions: Début de la sauvegarde');
     console.log('saveQuestions: Nombre de questions:', questions.length);
 
-    // S'assurer que chaque question a une manche
-    questions.forEach(q => {
+    // 1. S'assurer que chaque question a une manche
+    // Si une question n'a pas de manche, on lui attribue la manche de la question précédente
+    // ou la manche 1 par défaut si c'est la première
+    questions.forEach((q, index) => {
       if (!q.manche) {
-        q.manche = getMancheByQuestionId(q.id);
+        if (index > 0) {
+          q.manche = questions[index - 1].manche;
+        } else {
+          q.manche = 1;
+        }
       }
     });
+
+    // 2. Calculer dynamiquement les ranges pour chaque manche
+    const manchesConfig = {
+      1: { id: 1, nom: "Sel ou poivre" },
+      2: { id: 2, nom: "Le juste chiffre" },
+      3: { id: 3, nom: "Vrai ou faux Express" },
+      4: { id: 4, nom: "Le menu" },
+      5: { id: 5, nom: "Qui suis-je ?" }
+    };
+
+    // Initialiser les ranges
+    Object.values(manchesConfig).forEach(m => {
+      m.rangeDebut = null;
+      m.rangeFin = null;
+    });
+
+    // Parcourir les questions pour déterminer les ranges
+    questions.forEach(q => {
+      const manche = manchesConfig[q.manche];
+      if (manche) {
+        if (manche.rangeDebut === null || q.id < manche.rangeDebut) {
+          manche.rangeDebut = q.id;
+        }
+        if (manche.rangeFin === null || q.id > manche.rangeFin) {
+          manche.rangeFin = q.id;
+        }
+      }
+    });
+
+    // Remplir les trous si une manche est vide (optionnel, pour garder la structure)
+    // On peut laisser null ou mettre des valeurs cohérentes si besoin.
+    // Ici on laisse tel quel, le front gérera les manches vides.
 
     const content = `// ============================================
 // BANQUE DE QUESTIONS - MALAKOFF QUIZ
@@ -335,13 +454,7 @@ function saveQuestions(questions) {
 // ============================================
 
 // DÉFINITION DES MANCHES
-const MANCHES = {
-  1: { id: 1, nom: "Sel ou poivre", rangeDebut: 1, rangeFin: 8 },
-  2: { id: 2, nom: "Le juste chiffre", rangeDebut: 9, rangeFin: 14 },
-  3: { id: 3, nom: "Vrai ou faux Express", rangeDebut: 15, rangeFin: 24 },
-  4: { id: 4, nom: "Le menu", rangeDebut: 25, rangeFin: 28 },
-  5: { id: 5, nom: "Qui suis-je ?", rangeDebut: 29, rangeFin: 40 }
-};
+const MANCHES = ${JSON.stringify(manchesConfig, null, 2)};
 
 const questions = ${JSON.stringify(questions, null, 2)};
 
@@ -480,15 +593,15 @@ io.on('connection', (socket) => {
 
         // Supprimer la sauvegarde de la partie terminée seulement
         // si elle est réellement terminée (toutes les questions ont été répondues)
-        console.log(`🏁 Partie ${gameCode} terminée - Suppression de la sauvegarde`);
-        persistence.deleteSavedGame(gameCode);
+        console.log(`🏁 Partie ${gameCode} terminée - La partie reste sauvegardée pour l'historique`);
+        // persistence.deleteSavedGame(gameCode); // DÉSACTIVÉ : On garde l'historique
 
         // Optionnel : supprimer la partie de la mémoire après un délai
         // pour permettre la consultation du classement final
-        setTimeout(() => {
-          gameManager.deleteGame(gameCode);
-          console.log(`🗑️  Partie ${gameCode} supprimée de la mémoire`);
-        }, 300000); // 5 minutes
+        // setTimeout(() => {
+        //   gameManager.deleteGame(gameCode);
+        //   console.log(`🗑️  Partie ${gameCode} supprimée de la mémoire`);
+        // }, 300000); // 5 minutes
       }
     }
   });
@@ -506,18 +619,28 @@ io.on('connection', (socket) => {
       io.to(playerId).emit('player:answerValidated', { isCorrect: isValid });
 
       // Broadcaster à tous les joueurs la validation de cette réponse
-      if (player && response) {
-        io.to(gameCode).emit('game:playerAnswerValidated', {
-          playerName: player.name,
-          playerId: playerId,
-          isCorrect: isValid,
-          answer: response.answer
-        });
-      }
+      // MODIFICATION: On ne diffuse plus le résultat aux autres joueurs pour garder le suspense
+      // if (player && response) {
+      //   io.to(gameCode).emit('game:playerAnswerValidated', {
+      //     playerName: player.name,
+      //     playerId: playerId,
+      //     isCorrect: isValid,
+      //     answer: response.answer
+      //   });
+      // }
 
       // Envoyer la mise à jour au maître
       const responses = game.getResponsesWithPlayers();
       socket.emit('host:responsesUpdate', { responses });
+
+      // BROADCAST INSTANTANÉ DES SCORES
+      const leaderboard = game.getLeaderboard();
+      io.to(gameCode).emit('game:scoresUpdated', { leaderboard });
+
+      // Mettre à jour la liste des joueurs (pour le panneau permanent du host)
+      const playersList = game.getPlayers();
+      io.to(gameCode).emit('game:playersUpdate', { players: playersList });
+
       autoSaveGames(); // Sauvegarde après validation
     }
   });
@@ -531,6 +654,10 @@ io.on('connection', (socket) => {
       // Arrêter les timers de tous les joueurs
       io.to(gameCode).emit('game:stopTimer');
       console.log(`⏱️ Timers arrêtés pour révélation des résultats`);
+
+      // Fermer la question immédiatement pour empêcher toute modification ultérieure de la validation
+      game.closeQuestion();
+      console.log(`🔒 Question fermée lors de la révélation des résultats`);
 
       // Pour les questions QCM et VraiFaux, envoyer les résultats à tous les joueurs
       if (currentQuestion && (currentQuestion.type === 'QCM' || currentQuestion.type === 'VraiFaux')) {
@@ -576,7 +703,38 @@ io.on('connection', (socket) => {
         });
 
         console.log(`🎭 Résultats révélés pour la question ${currentQuestion.id}${fastestCorrectPlayerId ? ` - Plus rapide: ${fastestCorrectPlayerId}` : ''}`);
+      } else if (currentQuestion && currentQuestion.type === 'Libre') {
+        // Pour les questions libres, on envoie aussi le feedback
+        const responses = game.getResponsesWithPlayers();
+
+        game.players.forEach((player, socketId) => {
+          const playerResponse = game.responses.get(socketId);
+          if (playerResponse) {
+            // Pour Libre, pas de notion de "plus rapide" pour le bonus, mais on peut réutiliser la structure
+            io.to(socketId).emit('player:answerFeedback', {
+              isCorrect: playerResponse.validated === true,
+              correctAnswer: currentQuestion.reponseReference || "Voir avec l'animateur",
+              isFastest: false
+            });
+          }
+        });
+
+        // Broadcaster les résultats (juste validé/refusé)
+        io.to(gameCode).emit('game:resultsRevealed', {
+          responses: responses.map(r => ({
+            playerName: r.playerName,
+            playerId: r.playerId,
+            isCorrect: r.validated === true,
+            answer: r.answer,
+            isFastest: false
+          })),
+          fastestCorrectPlayerId: null
+        });
+
+        console.log(`🎭 Résultats révélés pour la question Libre ${currentQuestion.id}`);
       }
+
+      autoSaveGames(); // Sauvegarde après révélation des résultats
     }
   });
 
@@ -586,14 +744,19 @@ io.on('connection', (socket) => {
     if (game && game.host === socket.id) {
       const currentQuestion = game.getCurrentQuestion();
 
-      // Fermer la question : plus de réponses acceptées après ce point
-      game.closeQuestion();
-      console.log(`🔒 Question fermée - plus de réponses acceptées`);
+      // Note: La question est déjà fermée par revealResults
+      // game.closeQuestion(); 
+
 
       // Valider automatiquement les réponses pour QCM et VraiFaux
       if (currentQuestion && (currentQuestion.type === 'QCM' || currentQuestion.type === 'VraiFaux')) {
         game.autoValidateResponses();
         console.log(`✅ Validation automatique des réponses pour la question ${currentQuestion.id}`);
+
+        // BROADCAST INSTANTANÉ DES SCORES après validation automatique
+        const updatedLeaderboard = game.getLeaderboard();
+        io.to(gameCode).emit('game:scoresUpdated', { leaderboard: updatedLeaderboard });
+        console.log(`📊 Scores mis à jour envoyés à tous les joueurs après validation automatique`);
       }
 
       // Sauvegarder la question dans l'historique immédiatement après l'affichage du classement
@@ -609,6 +772,8 @@ io.on('connection', (socket) => {
         totalQuestions,
         isFinished: game.isFinished()
       });
+
+      autoSaveGames(); // Sauvegarde après affichage du classement
     }
   });
 
@@ -853,6 +1018,8 @@ io.on('connection', (socket) => {
         totalPlayers: game.players.size
       });
 
+      autoSaveGames(); // Sauvegarde après chaque réponse (CONTINUOUS SAVING)
+
       // Si tous ont répondu, envoyer signal supplémentaire
       if (responses.length === game.players.size) {
         setTimeout(() => {
@@ -1005,3 +1172,28 @@ server.listen(PORT, HOST, () => {
   console.log(`   http://${localIP}:${PORT}`);
   console.log(`\n💡 Pour arrêter le serveur : Ctrl+C\n`);
 });
+
+// ========== KEEP-ALIVE MECHANISM ==========
+// Empêcher le serveur de s'endormir sur les hébergeurs gratuits (Render, etc.)
+const PING_INTERVAL = 30 * 1000; // 30 secondes
+
+function keepAlive() {
+  const protocol = 'http';
+  const host = 'localhost';
+  const url = `${protocol}://${host}:${PORT}/ping`;
+
+  console.log(`💓 Keep-alive ping vers ${url}`);
+
+  http.get(url, (res) => {
+    console.log(`✅ Keep-alive ping status: ${res.statusCode}`);
+  }).on('error', (err) => {
+    console.error(`❌ Keep-alive ping error: ${err.message}`);
+  });
+}
+
+// Démarrer le ping périodique
+if (process.env.NODE_ENV === 'production' || true) { // Actif même en dev pour tester
+  setInterval(keepAlive, PING_INTERVAL);
+  // Premier ping après quelques secondes
+  setTimeout(keepAlive, 10000);
+}

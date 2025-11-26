@@ -359,9 +359,14 @@ function editQuestion(id) {
     document.getElementById('editQuestionType').value = question.type;
     document.getElementById('editQuestionText').value = question.question;
 
-    // Afficher la manche en lecture seule
-    const mancheInfo = manches[question.manche];
-    document.getElementById('editMancheInfo').textContent = `Manche: ${mancheInfo?.nom || 'Inconnue'}`;
+    // Peupler le select des manches
+    const select = document.getElementById('editQuestionManche');
+    let html = '<option value="">Sélectionnez une manche</option>';
+    Object.values(manches).forEach(manche => {
+        html += `<option value="${manche.id}">🎯 ${manche.nom}</option>`;
+    });
+    select.innerHTML = html;
+    select.value = question.manche;
 
     toggleFields('edit');
 
@@ -387,8 +392,9 @@ async function saveEdit(event) {
     const id = parseInt(document.getElementById('editQuestionId').value);
     const type = document.getElementById('editQuestionType').value;
     const question = document.getElementById('editQuestionText').value;
+    const manche = parseInt(document.getElementById('editQuestionManche').value);
 
-    const updatedQuestion = { id, type, question };
+    const updatedQuestion = { id, type, question, manche };
 
     if (type === 'QCM') {
         updatedQuestion.choix = [

@@ -93,6 +93,9 @@ function joinGame() {
             console.log('✅ Succès ! Changement d\'écran');
             document.getElementById('displayPlayerName').textContent = playerName;
 
+            // Mettre à jour le nom dans le header permanent
+            document.getElementById('headerPlayerName').textContent = playerName;
+
             // Afficher un message différent selon si c'est une reconnexion ou non
             if (response.reconnected) {
                 console.log('🔄 Reconnexion détectée');
@@ -151,9 +154,17 @@ function showSuccess(message) {
 
 function updateScoreDisplay(score) {
     currentScore = score;
+
+    // Mettre à jour le score dans l'écran de question (ancien emplacement)
     const scoreElement = document.getElementById('currentScoreValue');
     if (scoreElement) {
         scoreElement.textContent = `${score} pts`;
+    }
+
+    // Mettre à jour le score dans le header permanent
+    const headerScoreElement = document.getElementById('headerScoreValue');
+    if (headerScoreElement) {
+        headerScoreElement.textContent = `${score} pts`;
     }
 }
 
@@ -165,6 +176,17 @@ function showScreen(screenName) {
     console.log('Changement d\'écran vers:', screenName);
     Object.values(screens).forEach(screen => screen.classList.remove('active'));
     screens[screenName].classList.add('active');
+
+    // Afficher/masquer le header permanent selon l'écran
+    const header = document.getElementById('playerPermanentHeader');
+    if (screenName === 'join' || screenName === 'waiting') {
+        // Masquer le header sur les écrans de connexion et d'attente
+        header.style.display = 'none';
+    } else {
+        // Afficher le header sur tous les autres écrans (question, leaderboard, finished)
+        header.style.display = 'flex';
+    }
+
     console.log('✅ Écran changé');
 }
 
@@ -225,9 +247,9 @@ socket.on('game:playerAnswerValidated', ({ playerName: oppName, playerId, isCorr
 
 socket.on('player:answerRecorded', () => {
     console.log('Réponse enregistrée');
-    hasAnswered = true;
+    hasAnswered = true; // On garde le flag pour savoir qu'il a répondu au moins une fois
     const feedback = document.getElementById('answerFeedback');
-    feedback.innerHTML = '<p>⏳ Réponse enregistrée. En attente de validation...</p>';
+    feedback.innerHTML = '<p>⏳ Réponse enregistrée. Vous pouvez modifier votre choix tant que le temps n\'est pas écoulé.</p>';
     feedback.className = 'answer-feedback waiting';
     feedback.style.display = 'block';
 });
@@ -238,14 +260,14 @@ socket.on('player:answerFeedback', ({ isCorrect, correctAnswer, isFastest }) => 
     const feedback = document.getElementById('answerFeedback');
 
     if (isCorrect) {
+        // Bonne réponse - gagne les points (tous les joueurs corrects gagnent)
+        feedback.innerHTML = '<p>✅ Bonne réponse !</p>';
+        feedback.className = 'answer-feedback correct';
+
+        // Optionnel : on peut toujours indiquer si c'était le plus rapide, mais sans pénaliser les autres
         if (isFastest) {
-            // Joueur le plus rapide - gagne les points
-            feedback.innerHTML = '<p>✅ Bonne réponse !</p><p class="fastest-indicator">⚡ Vous êtes le plus rapide !</p>';
-            feedback.className = 'answer-feedback correct fastest';
-        } else {
-            // Bonne réponse mais pas assez rapide - 0 point
-            feedback.innerHTML = '<p>✅ Bonne réponse, mais pas assez rapide (0 point)</p>';
-            feedback.className = 'answer-feedback correct-but-slow';
+            feedback.innerHTML += '<p class="fastest-indicator" style="font-size: 0.9em; margin-top: 5px;">⚡ Vous êtes le plus rapide !</p>';
+            feedback.classList.add('fastest');
         }
     } else {
         feedback.innerHTML = `<p>❌ Mauvaise réponse</p><p class="correct-answer">Réponse correcte : ${correctAnswer}</p>`;
@@ -290,20 +312,9 @@ socket.on('game:stopTimer', () => {
 socket.on('game:resultsRevealed', ({ responses, fastestCorrectPlayerId }) => {
     console.log('Résultats révélés!', responses, 'Fastest:', fastestCorrectPlayerId);
 
-    // Mettre à jour les réponses des adversaires avec les vrais résultats
-    responses.forEach(r => {
-        if (r.playerName !== playerName) {
-            opponentsAnswers.set(r.playerId, {
-                playerName: r.playerName,
-                isCorrect: r.isCorrect,
-                answer: r.answer,
-                isFastest: r.isFastest || false
-            });
-        }
-    });
-
-    // Rafraîchir l'affichage avec les résultats
-    updateOpponentsDisplay();
+    // NE PAS afficher les réponses des autres joueurs
+    // On garde le suspense ou la confidentialité
+    document.getElementById('opponentsAnswers').style.display = 'none';
 });
 
 socket.on('game:leaderboard', ({ leaderboard, currentQuestion, totalQuestions, isFinished }) => {
@@ -313,6 +324,13 @@ socket.on('game:leaderboard', ({ leaderboard, currentQuestion, totalQuestions, i
     const myData = leaderboard.find(p => p.name === playerName);
     if (myData) {
         updateScoreDisplay(myData.score);
+    }
+
+    // Afficher la progression (Question X/Y)
+    const progressElem = document.getElementById('leaderboardQuestionProgress');
+    if (progressElem) {
+        // currentQuestion est l'index (0-based), donc +1 pour l'affichage
+        progressElem.textContent = `(Question ${currentQuestion + 1}/${totalQuestions})`;
     }
 
     displayLeaderboard(leaderboard);
@@ -337,6 +355,30 @@ socket.on('game:finished', ({ leaderboard, manuallyEnded }) => {
     }
 
     displayFinalResults(leaderboard);
+});
+
+// Événement de mise à jour des scores (instantané)
+socket.on('game:scoresUpdated', ({ leaderboard }) => {
+    console.log('Scores mis à jour instantanément:', leaderboard);
+
+    // TOUJOURS mettre à jour le score du joueur dans le header permanent (quel que soit l'écran actif)
+    const myData = leaderboard.find(p => p.name === playerName);
+    if (myData) {
+        updateScoreDisplay(myData.score);
+        console.log(`✅ Score du joueur ${playerName} mis à jour: ${myData.score} pts`);
+    }
+
+    // Si on est sur l'écran leaderboard, rafraîchir l'affichage complet
+    if (document.getElementById('leaderboardScreen').classList.contains('active')) {
+        displayLeaderboard(leaderboard);
+        console.log('📊 Affichage du leaderboard rafraîchi');
+    }
+
+    // Si on est sur l'écran de fin, rafraîchir l'affichage complet aussi
+    if (document.getElementById('finishedScreen').classList.contains('active')) {
+        displayFinalResults(leaderboard);
+        console.log('🏆 Affichage du classement final rafraîchi');
+    }
 });
 
 // ============================================
@@ -448,9 +490,8 @@ function displayQCMAnswers(question) {
 
     container.querySelectorAll('.answer-choice').forEach(choice => {
         choice.addEventListener('click', () => {
-            if (!hasAnswered) {
-                selectAnswer(choice.dataset.answer);
-            }
+            // On autorise le changement tant que le temps n'est pas écoulé
+            selectAnswer(choice.dataset.answer);
         });
     });
 
@@ -471,9 +512,8 @@ function displayVraiFauxAnswers(question) {
 
     container.querySelectorAll('.answer-choice').forEach(choice => {
         choice.addEventListener('click', () => {
-            if (!hasAnswered) {
-                selectAnswer(choice.dataset.answer);
-            }
+            // On autorise le changement tant que le temps n'est pas écoulé
+            selectAnswer(choice.dataset.answer);
         });
     });
 
@@ -492,11 +532,12 @@ function displayFreeAnswer() {
 }
 
 function selectAnswer(answer) {
-    if (hasAnswered || timeExpired) return;
+    if (timeExpired) return;
 
     document.querySelectorAll('.answer-choice').forEach(c => {
         c.classList.remove('selected');
-        c.classList.add('disabled');
+        // Ne plus désactiver les choix ici pour permettre le changement
+        // c.classList.add('disabled'); 
     });
 
     const selectedChoice = document.querySelector(`.answer-choice[data-answer="${answer}"]`);

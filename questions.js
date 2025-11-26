@@ -2,7 +2,7 @@
 // BANQUE DE QUESTIONS - MALAKOFF QUIZ
 // ============================================
 // Ce fichier est géré automatiquement par l'interface d'administration
-// Dernière modification : 23/11/2025 22:27:44
+// Dernière modification : 25/11/2025 22:50:25
 // ============================================
 
 // DÉFINITION DES MANCHES
@@ -18,15 +18,15 @@ const questions = [
   {
     "id": 1,
     "type": "Libre",
-    "question": "Pouvez-vous citer 3 items de la qualité orale?",
-    "reponseReference": "réponse , maitrise de l'entretien, procédure,",
+    "question": "Pouvez-vous citer les 3 items de la qualité orale?",
+    "reponseReference": "LA REPONSE - LA MAITRISE DE L ENTRETIEN TELEPHONIQUE -  PROCEDURES ",
     "manche": 1
   },
   {
     "id": 2,
     "type": "Libre",
     "question": "Pouvez-vous citer 3 Indicateurs qui comptent pour la prime trimestrielles des managers ?",
-    "reponseReference": "sat globale equipe , clarté équipe, DMt tél equipe",
+    "reponseReference": "La satisfaction globale équipe , clarté équipe, DMt tél équipe",
     "manche": 1
   },
   {
@@ -38,242 +38,235 @@ const questions = [
   },
   {
     "id": 4,
-    "manche": 1,
     "type": "Libre",
-    "question": "Citez 3 actions que les CR doivent réaliser au quotidien.",
-    "reponseReference": "(Réponse : répondre au soutien métiers, bal rce retours, faire des ezv pour cas complexe,ecoute quali accompagnement)"
+    "question": "Citez 3 actions que les Conseillers référents doivent réaliser au quotidien.",
+    "reponseReference": "Répondre au soutien métier, le traitement des bal rce retours, faire des ezv pour cas complexes , écoute qualité, accompagnement",
+    "manche": 1
   },
   {
     "id": 5,
     "type": "Libre",
-    "question": "3 Indicateurs visibles sur un bandeau conseiller",
+    "question": "Pouvez-citer 3 Indicateurs visibles sur un bandeau des conseillers?",
     "reponseReference": "QS, attente, appels traités et %pause tél",
     "manche": 1
   },
   {
     "id": 6,
-    "manche": 1,
     "type": "Libre",
-    "question": "3 statuts Odigo HORS production",
-    "reponseReference": "(formation, qualité, autres activités, lecture d'infos, pb informatique)"
+    "question": "Pouvez-vous citer 3 statuts Odigo HORS production?",
+    "reponseReference": "Formation, qualité, autres activités, lecture d'infos, dysfonctionnement informatique",
+    "manche": 1
   },
   {
     "id": 7,
-    "manche": 1,
     "type": "Libre",
-    "question": "3 noms de responsables de service RC",
-    "reponseReference": "(Florian germain, Sabrina sollazo, Idriss moula, Sylvie bernardeau, Nicolas Robert)"
+    "question": "Connaissez-vous trois noms de responsables du service relation client ?",
+    "reponseReference": "(Florian Germain, Sabrina Sollazo, Idriss Moula, Sylvie Bernardeau, Nicolas Robert",
+    "manche": 1
   },
   {
     "id": 8,
-    "manche": 1,
-    "type": "Libre",
-    "question": "3 noms de conseillers qui se connectent régulièrement très tôt le matin",
-    "reponseReference": "(Robin, Sandrine, etc libre)"
-  },
-  {
-    "id": 9,
     "type": "QCM",
-    "question": "3",
+    "question": "7h du matin",
     "choix": [
-      "Nombre appels client pris à l'heure par un conseiller.",
-      "Nombre de mail que l’Hypervision nous envoi par jour pour nous tenir informé des chiffres clés ",
-      "Le nombre de fois que je décale la sonnerie de mon réveil les matins d'hiver.",
+      "Est-ce l’heure à laquelle le premier conseiller interne arrive ?",
+      " Est-ce l’heure du premier SMS reçu par un responsable d’équipe en cas d’imprévu ? ",
+      "Est-ce l’heure du premier arrivé chez les prestataires ?",
       "Aucune des réponses"
     ],
     "bonneReponse": "B",
     "manche": 2
   },
   {
-    "id": 10,
-    "manche": 2,
+    "id": 9,
     "type": "QCM",
-    "question": "7h du matin",
+    "question": "3",
+    "manche": 2,
     "choix": [
-      "Heure à laquelle le premier conseiller interne arrive ",
-      "Heure du premier SMS  reçu par une RE en cas d'imprévu",
-      "Heure du premier arrivé chez les prestataires",
+      " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+      "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+      "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
       "Aucune des réponses"
     ],
     "bonneReponse": "B"
   },
   {
-    "id": 11,
-    "manche": 2,
+    "id": 10,
     "type": "QCM",
-    "question": "40",
+    "question": "Le chiffre juste est 40 ",
+    "manche": 2,
     "choix": [
-      "Nombre de page ouverture par un conseillers pour traiter un dossier ",
-      "Nombre de bugs Informatiques par jour ",
-      "Nombre d'indicateurs qu'un RE doit suivre par conseillers depuis ses PBI",
-      "Aucune des réponses"
+      "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+      "Est-ce le nombre de bugs informatiques par jour ? ",
+      "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+      "Est-ce que ça peut-être la réponse A, B et C ?"
     ],
     "bonneReponse": "C"
   },
   {
-    "id": 12,
-    "manche": 2,
+    "id": 11,
     "type": "QCM",
     "question": "2H30",
     "choix": [
-      "Temps moyen d'une réunion RS en coprod",
-      "Temps moyen d'une comop Assistance métiers CR",
-      "Temps d'attente maximale d'un client",
+      "Est-ce le temps moyen d'une réunion COPROD des responsable de service ?",
+      "Est-ce le temps moyen des CR d’un COMOP de l'Assistance métier?",
+      "Est-ce le temps d’attente maximal d’un client pour nous joindre?",
+      "Aucune idée, mais j’aime bien la lettre D "
+    ],
+    "bonneReponse": "A",
+    "manche": 2
+  },
+  {
+    "id": 12,
+    "type": "QCM",
+    "question": "3 Heures ",
+    "choix": [
+      "Est-ce la durée moyenne de soutien d’un conseiller référent par jour ? ",
+      "Est-ce le temps de téléphone minimum par conseiller client en temps plein journalier ? ",
+      " Est-ce le temps de pause maximum du midi?",
       "Aucune des réponses"
     ],
-    "bonneReponse": "A"
+    "bonneReponse": "B",
+    "manche": 2
   },
   {
     "id": 13,
-    "manche": 2,
-    "type": "QCM",
-    "question": "3",
-    "choix": [
-      "Durée moyenne du soutien CR par jour",
-      "Temps de tél minimum par cc journaliers temps plein",
-      "Temps de la Pause maximum du midi",
-      "Aucune des réponses"
-    ],
-    "bonneReponse": "B"
+    "type": "VraiFaux",
+    "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+    "manche": 3,
+    "bonneReponse": "Vrai"
   },
   {
     "id": 14,
-    "manche": 2,
     "type": "QCM",
-    "question": "4",
+    "question": "La bonne réponse est 4 ",
+    "manche": 2,
     "choix": [
-      "Nombre de personne qui travaille à l'assistance métier RC",
-      "Le nombre de faq rce intégré dans mayday",
-      "le nombre de minutes qu'un pc met à s'ouvrir le matin en moyenne",
-      "Aucune des réponses"
+      "Est-ce le nombre de personnes qui travaillent à l’assistance métier RC ? ",
+      "Est-ce le nombre de FAQ RCE intégrées dans Mayday ? ",
+      "Est-ce le nombre de minutes qu’un PC met à s’ouvrir le matin en moyenne ? ",
+      ""
     ],
     "bonneReponse": "A"
   },
   {
     "id": 15,
-    "manche": 3,
     "type": "VraiFaux",
-    "question": "Les managers remplissent un compte rendu d'activité détaillé chaque jour",
+    "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+    "manche": 3,
     "bonneReponse": "Vrai"
   },
   {
     "id": 16,
-    "manche": 3,
     "type": "VraiFaux",
-    "question": "Les RS doivent animer chaque semaine des réunions avec tous les managers RC",
+    "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+    "manche": 3,
     "bonneReponse": "Vrai"
   },
   {
     "id": 17,
-    "manche": 3,
     "type": "VraiFaux",
-    "question": "Chaque RS de la RC est forcément ambassadeur et responsable d'un process",
-    "bonneReponse": "Vrai"
+    "question": "Est-ce que les CR font aussi le soutien métier des prestataires ?\n\n",
+    "manche": 3,
+    "bonneReponse": "Faux"
   },
   {
     "id": 18,
-    "manche": 3,
     "type": "VraiFaux",
-    "question": "Les CR font aussi le soutien métier des prestataires",
-    "bonneReponse": "Faux"
-  },
-  {
-    "id": 19,
+    "question": "Est-ce que les conseillers qui dépassent 60% de taux tél par trimestre ont une prime ?",
     "manche": 3,
-    "type": "VraiFaux",
-    "question": "Les conseillers qui dépassent 60% de taux tél par trimestre ont une prime",
     "bonneReponse": "Vrai"
   },
   {
-    "id": 20,
-    "manche": 3,
+    "id": 19,
     "type": "VraiFaux",
-    "question": "Une CR a 40% de production à réaliser en plus de son activité de soutien",
+    "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
+    "manche": 3,
     "bonneReponse": "Faux"
   },
   {
-    "id": 21,
-    "manche": 3,
+    "id": 20,
     "type": "VraiFaux",
-    "question": "Un manager justifie chaque enquête de satisfaction négative reçu par son équipe",
+    "question": "Est-ce qu’un manager justifie chaque enquête de satisfaction négative reçue par son équipe ?",
+    "manche": 3,
+    "bonneReponse": "Vrai"
+  },
+  {
+    "id": 21,
+    "type": "VraiFaux",
+    "question": "Est-ce qu’il existe 5 files d’appel RCE ? ",
+    "manche": 3,
     "bonneReponse": "Vrai"
   },
   {
     "id": 22,
-    "manche": 3,
     "type": "VraiFaux",
-    "question": "Il existe 5 files d'appel rce ",
+    "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
+    "manche": 3,
     "bonneReponse": "Vrai"
   },
   {
     "id": 23,
-    "manche": 3,
     "type": "VraiFaux",
-    "question": "Les Conseillers peuvent utiliser plus de 20 statuts odigo différents",
+    "question": "Est-ce qu’un manager peut appartenir à plus de 20 groupes Teams ?",
+    "manche": 3,
     "bonneReponse": "Vrai"
   },
   {
     "id": 24,
-    "manche": 3,
-    "type": "VraiFaux",
-    "question": "Un manager appartient à plus de 20 groupes TEAMS",
-    "bonneReponse": "Vrai"
+    "type": "Libre",
+    "question": "Pouvez-vous citer 5 missions au sein de la RCE des conseillers client ?",
+    "manche": 4,
+    "reponseReference": "Support extranet  FIO Qualité  Réclamations insatisfaction  Ambassadeurs Mayday"
   },
   {
     "id": 25,
-    "manche": 4,
     "type": "Libre",
-    "question": "CC: 5 missions au sein de la RCE",
-    "reponseReference": "•\trep 1 = Support extranet •\trep 2 = FIO •\trep 3 = Qualité •\trep 4 = Recla insat •\trep 5 = Ambassadeurs mayday"
+    "question": "Pouvez-vous citer les 5 plus grands projets qui arriveront en RC ?",
+    "manche": 4,
+    "reponseReference": "MAYDAY : base de connaissance intelligente pour centraliser, structurer et diffuser l’information métier avec IA.  Speech to Text : conversion automatique de la parole en texte pour faciliter la transcription des échanges.  Numéro unique MH1ID : identification unique pour suivre et tracer les interactions clients.  CRM poste de travail : intégration du logiciel de gestion de la relation client directement dans le poste de travail des conseillers.  Distribution de l’activité : gestion et répartition optimisée des appels ou tâches entre les conseillers selon les règles définies."
   },
   {
     "id": 26,
-    "manche": 4,
     "type": "Libre",
-    "question": "RC: Citez les 5 plus gros projet qui arriveront en RC",
-    "reponseReference": "•\trep 1 = MAYDAY base de connaissance •\trep 2 = speech to text •\trep 3 = numero unique MH1ID •\trep 4 = CRM poste de travail •\trep 5 = Distribution de l'activité"
+    "question": "Pouvez-vous citer les 5 plus grosses BAL ou adresses mail internes dont les responsables d’équipe ont la responsabilité de piloter et suivre au quotidien ?",
+    "manche": 4,
+    "reponseReference": "Boîte « Vrai réclamation attente service interne »  Boîte « Mail anoRCE remontée RCE »  Boîte « Mail urgence commerciale »  Boîte « Mail entreprise ADP »  Boîte « Mail accueil nouveau client »"
   },
   {
     "id": 27,
-    "manche": 4,
     "type": "Libre",
-    "question": "RE : 5 plus grosses bal ou adresse mail qu'ils ont la responsabilité de piloter et suivre au quotidien",
-    "reponseReference": "•\trep 1 = Vrai recla attente service interne •\trep 2 =  mail ano rce remontee rce •\trep 3 =  mail Urgence commerciale •\trep 4 = mail entreprise ADP •\trep 5 = mail accueil nouveau client"
+    "question": "Pouvez-vous citer les 5 principaux indicateurs chiffrés qu’un Responsable de service (RS) doit expliquer au quotidien ?",
+    "manche": 4,
+    "reponseReference": "La DMT (Durée Moyenne de Traitement) du site  La satisfaction globale du site  La note de clarté du site  Les notes de qualité du site  L'ancienneté des stocks mails"
   },
   {
     "id": 28,
-    "manche": 4,
     "type": "Libre",
-    "question": "RS : les 5 plus gros chiffres qu'un RS doit expliquer au quotidien",
-    "reponseReference": "•\trep 1 = La dmt du site •\trep 2 = La satisfaction globale du site •\trep 3 = la note clarté du site •\trep 4 = les notes quali du site •\trep 5 = l'ancienneté des stock mails"
+    "question": "Chaque semaine, c’est le moment où les dossiers sérieux croisent les blagues bien choisies (et parfois, les sourires complices en option).\nOn échange sur tout ce qui fait avancer, parfois en sirotant un café virtuel au loin.\nOn décortique chiffres et projets,\net c’est aussi le moment où l’on dit à son manager : « J’ai eu trop de dispo cette semaine » ou « trop de renfort ».",
+    "manche": 5,
+    "reponseReference": "RÉUNION D'ÉQUIPE"
   },
   {
-    "manche": 5,
+    "id": 29,
     "type": "Libre",
-    "question": "On y parle de chiffres, de projets, et parfois même de la météo… enfin, presque, on n'est pas météorologues. C'est le moment où les dossiers sérieux croisent les blagues bien choisies (et en option, les regards félins). On échange sur tout ce qui fait avancer, parfois en sirotant un café virtuel au loin. On décortique chiffres et projets, avec des regards complices histoire de ne pas trop se prendre au sérieux. C'est l'endroit où les idées fusent et les sourires ne sont jamais bien loin, même pour les plus sérieux. Qui suis-je ?",
-    "reponseReference": "RÉUNION D'ÉQUIPE",
-    "id": 29
+    "question": "On fait appel à moi quand ça monte, mais les appels restent toujours muets.\nC’est le moment parfait pour appliquer une stratégie et faire le grand ménage.\nGrâce à moi, ton portefeuille te dit merci (enfin, un peu).\n\nQui suis-je ?",
+    "manche": 5,
+    "reponseReference": "LES SAMEDIS TRAVAILLÉS"
   },
   {
-    "manche": 5,
+    "id": 30,
     "type": "Libre",
-    "question": "Je suis un jour où normalement on chôme, mais plusieurs fois par an la société propose de me transformer en terrain de chasse aux dossiers. Plusieurs fois par an, je me transforme en zone de haute activité où les téléphones restent désespérément muets. C'est le moment parfait pour faire le grand ménage dans les stocks, tel un ninja du classement. Bonus sympa : ce jour-là, les heures sont majorées, donc ton portefeuille te dit merci (enfin, un peu). Qui suis-je ?",
-    "reponseReference": "LES SAMEDIS TRAVAILLÉS",
-    "id": 30
+    "question": "Je te raconte tout : même combien tu bosses bien.\nJe suis un miroir numérique un peu capricieux, parfois prêt à charger, patience, jeune padawan.\nJe te connais encore mieux que tes collègues et presque autant que ton manager.\nJe suis un outil qui a la force (power).\n\nQui suis-je ?",
+    "manche": 5,
+    "reponseReference": "POWER BI"
   },
   {
-    "manche": 5,
+    "id": 31,
     "type": "Libre",
-    "question": "Je suis un outil magique qui te raconte tout : délais, stocks, et même combien tu bosses bien. Je suis un miroir numérique un peu capricieux, parfois prêt à charger, patience, jeune padawan ! Je t'aide aussi à savoir si les clients sont contenus, grâce aux enquêtes, ça rigole pas. Et je surveille les affiliations des salariés, pour que personne ne traîne dans l'ombre. Qui suis-je ?",
-    "reponseReference": "POWER BI",
-    "id": 31
-  },
-  {
+    "question": "Quand on parle de moi, c’est souvent avec émotion.\nChacun a sa propre technique pour m’aborder.\nJe peux susciter la joie ou la colère.\nParfois je file à toute vitesse, parfois je prends mon temps…\nTIC TAC\n\nQui suis-je ?",
     "manche": 5,
-    "type": "Libre",
-    "question": "Je suis ce temps mystérieux entre « demande envoyée » et « problème réglé », souvent trop long pour les impatients. Parfois je file à toute vitesse, parfois je prends mon temps… c'est le grand huit des dossiers ! On m'observe comme un compte à rebours, espérant que je ne dépasse pas la limite. Je cours vers Power BI﻿ pour te trouver, comme un détective en mission. Qui suis-je ?",
-    "reponseReference": "DÉLAIS DE TRAITEMENT",
-    "id": 32
+    "reponseReference": "DÉLAIS DE TRAITEMENT"
   }
 ];
 
