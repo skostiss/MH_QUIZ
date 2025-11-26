@@ -21,6 +21,7 @@ class Game {
     this.questionStartTime = null;
     this.questionsHistory = []; // Historique de toutes les questions avec leurs réponses
     this.timestamp = Date.now(); // Date de création de la partie
+    this.checkpoints = []; // Historique des checkpoints (snapshots complets de la partie)
   }
 
   // Ajouter le maître du jeu
@@ -452,6 +453,103 @@ class Game {
       totalPlayers: this.players.size,
       status: this.status
     };
+  }
+
+  // ============================================
+  // GESTION DES CHECKPOINTS
+  // ============================================
+
+  // Créer un checkpoint (snapshot complet de l'état actuel)
+  createCheckpoint() {
+    // Deep clone des players
+    const playersSnapshot = new Map();
+    this.players.forEach((player, socketId) => {
+      playersSnapshot.set(socketId, { ...player });
+    });
+
+    // Deep clone de questionsHistory
+    const historySnapshot = this.questionsHistory.map(item => {
+      const responsesClone = new Map();
+      item.responses.forEach((response, socketId) => {
+        responsesClone.set(socketId, { ...response });
+      });
+
+      return {
+        questionIndex: item.questionIndex,
+        question: { ...item.question },
+        responses: responsesClone,
+        timestamp: item.timestamp
+      };
+    });
+
+    const currentQuestion = this.getCurrentQuestion();
+    const questionLabel = currentQuestion ? `Question ${this.currentQuestionIndex + 1}` : `Début`;
+
+    const checkpoint = {
+      id: `cp_${this.currentQuestionIndex}_${Date.now()}`,
+      timestamp: Date.now(),
+      questionIndex: this.currentQuestionIndex,
+      questionId: currentQuestion ? currentQuestion.id : null,
+      players: playersSnapshot,
+      questionsHistory: historySnapshot,
+      label: questionLabel
+    };
+
+    this.checkpoints.push(checkpoint);
+    console.log(`💾 Checkpoint créé: ${checkpoint.label} (ID: ${checkpoint.id})`);
+
+    return checkpoint.id;
+  }
+
+  // Charger un checkpoint (restaurer l'état de la partie à ce point)
+  loadCheckpoint(checkpointId) {
+    const checkpoint = this.checkpoints.find(cp => cp.id === checkpointId);
+
+    if (!checkpoint) {
+      console.error(`❌ Checkpoint ${checkpointId} introuvable`);
+      return false;
+    }
+
+    // Restaurer les joueurs avec leurs scores
+    this.players = new Map();
+    checkpoint.players.forEach((player, socketId) => {
+      this.players.set(socketId, { ...player });
+    });
+
+    // Restaurer l'historique des questions
+    this.questionsHistory = checkpoint.questionsHistory.map(item => {
+      const responsesClone = new Map();
+      item.responses.forEach((response, socketId) => {
+        responsesClone.set(socketId, { ...response });
+      });
+
+      return {
+        questionIndex: item.questionIndex,
+        question: { ...item.question },
+        responses: responsesClone,
+        timestamp: item.timestamp
+      };
+    });
+
+    // Restaurer l'index de question
+    this.currentQuestionIndex = checkpoint.questionIndex;
+
+    // Réinitialiser les réponses en cours
+    this.responses = new Map();
+    this.questionStartTime = null;
+
+    console.log(`✅ Checkpoint chargé: ${checkpoint.label} (ID: ${checkpoint.id})`);
+    return true;
+  }
+
+  // Obtenir la liste des checkpoints pour l'UI
+  getCheckpointsList() {
+    return this.checkpoints.map(cp => ({
+      id: cp.id,
+      timestamp: cp.timestamp,
+      label: cp.label,
+      questionIndex: cp.questionIndex
+    }));
   }
 }
 

@@ -107,7 +107,8 @@ app.get('/api/games/active', (req, res) => {
         players: players,
         currentQuestion: game.currentQuestionIndex + 1,
         totalQuestions: game.selectedQuestions.length,
-        timestamp: game.timestamp
+        timestamp: game.timestamp,
+        checkpoints: game.getCheckpointsList()
       });
     });
     console.log(`📋 API GET /api/games/active - Envoi de ${activeGames.length} parties actives avec détails des joueurs`);
@@ -745,7 +746,7 @@ io.on('connection', (socket) => {
       const currentQuestion = game.getCurrentQuestion();
 
       // Note: La question est déjà fermée par revealResults
-      // game.closeQuestion(); 
+      // game.closeQuestion();
 
 
       // Valider automatiquement les réponses pour QCM et VraiFaux
@@ -762,6 +763,9 @@ io.on('connection', (socket) => {
       // Sauvegarder la question dans l'historique immédiatement après l'affichage du classement
       game.saveCurrentQuestionToHistory();
 
+      // ⭐ CRÉER UN POINT DE SAUVEGARDE (CHECKPOINT) ⭐
+      game.createCheckpoint();
+
       const leaderboard = game.getLeaderboard();
       const currentQuestionNum = game.currentQuestionIndex;
       const totalQuestions = game.selectedQuestions.length;
@@ -773,7 +777,44 @@ io.on('connection', (socket) => {
         isFinished: game.isFinished()
       });
 
-      autoSaveGames(); // Sauvegarde après affichage du classement
+      autoSaveGames(); // Sauvegarde après affichage du classement (inclut le checkpoint)
+    }
+  });
+
+  // Charger un checkpoint
+  socket.on('host:loadCheckpoint', ({ gameCode, checkpointId }) => {
+    const game = gameManager.getGame(gameCode);
+    if (game && game.host === socket.id) {
+      console.log(`🔄 Tentative de chargement du checkpoint ${checkpointId} pour la partie ${gameCode}`);
+
+      const success = game.loadCheckpoint(checkpointId);
+
+      if (success) {
+        // Notifier tous les joueurs du changement d'état
+        io.to(gameCode).emit('game:checkpointLoaded', {
+          currentQuestionIndex: game.currentQuestionIndex,
+          leaderboard: game.getLeaderboard()
+        });
+
+        // Retourner l'état au host
+        socket.emit('host:checkpointLoadSuccess', {
+          gameCode: gameCode,
+          currentQuestion: game.getCurrentQuestion(),
+          currentQuestionIndex: game.currentQuestionIndex,
+          totalQuestions: game.selectedQuestions.length,
+          leaderboard: game.getLeaderboard()
+        });
+
+        // Sauvegarder l'état après le chargement
+        autoSaveGames();
+
+        console.log(`✅ Checkpoint ${checkpointId} chargé avec succès pour la partie ${gameCode}`);
+      } else {
+        socket.emit('host:checkpointLoadError', {
+          error: 'Checkpoint introuvable'
+        });
+        console.error(`❌ Échec du chargement du checkpoint ${checkpointId}`);
+      }
     }
   });
 

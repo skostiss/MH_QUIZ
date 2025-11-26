@@ -43,7 +43,21 @@ function serializeGame(game) {
       responses: mapToObject(item.responses),
       timestamp: item.timestamp
     })),
-    timestamp: game.timestamp
+    timestamp: game.timestamp,
+    checkpoints: game.checkpoints.map(cp => ({
+      id: cp.id,
+      timestamp: cp.timestamp,
+      questionIndex: cp.questionIndex,
+      questionId: cp.questionId,
+      players: mapToObject(cp.players),
+      questionsHistory: cp.questionsHistory.map(item => ({
+        questionIndex: item.questionIndex,
+        question: item.question,
+        responses: mapToObject(item.responses),
+        timestamp: item.timestamp
+      })),
+      label: cp.label
+    }))
   };
 }
 
@@ -72,6 +86,22 @@ function deserializeGame(data, Game) {
   }));
 
   game.timestamp = data.timestamp || Date.now();
+
+  // Désérialiser les checkpoints
+  game.checkpoints = (data.checkpoints || []).map(cp => ({
+    id: cp.id,
+    timestamp: cp.timestamp,
+    questionIndex: cp.questionIndex,
+    questionId: cp.questionId,
+    players: objectToMap(cp.players),
+    questionsHistory: cp.questionsHistory.map(item => ({
+      questionIndex: item.questionIndex,
+      question: item.question,
+      responses: objectToMap(item.responses),
+      timestamp: item.timestamp
+    })),
+    label: cp.label
+  }));
 
   return game;
 }

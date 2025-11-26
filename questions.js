@@ -2,16 +2,41 @@
 // BANQUE DE QUESTIONS - MALAKOFF QUIZ
 // ============================================
 // Ce fichier est géré automatiquement par l'interface d'administration
-// Dernière modification : 25/11/2025 22:50:25
+// Dernière modification : 26/11/2025 23:29:50
 // ============================================
 
 // DÉFINITION DES MANCHES
 const MANCHES = {
-  1: { id: 1, nom: "Sel ou poivre", rangeDebut: 1, rangeFin: 8 },
-  2: { id: 2, nom: "Le juste chiffre", rangeDebut: 9, rangeFin: 14 },
-  3: { id: 3, nom: "Vrai ou faux Express", rangeDebut: 15, rangeFin: 24 },
-  4: { id: 4, nom: "Le menu", rangeDebut: 25, rangeFin: 28 },
-  5: { id: 5, nom: "Qui suis-je ?", rangeDebut: 29, rangeFin: 40 }
+  "1": {
+    "id": 1,
+    "nom": "Sel ou poivre",
+    "rangeDebut": 1,
+    "rangeFin": 7
+  },
+  "2": {
+    "id": 2,
+    "nom": "Le juste chiffre",
+    "rangeDebut": 8,
+    "rangeFin": 14
+  },
+  "3": {
+    "id": 3,
+    "nom": "Vrai ou faux Express",
+    "rangeDebut": 13,
+    "rangeFin": 23
+  },
+  "4": {
+    "id": 4,
+    "nom": "Le menu",
+    "rangeDebut": 24,
+    "rangeFin": 27
+  },
+  "5": {
+    "id": 5,
+    "nom": "Qui suis-je ?",
+    "rangeDebut": 28,
+    "rangeFin": 31
+  }
 };
 
 const questions = [
@@ -93,7 +118,7 @@ const questions = [
   {
     "id": 10,
     "type": "QCM",
-    "question": "Le chiffre juste est 40 ",
+    "question": "Le chiffre juste est 10",
     "manche": 2,
     "choix": [
       "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
@@ -107,14 +132,14 @@ const questions = [
     "id": 11,
     "type": "QCM",
     "question": "2H30",
+    "manche": 2,
     "choix": [
-      "Est-ce le temps moyen d'une réunion COPROD des responsable de service ?",
+      "Est-ce le temps moyen d'une réunion CODIR des responsable de service ?",
       "Est-ce le temps moyen des CR d’un COMOP de l'Assistance métier?",
       "Est-ce le temps d’attente maximal d’un client pour nous joindre?",
       "Aucune idée, mais j’aime bien la lettre D "
     ],
-    "bonneReponse": "A",
-    "manche": 2
+    "bonneReponse": "A"
   },
   {
     "id": 12,

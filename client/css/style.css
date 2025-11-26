@@ -1835,6 +1835,76 @@ body:has(.player-permanent-header[style*="display: block"]) .container {
         padding-top: 65px;
     }
 }
+/* --- CHECKPOINT GAMES --- */
+.section-description {
+    color: var(--text-muted);
+    font-size: 0.9em;
+    font-style: italic;
+    margin: -10px 0 15px 0;
+}
+
+.active-game-item.checkpoint {
+    border-left: 4px solid #FFD700;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+}
+
+.active-game-item.checkpoint:hover {
+    border-left-color: #FFA500;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+    box-shadow: 0 4px 16px rgba(255, 215, 0, 0.15);
+}
+
+.checkpoint-info {
+    background: rgba(255, 215, 0, 0.1);
+    border-left: 3px solid #FFD700;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    color: #FFA500;
+    font-weight: 500;
+    margin: 8px 0;
+}
+
+/* --- CHECKPOINT SELECTOR --- */
+.checkpoint-selector {
+    background: rgba(255, 215, 0, 0.1);
+    border-left: 3px solid #FFD700;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+.checkpoint-selector label {
+    display: block;
+    font-weight: 600;
+    color: #FFA500;
+    margin-bottom: 6px;
+    font-size: 0.9em;
+}
+
+.checkpoint-dropdown {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #FFD700;
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.checkpoint-dropdown:hover {
+    border-color: #FFA500;
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.checkpoint-dropdown:focus {
+    outline: none;
+    border-color: #FFA500;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+}
+
 /* --- ARCHIVED GAMES --- */
 .active-game-item.archived {
     opacity: 0.8;

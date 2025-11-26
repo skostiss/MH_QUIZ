@@ -1,29 +1,23 @@
 {
-  "timestamp": 1764187615048,
+  "timestamp": 1764197277371,
   "games": {
-    "6484": {
-      "gameCode": "6484",
-      "host": "2tJaPoYdECJ73Lf3AAAF",
+    "1292": {
+      "gameCode": "1292",
+      "host": "-taHdAgsNTXXQgdyAAAV",
       "players": {
-        "RzuPp-IR2ac-qewuAAAF": {
-          "id": "RzuPp-IR2ac-qewuAAAF",
-          "name": "sq",
+        "iPk3Ivzt9fMYOo02AAAR": {
+          "id": "iPk3Ivzt9fMYOo02AAAR",
+          "name": "Alice",
           "score": 1,
-          "connected": false
-        },
-        "GkuDuEt4qNN569QdAAAH": {
-          "id": "GkuDuEt4qNN569QdAAAH",
-          "name": "GLJGJGJG",
-          "score": 0,
           "connected": false
         }
       },
-      "status": "finished",
+      "status": "playing",
       "selectedQuestions": [
         {
-          "id": 22,
+          "id": 21,
           "type": "VraiFaux",
-          "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
+          "question": "Est-ce qu’il existe 5 files d’appel RCE ? ",
           "manche": 3,
           "bonneReponse": "Vrai"
         },
@@ -31,6 +25,20 @@
           "id": 23,
           "type": "VraiFaux",
           "question": "Est-ce qu’un manager peut appartenir à plus de 20 groupes Teams ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 20,
+          "type": "VraiFaux",
+          "question": "Est-ce qu’un manager justifie chaque enquête de satisfaction négative reçue par son équipe ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 22,
+          "type": "VraiFaux",
+          "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
           "manche": 3,
           "bonneReponse": "Vrai"
         },
@@ -56,23 +64,9 @@
           "bonneReponse": "Vrai"
         },
         {
-          "id": 21,
+          "id": 16,
           "type": "VraiFaux",
-          "question": "Est-ce qu’il existe 5 files d’appel RCE ? ",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
-          "id": 20,
-          "type": "VraiFaux",
-          "question": "Est-ce qu’un manager justifie chaque enquête de satisfaction négative reçue par son équipe ?",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
-          "id": 15,
-          "type": "VraiFaux",
-          "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+          "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
           "manche": 3,
           "bonneReponse": "Vrai"
         },
@@ -84,41 +78,35 @@
           "bonneReponse": "Faux"
         },
         {
-          "id": 16,
+          "id": 15,
           "type": "VraiFaux",
-          "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+          "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
           "manche": 3,
           "bonneReponse": "Vrai"
         }
       ],
-      "currentQuestionIndex": 2,
+      "currentQuestionIndex": 1,
       "responses": {},
-      "questionStartTime": 1764187388591,
+      "questionStartTime": 1764193651160,
       "questionsHistory": [
         {
           "questionIndex": 0,
           "question": {
-            "id": 22,
+            "id": 21,
             "type": "VraiFaux",
-            "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
+            "question": "Est-ce qu’il existe 5 files d’appel RCE ? ",
             "manche": 3,
             "bonneReponse": "Vrai"
           },
           "responses": {
-            "RzuPp-IR2ac-qewuAAAF": {
+            "iPk3Ivzt9fMYOo02AAAR": {
               "answer": "Vrai",
-              "time": 5756,
+              "time": 3417,
               "validated": true,
               "points": 1
-            },
-            "GkuDuEt4qNN569QdAAAH": {
-              "answer": "Faux",
-              "time": 9276,
-              "validated": false,
-              "points": 0
             }
           },
-          "timestamp": 1764187289567
+          "timestamp": 1764193647699
         },
         {
           "questionIndex": 1,
@@ -130,49 +118,37 @@
             "bonneReponse": "Vrai"
           },
           "responses": {},
-          "timestamp": 1764187381359
-        },
-        {
-          "questionIndex": 2,
-          "question": {
-            "id": 19,
-            "type": "VraiFaux",
-            "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
-            "manche": 3,
-            "bonneReponse": "Faux"
-          },
-          "responses": {},
-          "timestamp": 1764187412089
+          "timestamp": 1764193661876
         }
       ],
-      "timestamp": 1764187236889
+      "timestamp": 1764193609038,
+      "checkpoints": []
     },
-    "8225": {
-      "gameCode": "8225",
-      "host": "y1d1vxvQ8FBRBwBpAAAL",
+    "1444": {
+      "gameCode": "1444",
+      "host": "t33WXpFUYHtmbdCYAAAf",
       "players": {
-        "iC9lSqO1yAsfywLwAAAJ": {
-          "id": "iC9lSqO1yAsfywLwAAAJ",
-          "name": "a",
+        "1K8Rr-LpgkHsf36PAAAT": {
+          "id": "1K8Rr-LpgkHsf36PAAAT",
+          "name": "A",
           "score": 5,
           "connected": false
         },
-        "Zw1Oe4W43p78ZqQ_AAAI": {
-          "id": "Zw1Oe4W43p78ZqQ_AAAI",
-          "name": "b",
-          "score": 4,
+        "2S0acnlYKvhv6ZlLAAAP": {
+          "id": "2S0acnlYKvhv6ZlLAAAP",
+          "name": "B",
+          "score": 6,
+          "connected": false
+        },
+        "KXTfstCZXQ8fNGauAAAR": {
+          "id": "KXTfstCZXQ8fNGauAAAR",
+          "name": "C",
+          "score": 7,
           "connected": false
         }
       },
-      "status": "finished",
+      "status": "playing",
       "selectedQuestions": [
-        {
-          "id": 4,
-          "type": "Libre",
-          "question": "Citez 3 actions que les Conseillers référents doivent réaliser au quotidien.",
-          "reponseReference": "Répondre au soutien métier, le traitement des bal rce retours, faire des ezv pour cas complexes , écoute qualité, accompagnement",
-          "manche": 1
-        },
         {
           "id": 9,
           "type": "QCM",
@@ -187,77 +163,65 @@
           "bonneReponse": "B"
         },
         {
-          "id": 8,
+          "id": 10,
           "type": "QCM",
-          "question": "7h du matin",
+          "question": "Le chiffre juste est 10",
+          "manche": 2,
           "choix": [
-            "Est-ce l’heure à laquelle le premier conseiller interne arrive ?",
-            " Est-ce l’heure du premier SMS reçu par un responsable d’équipe en cas d’imprévu ? ",
-            "Est-ce l’heure du premier arrivé chez les prestataires ?",
-            "Aucune des réponses"
+            "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+            "Est-ce le nombre de bugs informatiques par jour ? ",
+            "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+            "Est-ce que ça peut-être la réponse A, B et C ?"
           ],
-          "bonneReponse": "B",
-          "manche": 2
+          "bonneReponse": "C"
         },
         {
-          "id": 27,
-          "type": "Libre",
-          "question": "Pouvez-vous citer les 5 principaux indicateurs chiffrés qu’un Responsable de service (RS) doit expliquer au quotidien ?",
-          "manche": 4,
-          "reponseReference": "La DMT (Durée Moyenne de Traitement) du site  La satisfaction globale du site  La note de clarté du site  Les notes de qualité du site  L'ancienneté des stocks mails"
+          "id": 13,
+          "type": "VraiFaux",
+          "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+          "manche": 3,
+          "bonneReponse": "Vrai"
         },
         {
-          "id": 25,
-          "type": "Libre",
-          "question": "Pouvez-vous citer les 5 plus grands projets qui arriveront en RC ?",
-          "manche": 4,
-          "reponseReference": "MAYDAY : base de connaissance intelligente pour centraliser, structurer et diffuser l’information métier avec IA.  Speech to Text : conversion automatique de la parole en texte pour faciliter la transcription des échanges.  Numéro unique MH1ID : identification unique pour suivre et tracer les interactions clients.  CRM poste de travail : intégration du logiciel de gestion de la relation client directement dans le poste de travail des conseillers.  Distribution de l’activité : gestion et répartition optimisée des appels ou tâches entre les conseillers selon les règles définies."
+          "id": 16,
+          "type": "VraiFaux",
+          "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
+        },
+        {
+          "id": 15,
+          "type": "VraiFaux",
+          "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+          "manche": 3,
+          "bonneReponse": "Vrai"
         }
       ],
       "currentQuestionIndex": 5,
       "responses": {
-        "iC9lSqO1yAsfywLwAAAJ": {
-          "answer": "BNBN,",
-          "time": 8817,
+        "1K8Rr-LpgkHsf36PAAAT": {
+          "answer": "Vrai",
+          "time": 6485,
           "validated": true,
           "points": 1
         },
-        "Zw1Oe4W43p78ZqQ_AAAI": {
-          "answer": "BBN,B,B,,",
-          "time": 16877,
-          "validated": false,
-          "points": 0
+        "2S0acnlYKvhv6ZlLAAAP": {
+          "answer": "Vrai",
+          "time": 8964,
+          "validated": true,
+          "points": 1
+        },
+        "KXTfstCZXQ8fNGauAAAR": {
+          "answer": "Vrai",
+          "time": 11359,
+          "validated": true,
+          "points": 1
         }
       },
-      "questionStartTime": 1764184438445,
+      "questionStartTime": 1764196644451,
       "questionsHistory": [
         {
           "questionIndex": 0,
-          "question": {
-            "id": 4,
-            "type": "Libre",
-            "question": "Citez 3 actions que les Conseillers référents doivent réaliser au quotidien.",
-            "reponseReference": "Répondre au soutien métier, le traitement des bal rce retours, faire des ezv pour cas complexes , écoute qualité, accompagnement",
-            "manche": 1
-          },
-          "responses": {
-            "iC9lSqO1yAsfywLwAAAJ": {
-              "answer": "jkjkj",
-              "time": 12998,
-              "validated": true,
-              "points": 2
-            },
-            "Zw1Oe4W43p78ZqQ_AAAI": {
-              "answer": "jjhjhjh",
-              "time": 15701,
-              "validated": true,
-              "points": 2
-            }
-          },
-          "timestamp": 1764184299025
-        },
-        {
-          "questionIndex": 1,
           "question": {
             "id": 9,
             "type": "QCM",
@@ -272,157 +236,1051 @@
             "bonneReponse": "B"
           },
           "responses": {
-            "iC9lSqO1yAsfywLwAAAJ": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "answer": "A",
+              "time": 6612,
+              "validated": false,
+              "points": 0
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
               "answer": "B",
-              "time": 8516,
+              "time": 20151,
               "validated": true,
               "points": 2
             },
-            "Zw1Oe4W43p78ZqQ_AAAI": {
-              "answer": "A",
-              "time": 11616,
-              "validated": false,
-              "points": 0
+            "KXTfstCZXQ8fNGauAAAR": {
+              "answer": "B",
+              "time": 27151,
+              "validated": true,
+              "points": 2
             }
           },
-          "timestamp": 1764184344788
+          "timestamp": 1764196484838
+        },
+        {
+          "questionIndex": 1,
+          "question": {
+            "id": 10,
+            "type": "QCM",
+            "question": "Le chiffre juste est 10",
+            "manche": 2,
+            "choix": [
+              "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+              "Est-ce le nombre de bugs informatiques par jour ? ",
+              "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+              "Est-ce que ça peut-être la réponse A, B et C ?"
+            ],
+            "bonneReponse": "C"
+          },
+          "responses": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "answer": "C",
+              "time": 9496,
+              "validated": true,
+              "points": 2
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "answer": "D",
+              "time": 12596,
+              "validated": true,
+              "points": 2
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "answer": "D",
+              "time": 17319,
+              "validated": true,
+              "points": 2
+            }
+          },
+          "timestamp": 1764196556494
         },
         {
           "questionIndex": 2,
           "question": {
-            "id": 8,
-            "type": "QCM",
-            "question": "7h du matin",
-            "choix": [
-              "Est-ce l’heure à laquelle le premier conseiller interne arrive ?",
-              " Est-ce l’heure du premier SMS reçu par un responsable d’équipe en cas d’imprévu ? ",
-              "Est-ce l’heure du premier arrivé chez les prestataires ?",
-              "Aucune des réponses"
-            ],
-            "bonneReponse": "B",
-            "manche": 2
+            "id": 13,
+            "type": "VraiFaux",
+            "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+            "manche": 3,
+            "bonneReponse": "Vrai"
           },
           "responses": {
-            "iC9lSqO1yAsfywLwAAAJ": {
-              "answer": "D",
-              "time": 21437,
-              "validated": false,
-              "points": 0
-            },
-            "Zw1Oe4W43p78ZqQ_AAAI": {
-              "answer": "B",
-              "time": 26157,
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "answer": "Vrai",
+              "time": 8741,
               "validated": true,
-              "points": 2
+              "points": 1
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "answer": "Vrai",
+              "time": 12018,
+              "validated": true,
+              "points": 1
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "answer": "Vrai",
+              "time": 14777,
+              "validated": true,
+              "points": 1
             }
           },
-          "timestamp": 1764184404546
+          "timestamp": 1764196602572
         },
         {
           "questionIndex": 3,
           "question": {
-            "id": 27,
-            "type": "Libre",
-            "question": "Pouvez-vous citer les 5 principaux indicateurs chiffrés qu’un Responsable de service (RS) doit expliquer au quotidien ?",
-            "manche": 4,
-            "reponseReference": "La DMT (Durée Moyenne de Traitement) du site  La satisfaction globale du site  La note de clarté du site  Les notes de qualité du site  L'ancienneté des stocks mails"
+            "id": 16,
+            "type": "VraiFaux",
+            "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+            "manche": 3,
+            "bonneReponse": "Vrai"
           },
-          "responses": {},
-          "timestamp": 1764184421762
+          "responses": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "answer": "Vrai",
+              "time": 14138,
+              "validated": true,
+              "points": 1
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "answer": "Faux",
+              "time": 17518,
+              "validated": false,
+              "points": 0
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "answer": "Vrai",
+              "time": 9938,
+              "validated": true,
+              "points": 1
+            }
+          },
+          "timestamp": 1764196636437
         },
         {
           "questionIndex": 4,
           "question": {
-            "id": 25,
-            "type": "Libre",
-            "question": "Pouvez-vous citer les 5 plus grands projets qui arriveront en RC ?",
-            "manche": 4,
-            "reponseReference": "MAYDAY : base de connaissance intelligente pour centraliser, structurer et diffuser l’information métier avec IA.  Speech to Text : conversion automatique de la parole en texte pour faciliter la transcription des échanges.  Numéro unique MH1ID : identification unique pour suivre et tracer les interactions clients.  CRM poste de travail : intégration du logiciel de gestion de la relation client directement dans le poste de travail des conseillers.  Distribution de l’activité : gestion et répartition optimisée des appels ou tâches entre les conseillers selon les règles définies."
+            "id": 15,
+            "type": "VraiFaux",
+            "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+            "manche": 3,
+            "bonneReponse": "Vrai"
           },
           "responses": {
-            "iC9lSqO1yAsfywLwAAAJ": {
-              "answer": "BNBN,",
-              "time": 8817,
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "answer": "Vrai",
+              "time": 6485,
               "validated": true,
               "points": 1
             },
-            "Zw1Oe4W43p78ZqQ_AAAI": {
-              "answer": "BBN,B,B,,",
-              "time": 16877,
-              "validated": false,
-              "points": 0
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "answer": "Vrai",
+              "time": 8964,
+              "validated": true,
+              "points": 1
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "answer": "Vrai",
+              "time": 11359,
+              "validated": true,
+              "points": 1
             }
           },
-          "timestamp": 1764184471424
+          "timestamp": 1764196673976
         }
       ],
-      "timestamp": 1764184234665
-    },
-    "9945": {
-      "gameCode": "9945",
-      "host": "w34W0-wi_aqMgWMnAAAL",
-      "players": {
-        "FEh8UduX6UH0uy88AAAH": {
-          "id": "FEh8UduX6UH0uy88AAAH",
-          "name": "A",
-          "score": 0,
-          "connected": true
+      "timestamp": 1764196261197,
+      "checkpoints": [
+        {
+          "id": "cp_0_1764196484838",
+          "timestamp": 1764196484838,
+          "questionIndex": 0,
+          "questionId": 9,
+          "players": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "id": "1K8Rr-LpgkHsf36PAAAT",
+              "name": "A",
+              "score": 0,
+              "connected": true
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "id": "2S0acnlYKvhv6ZlLAAAP",
+              "name": "B",
+              "score": 2,
+              "connected": true
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "id": "KXTfstCZXQ8fNGauAAAR",
+              "name": "C",
+              "score": 2,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 9,
+                "type": "QCM",
+                "question": "3",
+                "manche": 2,
+                "choix": [
+                  " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+                  "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+                  "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
+                  "Aucune des réponses"
+                ],
+                "bonneReponse": "B"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "A",
+                  "time": 6612,
+                  "validated": false,
+                  "points": 0
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "B",
+                  "time": 20151,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "B",
+                  "time": 27151,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196484838
+            }
+          ],
+          "label": "Question 1"
         },
-        "-Z-1bNDuaAMQ9tJgAAAN": {
-          "id": "-Z-1bNDuaAMQ9tJgAAAN",
+        {
+          "id": "cp_1_1764196556494",
+          "timestamp": 1764196556494,
+          "questionIndex": 1,
+          "questionId": 10,
+          "players": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "id": "1K8Rr-LpgkHsf36PAAAT",
+              "name": "A",
+              "score": 2,
+              "connected": true
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "id": "2S0acnlYKvhv6ZlLAAAP",
+              "name": "B",
+              "score": 2,
+              "connected": true
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "id": "KXTfstCZXQ8fNGauAAAR",
+              "name": "C",
+              "score": 2,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 9,
+                "type": "QCM",
+                "question": "3",
+                "manche": 2,
+                "choix": [
+                  " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+                  "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+                  "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
+                  "Aucune des réponses"
+                ],
+                "bonneReponse": "B"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "A",
+                  "time": 6612,
+                  "validated": false,
+                  "points": 0
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "B",
+                  "time": 20151,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "B",
+                  "time": 27151,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196484838
+            },
+            {
+              "questionIndex": 1,
+              "question": {
+                "id": 10,
+                "type": "QCM",
+                "question": "Le chiffre juste est 10",
+                "manche": 2,
+                "choix": [
+                  "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+                  "Est-ce le nombre de bugs informatiques par jour ? ",
+                  "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+                  "Est-ce que ça peut-être la réponse A, B et C ?"
+                ],
+                "bonneReponse": "C"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "C",
+                  "time": 9496,
+                  "validated": true,
+                  "points": 2
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "D",
+                  "time": 12596,
+                  "validated": false,
+                  "points": 0
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "D",
+                  "time": 17319,
+                  "validated": false,
+                  "points": 0
+                }
+              },
+              "timestamp": 1764196556494
+            }
+          ],
+          "label": "Question 2"
+        },
+        {
+          "id": "cp_2_1764196602572",
+          "timestamp": 1764196602572,
+          "questionIndex": 2,
+          "questionId": 13,
+          "players": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "id": "1K8Rr-LpgkHsf36PAAAT",
+              "name": "A",
+              "score": 3,
+              "connected": true
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "id": "2S0acnlYKvhv6ZlLAAAP",
+              "name": "B",
+              "score": 5,
+              "connected": true
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "id": "KXTfstCZXQ8fNGauAAAR",
+              "name": "C",
+              "score": 5,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 9,
+                "type": "QCM",
+                "question": "3",
+                "manche": 2,
+                "choix": [
+                  " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+                  "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+                  "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
+                  "Aucune des réponses"
+                ],
+                "bonneReponse": "B"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "A",
+                  "time": 6612,
+                  "validated": false,
+                  "points": 0
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "B",
+                  "time": 20151,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "B",
+                  "time": 27151,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196484838
+            },
+            {
+              "questionIndex": 1,
+              "question": {
+                "id": 10,
+                "type": "QCM",
+                "question": "Le chiffre juste est 10",
+                "manche": 2,
+                "choix": [
+                  "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+                  "Est-ce le nombre de bugs informatiques par jour ? ",
+                  "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+                  "Est-ce que ça peut-être la réponse A, B et C ?"
+                ],
+                "bonneReponse": "C"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "C",
+                  "time": 9496,
+                  "validated": true,
+                  "points": 2
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "D",
+                  "time": 12596,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "D",
+                  "time": 17319,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196556494
+            },
+            {
+              "questionIndex": 2,
+              "question": {
+                "id": 13,
+                "type": "VraiFaux",
+                "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 8741,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Vrai",
+                  "time": 12018,
+                  "validated": true,
+                  "points": 1
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 14777,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196602572
+            }
+          ],
+          "label": "Question 3"
+        },
+        {
+          "id": "cp_3_1764196636437",
+          "timestamp": 1764196636437,
+          "questionIndex": 3,
+          "questionId": 16,
+          "players": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "id": "1K8Rr-LpgkHsf36PAAAT",
+              "name": "A",
+              "score": 4,
+              "connected": true
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "id": "2S0acnlYKvhv6ZlLAAAP",
+              "name": "B",
+              "score": 5,
+              "connected": true
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "id": "KXTfstCZXQ8fNGauAAAR",
+              "name": "C",
+              "score": 6,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 9,
+                "type": "QCM",
+                "question": "3",
+                "manche": 2,
+                "choix": [
+                  " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+                  "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+                  "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
+                  "Aucune des réponses"
+                ],
+                "bonneReponse": "B"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "A",
+                  "time": 6612,
+                  "validated": false,
+                  "points": 0
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "B",
+                  "time": 20151,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "B",
+                  "time": 27151,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196484838
+            },
+            {
+              "questionIndex": 1,
+              "question": {
+                "id": 10,
+                "type": "QCM",
+                "question": "Le chiffre juste est 10",
+                "manche": 2,
+                "choix": [
+                  "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+                  "Est-ce le nombre de bugs informatiques par jour ? ",
+                  "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+                  "Est-ce que ça peut-être la réponse A, B et C ?"
+                ],
+                "bonneReponse": "C"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "C",
+                  "time": 9496,
+                  "validated": true,
+                  "points": 2
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "D",
+                  "time": 12596,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "D",
+                  "time": 17319,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196556494
+            },
+            {
+              "questionIndex": 2,
+              "question": {
+                "id": 13,
+                "type": "VraiFaux",
+                "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 8741,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Vrai",
+                  "time": 12018,
+                  "validated": true,
+                  "points": 1
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 14777,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196602572
+            },
+            {
+              "questionIndex": 3,
+              "question": {
+                "id": 16,
+                "type": "VraiFaux",
+                "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 14138,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Faux",
+                  "time": 17518,
+                  "validated": false,
+                  "points": 0
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 9938,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196636437
+            }
+          ],
+          "label": "Question 4"
+        },
+        {
+          "id": "cp_4_1764196673976",
+          "timestamp": 1764196673976,
+          "questionIndex": 4,
+          "questionId": 15,
+          "players": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "id": "1K8Rr-LpgkHsf36PAAAT",
+              "name": "A",
+              "score": 5,
+              "connected": true
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "id": "2S0acnlYKvhv6ZlLAAAP",
+              "name": "B",
+              "score": 6,
+              "connected": true
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "id": "KXTfstCZXQ8fNGauAAAR",
+              "name": "C",
+              "score": 7,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 9,
+                "type": "QCM",
+                "question": "3",
+                "manche": 2,
+                "choix": [
+                  " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+                  "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+                  "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
+                  "Aucune des réponses"
+                ],
+                "bonneReponse": "B"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "A",
+                  "time": 6612,
+                  "validated": false,
+                  "points": 0
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "B",
+                  "time": 20151,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "B",
+                  "time": 27151,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196484838
+            },
+            {
+              "questionIndex": 1,
+              "question": {
+                "id": 10,
+                "type": "QCM",
+                "question": "Le chiffre juste est 10",
+                "manche": 2,
+                "choix": [
+                  "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+                  "Est-ce le nombre de bugs informatiques par jour ? ",
+                  "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+                  "Est-ce que ça peut-être la réponse A, B et C ?"
+                ],
+                "bonneReponse": "C"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "C",
+                  "time": 9496,
+                  "validated": true,
+                  "points": 2
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "D",
+                  "time": 12596,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "D",
+                  "time": 17319,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196556494
+            },
+            {
+              "questionIndex": 2,
+              "question": {
+                "id": 13,
+                "type": "VraiFaux",
+                "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 8741,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Vrai",
+                  "time": 12018,
+                  "validated": true,
+                  "points": 1
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 14777,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196602572
+            },
+            {
+              "questionIndex": 3,
+              "question": {
+                "id": 16,
+                "type": "VraiFaux",
+                "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 14138,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Faux",
+                  "time": 17518,
+                  "validated": false,
+                  "points": 0
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 9938,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196636437
+            },
+            {
+              "questionIndex": 4,
+              "question": {
+                "id": 15,
+                "type": "VraiFaux",
+                "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 6485,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Vrai",
+                  "time": 8964,
+                  "validated": true,
+                  "points": 1
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 11359,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196673976
+            }
+          ],
+          "label": "Question 5"
+        },
+        {
+          "id": "cp_5_1764197019090",
+          "timestamp": 1764197019090,
+          "questionIndex": 5,
+          "questionId": null,
+          "players": {
+            "1K8Rr-LpgkHsf36PAAAT": {
+              "id": "1K8Rr-LpgkHsf36PAAAT",
+              "name": "A",
+              "score": 5,
+              "connected": false
+            },
+            "2S0acnlYKvhv6ZlLAAAP": {
+              "id": "2S0acnlYKvhv6ZlLAAAP",
+              "name": "B",
+              "score": 6,
+              "connected": false
+            },
+            "KXTfstCZXQ8fNGauAAAR": {
+              "id": "KXTfstCZXQ8fNGauAAAR",
+              "name": "C",
+              "score": 7,
+              "connected": false
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 9,
+                "type": "QCM",
+                "question": "3",
+                "manche": 2,
+                "choix": [
+                  " Est-ce le nombre d'appels clients pris à l'heure par un conseiller ?",
+                  "Est-ce le nombre de mails que l’Hypervision nous envoie par jour pour nous tenir informés des chiffres clés ?",
+                  "Est-ce le nombre de fois que je décale la sonnerie de mon réveil les matins d’hiver ?",
+                  "Aucune des réponses"
+                ],
+                "bonneReponse": "B"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "A",
+                  "time": 6612,
+                  "validated": false,
+                  "points": 0
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "B",
+                  "time": 20151,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "B",
+                  "time": 27151,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196484838
+            },
+            {
+              "questionIndex": 1,
+              "question": {
+                "id": 10,
+                "type": "QCM",
+                "question": "Le chiffre juste est 10",
+                "manche": 2,
+                "choix": [
+                  "Est-ce le nombre de pages ouvertes par un conseiller pour traiter un dossier ?",
+                  "Est-ce le nombre de bugs informatiques par jour ? ",
+                  "Est-ce le nombre d'indicateurs qu'un responsable d'équipe doit suivre par conseiller depuis ses PBI ?",
+                  "Est-ce que ça peut-être la réponse A, B et C ?"
+                ],
+                "bonneReponse": "C"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "C",
+                  "time": 9496,
+                  "validated": true,
+                  "points": 2
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "D",
+                  "time": 12596,
+                  "validated": true,
+                  "points": 2
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "D",
+                  "time": 17319,
+                  "validated": true,
+                  "points": 2
+                }
+              },
+              "timestamp": 1764196556494
+            },
+            {
+              "questionIndex": 2,
+              "question": {
+                "id": 13,
+                "type": "VraiFaux",
+                "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 8741,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Vrai",
+                  "time": 12018,
+                  "validated": true,
+                  "points": 1
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 14777,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196602572
+            },
+            {
+              "questionIndex": 3,
+              "question": {
+                "id": 16,
+                "type": "VraiFaux",
+                "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 14138,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Faux",
+                  "time": 17518,
+                  "validated": false,
+                  "points": 0
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 9938,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196636437
+            },
+            {
+              "questionIndex": 4,
+              "question": {
+                "id": 15,
+                "type": "VraiFaux",
+                "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "1K8Rr-LpgkHsf36PAAAT": {
+                  "answer": "Vrai",
+                  "time": 6485,
+                  "validated": true,
+                  "points": 1
+                },
+                "2S0acnlYKvhv6ZlLAAAP": {
+                  "answer": "Vrai",
+                  "time": 8964,
+                  "validated": true,
+                  "points": 1
+                },
+                "KXTfstCZXQ8fNGauAAAR": {
+                  "answer": "Vrai",
+                  "time": 11359,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196673976
+            }
+          ],
+          "label": "Début"
+        }
+      ]
+    },
+    "8744": {
+      "gameCode": "8744",
+      "host": "45z_46miDdTMPjShAAAh",
+      "players": {
+        "05M7LWtxE7l7ENmiAAAX": {
+          "id": "05M7LWtxE7l7ENmiAAAX",
+          "name": "A",
+          "score": 2,
+          "connected": false
+        },
+        "JGFg_Jyq6LnTWBetAAAZ": {
+          "id": "JGFg_Jyq6LnTWBetAAAZ",
           "name": "B",
-          "score": 1,
-          "connected": true
+          "score": 0,
+          "connected": false
+        },
+        "pq9GTgjL50NF-Q5XAAAb": {
+          "id": "pq9GTgjL50NF-Q5XAAAb",
+          "name": "C",
+          "score": 2,
+          "connected": false
         }
       },
       "status": "finished",
       "selectedQuestions": [
         {
-          "id": 19,
-          "type": "VraiFaux",
-          "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
-          "manche": 3,
-          "bonneReponse": "Faux"
-        },
-        {
-          "id": 22,
-          "type": "VraiFaux",
-          "question": "Est-ce que les Conseillers peuvent utiliser plus de 20 statuts Odigo différents ?",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
           "id": 15,
           "type": "VraiFaux",
           "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
-          "id": 23,
-          "type": "VraiFaux",
-          "question": "Est-ce qu’un manager peut appartenir à plus de 20 groupes Teams ?",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
-          "id": 18,
-          "type": "VraiFaux",
-          "question": "Est-ce que les conseillers qui dépassent 60% de taux tél par trimestre ont une prime ?",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
-          "id": 20,
-          "type": "VraiFaux",
-          "question": "Est-ce qu’un manager justifie chaque enquête de satisfaction négative reçue par son équipe ?",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
-          "id": 16,
-          "type": "VraiFaux",
-          "question": "Est-ce que chaque RS de la RC est forcément ambassadeur et responsable d'un process ?",
           "manche": 3,
           "bonneReponse": "Vrai"
         },
@@ -432,66 +1290,251 @@
           "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
           "manche": 3,
           "bonneReponse": "Vrai"
-        },
-        {
-          "id": 21,
-          "type": "VraiFaux",
-          "question": "Est-ce qu’il existe 5 files d’appel RCE ? ",
-          "manche": 3,
-          "bonneReponse": "Vrai"
-        },
-        {
-          "id": 17,
-          "type": "VraiFaux",
-          "question": "Est-ce que les CR font aussi le soutien métier des prestataires ?\n\n",
-          "manche": 3,
-          "bonneReponse": "Faux"
         }
       ],
-      "currentQuestionIndex": 0,
-      "responses": {
-        "FEh8UduX6UH0uy88AAAH": {
-          "answer": "Vrai",
-          "time": 3635,
-          "validated": false,
-          "points": 0
-        },
-        "-Z-1bNDuaAMQ9tJgAAAN": {
-          "answer": "Faux",
-          "time": 8294,
-          "validated": true,
-          "points": 1
-        }
-      },
-      "questionStartTime": 1764187526533,
+      "currentQuestionIndex": 2,
+      "responses": {},
+      "questionStartTime": 1764196962610,
       "questionsHistory": [
         {
           "questionIndex": 0,
           "question": {
-            "id": 19,
+            "id": 15,
             "type": "VraiFaux",
-            "question": "Est-ce qu’une CR a 40% de production à réaliser en plus de son activité de soutien ?",
+            "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
             "manche": 3,
-            "bonneReponse": "Faux"
+            "bonneReponse": "Vrai"
           },
           "responses": {
-            "FEh8UduX6UH0uy88AAAH": {
+            "05M7LWtxE7l7ENmiAAAX": {
               "answer": "Vrai",
-              "time": 3635,
+              "time": 3632,
+              "validated": true,
+              "points": 1
+            },
+            "JGFg_Jyq6LnTWBetAAAZ": {
+              "answer": "Faux",
+              "time": 8071,
               "validated": false,
               "points": 0
             },
-            "-Z-1bNDuaAMQ9tJgAAAN": {
-              "answer": "Faux",
-              "time": 8294,
+            "pq9GTgjL50NF-Q5XAAAb": {
+              "answer": "Vrai",
+              "time": 11432,
               "validated": true,
               "points": 1
             }
           },
-          "timestamp": 1764187546834
+          "timestamp": 1764196897449
+        },
+        {
+          "questionIndex": 1,
+          "question": {
+            "id": 13,
+            "type": "VraiFaux",
+            "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+            "manche": 3,
+            "bonneReponse": "Vrai"
+          },
+          "responses": {},
+          "timestamp": 1764196986690
         }
       ],
-      "timestamp": 1764187493430
+      "timestamp": 1764196819172,
+      "checkpoints": [
+        {
+          "id": "cp_0_1764196897449",
+          "timestamp": 1764196897449,
+          "questionIndex": 0,
+          "questionId": 15,
+          "players": {
+            "05M7LWtxE7l7ENmiAAAX": {
+              "id": "05M7LWtxE7l7ENmiAAAX",
+              "name": "A",
+              "score": 1,
+              "connected": true
+            },
+            "JGFg_Jyq6LnTWBetAAAZ": {
+              "id": "JGFg_Jyq6LnTWBetAAAZ",
+              "name": "B",
+              "score": 0,
+              "connected": true
+            },
+            "pq9GTgjL50NF-Q5XAAAb": {
+              "id": "pq9GTgjL50NF-Q5XAAAb",
+              "name": "C",
+              "score": 1,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 15,
+                "type": "VraiFaux",
+                "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "05M7LWtxE7l7ENmiAAAX": {
+                  "answer": "Vrai",
+                  "time": 3632,
+                  "validated": true,
+                  "points": 1
+                },
+                "JGFg_Jyq6LnTWBetAAAZ": {
+                  "answer": "Faux",
+                  "time": 8071,
+                  "validated": false,
+                  "points": 0
+                },
+                "pq9GTgjL50NF-Q5XAAAb": {
+                  "answer": "Vrai",
+                  "time": 11432,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196897449
+            }
+          ],
+          "label": "Question 1"
+        },
+        {
+          "id": "cp_0_1764196957065",
+          "timestamp": 1764196957065,
+          "questionIndex": 0,
+          "questionId": 15,
+          "players": {
+            "05M7LWtxE7l7ENmiAAAX": {
+              "id": "05M7LWtxE7l7ENmiAAAX",
+              "name": "A",
+              "score": 2,
+              "connected": true
+            },
+            "JGFg_Jyq6LnTWBetAAAZ": {
+              "id": "JGFg_Jyq6LnTWBetAAAZ",
+              "name": "B",
+              "score": 0,
+              "connected": true
+            },
+            "pq9GTgjL50NF-Q5XAAAb": {
+              "id": "pq9GTgjL50NF-Q5XAAAb",
+              "name": "C",
+              "score": 2,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 15,
+                "type": "VraiFaux",
+                "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "05M7LWtxE7l7ENmiAAAX": {
+                  "answer": "Vrai",
+                  "time": 3632,
+                  "validated": true,
+                  "points": 1
+                },
+                "JGFg_Jyq6LnTWBetAAAZ": {
+                  "answer": "Faux",
+                  "time": 8071,
+                  "validated": false,
+                  "points": 0
+                },
+                "pq9GTgjL50NF-Q5XAAAb": {
+                  "answer": "Vrai",
+                  "time": 11432,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196897449
+            }
+          ],
+          "label": "Question 1"
+        },
+        {
+          "id": "cp_1_1764197072138",
+          "timestamp": 1764197072138,
+          "questionIndex": 1,
+          "questionId": 13,
+          "players": {
+            "05M7LWtxE7l7ENmiAAAX": {
+              "id": "05M7LWtxE7l7ENmiAAAX",
+              "name": "A",
+              "score": 2,
+              "connected": true
+            },
+            "JGFg_Jyq6LnTWBetAAAZ": {
+              "id": "JGFg_Jyq6LnTWBetAAAZ",
+              "name": "B",
+              "score": 0,
+              "connected": true
+            },
+            "pq9GTgjL50NF-Q5XAAAb": {
+              "id": "pq9GTgjL50NF-Q5XAAAb",
+              "name": "C",
+              "score": 2,
+              "connected": true
+            }
+          },
+          "questionsHistory": [
+            {
+              "questionIndex": 0,
+              "question": {
+                "id": 15,
+                "type": "VraiFaux",
+                "question": "Est-ce que les managers remplissent un compte rendu d’activité détaillé chaque jour ?",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {
+                "05M7LWtxE7l7ENmiAAAX": {
+                  "answer": "Vrai",
+                  "time": 3632,
+                  "validated": true,
+                  "points": 1
+                },
+                "JGFg_Jyq6LnTWBetAAAZ": {
+                  "answer": "Faux",
+                  "time": 8071,
+                  "validated": false,
+                  "points": 0
+                },
+                "pq9GTgjL50NF-Q5XAAAb": {
+                  "answer": "Vrai",
+                  "time": 11432,
+                  "validated": true,
+                  "points": 1
+                }
+              },
+              "timestamp": 1764196897449
+            },
+            {
+              "questionIndex": 1,
+              "question": {
+                "id": 13,
+                "type": "VraiFaux",
+                "question": "Est-ce que les RS doivent animer chaque semaine des réunions avec tous les managers RC ?\n\n",
+                "manche": 3,
+                "bonneReponse": "Vrai"
+              },
+              "responses": {},
+              "timestamp": 1764196986690
+            }
+          ],
+          "label": "Question 2"
+        }
+      ]
     }
   }
 }

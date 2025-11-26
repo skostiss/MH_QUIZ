@@ -1347,11 +1347,11 @@ function resumeTimer() {
 async function showRestoreGameScreen() {
     showScreen('restore');
     const message = document.getElementById('restoreGameMessage');
-    const activeContainer = document.getElementById('activeGamesList');
+    const checkpointContainer = document.getElementById('checkpointGamesList');
     const archivedContainer = document.getElementById('archivedGamesList');
 
     message.textContent = 'Chargement des parties...';
-    activeContainer.innerHTML = '';
+    checkpointContainer.innerHTML = '';
     archivedContainer.innerHTML = '';
 
     try {
@@ -1367,19 +1367,21 @@ async function showRestoreGameScreen() {
 
         if (allGames.length === 0) {
             message.textContent = 'Aucune partie sauvegardée.';
-            activeContainer.innerHTML = '<p class="empty-state">Aucune partie en cours</p>';
+            checkpointContainer.innerHTML = '<p class="empty-state">Aucune partie avec checkpoint</p>';
             archivedContainer.innerHTML = '<p class="empty-state">Aucune partie archivée</p>';
             return;
         }
 
-        // Séparer les parties actives et archivées
-        const activeGames = allGames.filter(g => g.status !== 'finished');
-        const archivedGames = allGames.filter(g => g.status === 'finished');
+        // Séparer les parties en 2 catégories :
+        // 1. Parties avec checkpoint (à poursuivre)
+        // 2. Parties sans checkpoint et terminées (archivées)
+        const checkpointGames = allGames.filter(g => g.checkpoints && g.checkpoints.length > 0);
+        const archivedGames = allGames.filter(g => (!g.checkpoints || g.checkpoints.length === 0) && g.status === 'finished');
 
         message.textContent = `${allGames.length} partie(s) trouvée(s)`;
 
         // Fonction helper pour générer le HTML d'une partie
-        const renderGameItem = (game) => {
+        const renderGameItem = (game, showCheckpoint = false) => {
             const statusText = {
                 'waiting': 'En attente',
                 'playing': 'En cours',
@@ -1402,6 +1404,25 @@ async function showRestoreGameScreen() {
                 playersInfo = `<div class="game-players-list"><em>Aucun participant</em></div>`;
             }
 
+            // Afficher le sélecteur de checkpoint si des checkpoints existent
+            let checkpointSelector = '';
+            if (showCheckpoint && game.checkpoints && game.checkpoints.length > 0) {
+                const checkpointOptions = game.checkpoints
+                    .sort((a, b) => b.timestamp - a.timestamp) // Plus récents en premier
+                    .map(cp => `<option value="${cp.id}">${cp.label} - ${new Date(cp.timestamp).toLocaleString()}</option>`)
+                    .join('');
+
+                checkpointSelector = `
+                    <div class="checkpoint-selector">
+                        <label>📍 Point de restauration :</label>
+                        <select class="checkpoint-dropdown" data-game-code="${game.gameCode}">
+                            <option value="current">État actuel (Q${game.currentQuestion}/${game.totalQuestions})</option>
+                            ${checkpointOptions}
+                        </select>
+                    </div>
+                `;
+            }
+
             // Pour les parties terminées, on affiche "Consulter" au lieu de "Reprendre"
             const actionBtnText = game.status === 'finished' ? '👁️ Consulter' : '🔄 Reprendre';
             const actionBtnClass = game.status === 'finished' ? 'btn-view-game' : 'btn-restore-game';
@@ -1411,7 +1432,7 @@ async function showRestoreGameScreen() {
                     <div class="game-select-checkbox">
                         <input type="checkbox" class="game-checkbox" data-code="${game.gameCode}">
                     </div>
-                    <div class="active-game-item ${game.status === 'finished' ? 'archived' : ''}" data-code="${game.gameCode}">
+                    <div class="active-game-item ${game.status === 'finished' ? 'archived' : ''} ${showCheckpoint ? 'checkpoint' : ''}" data-code="${game.gameCode}">
                         <div class="game-item-header">
                             <strong>Code: ${game.gameCode}</strong>
                             <span class="game-status status-${game.status}">${statusText}</span>
@@ -1421,6 +1442,7 @@ async function showRestoreGameScreen() {
                             <span>❓ Question ${game.currentQuestion} / ${game.totalQuestions}</span>
                             <span class="game-date">${new Date(game.timestamp).toLocaleString()}</span>
                         </div>
+                        ${checkpointSelector}
                         ${playersInfo}
                         <div class="game-item-action">
                             <button class="${actionBtnClass}">${actionBtnText}</button>
@@ -1430,16 +1452,16 @@ async function showRestoreGameScreen() {
             `;
         };
 
-        // Rendu des parties actives
-        if (activeGames.length > 0) {
-            activeContainer.innerHTML = activeGames.map(renderGameItem).join('');
+        // Rendu des parties avec checkpoint (à poursuivre)
+        if (checkpointGames.length > 0) {
+            checkpointContainer.innerHTML = checkpointGames.map(g => renderGameItem(g, true)).join('');
         } else {
-            activeContainer.innerHTML = '<p class="empty-state">Aucune partie en cours</p>';
+            checkpointContainer.innerHTML = '<p class="empty-state">Aucune partie avec checkpoint</p>';
         }
 
         // Rendu des parties archivées
         if (archivedGames.length > 0) {
-            archivedContainer.innerHTML = archivedGames.map(renderGameItem).join('');
+            archivedContainer.innerHTML = archivedGames.map(g => renderGameItem(g, false)).join('');
         } else {
             archivedContainer.innerHTML = '<p class="empty-state">Aucune partie archivée</p>';
         }
@@ -1488,6 +1510,27 @@ async function showRestoreGameScreen() {
                     restoreGame(gameCode);
                 }
             });
+        });
+
+        // Gérer les changements sur les sélecteurs de checkpoint
+        document.querySelectorAll('.checkpoint-dropdown').forEach(select => {
+            select.addEventListener('change', (e) => {
+                const gameCode = e.target.dataset.gameCode;
+                const checkpointId = e.target.value;
+
+                if (checkpointId !== 'current') {
+                    // Demander confirmation avant d'écraser l'état actuel
+                    if (confirm('⚠️ Charger ce checkpoint écrasera l\'état actuel de la partie.\n\nContinuer ?')) {
+                        loadCheckpoint(gameCode, checkpointId);
+                    } else {
+                        // Remettre sur "État actuel"
+                        e.target.value = 'current';
+                    }
+                }
+            });
+
+            // Empêcher la propagation du clic sur le dropdown
+            select.addEventListener('click', (e) => e.stopPropagation());
         });
 
     } catch (error) {
@@ -1581,6 +1624,45 @@ function restoreGame(restoredGameCode) {
 // Événement lorsque le maître se reconnecte
 socket.on('game:hostReconnected', () => {
     console.log('Le maître du jeu s\'est reconnecté');
+});
+
+// ============================================
+// GESTION DES CHECKPOINTS
+// ============================================
+
+// Fonction pour charger un checkpoint
+function loadCheckpoint(gameCode, checkpointId) {
+    console.log(`📡 Demande de chargement du checkpoint ${checkpointId} pour la partie ${gameCode}`);
+
+    socket.emit('host:loadCheckpoint', { gameCode, checkpointId });
+}
+
+// Événement de succès du chargement de checkpoint
+socket.on('host:checkpointLoadSuccess', (data) => {
+    console.log('✅ Checkpoint chargé avec succès', data);
+
+    // Fermer le modal de restauration
+    showScreen('leaderboardScreen');
+
+    // Mettre à jour les variables globales
+    gameCode = data.gameCode;
+    currentQuestion = data.currentQuestionIndex;
+    totalQuestions = data.totalQuestions;
+
+    // Mettre à jour le panneau d'infos
+    showGameInfoPanel(gameCode);
+
+    // Afficher le classement après le chargement du checkpoint
+    updateLeaderboard(data.leaderboard, data.currentQuestionIndex, data.totalQuestions, false);
+
+    // Afficher un message de confirmation
+    alert(`✅ Checkpoint chargé avec succès!\n\nLa partie a été restaurée à la ${data.currentQuestion?.type || 'question'} n°${data.currentQuestionIndex + 1}.`);
+});
+
+// Événement d'erreur du chargement de checkpoint
+socket.on('host:checkpointLoadError', (data) => {
+    console.error('❌ Erreur lors du chargement du checkpoint:', data);
+    alert(`❌ Erreur: ${data.error}`);
 });
 
 // ============================================
